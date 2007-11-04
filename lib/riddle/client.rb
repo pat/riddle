@@ -74,8 +74,8 @@ module Riddle
     attr_accessor :server, :port, :offset, :limit, :max_matches,
       :match_mode, :sort_mode, :sort_by, :weights, :id_range, :filters,
       :group_by, :group_function, :group_clause, :group_distinct, :cut_off,
-      :retry_count, :retry_delay
-    attr_reader :anchor
+      :retry_count, :retry_delay, :anchor
+    attr_reader :queue
     
     # Can instantiate with a specific server and port - otherwise it assumes
     # defaults of localhost and 3312 respectively. All other settings can be
@@ -92,7 +92,7 @@ module Riddle
       @sort_mode      = :relevance
       @sort_by        = ''
       @weights        = []
-      @id_range       = 0..0xFFFFFFFF
+      @id_range       = 0..0
       @filters        = []
       @group_by       = ''
       @group_function = :day
@@ -108,7 +108,7 @@ module Riddle
       @queue = []
     end
     
-    def anchor=(lat_attr, lat, long_attr, long)
+    def set_anchor(lat_attr, lat, long_attr, long)
       @anchor = {
         :latitude_attribute   => lat_attr,
         :latitude             => lat,
@@ -327,15 +327,21 @@ module Riddle
       # Query
       message.append_string search
       
+      # puts message.to_s.length
+      
       # Weights
       message.append_int @weights.length
       message.append_ints *@weights
+      
+      # puts "#{message.to_s.length}, #{@weights.length}"
       
       # Index
       message.append_string index
       
       # ID Range
       message.append_ints 0, @id_range.first, @id_range.last
+      
+      # puts message.to_s.length
       
       # Filters
       message.append_int @filters.length

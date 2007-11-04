@@ -22,14 +22,14 @@ module Riddle
         case self.values
         when Range
           if self.values.first.is_a?(Float) && self.values.last.is_a?(Float)
-            append_int FilterTypes[:float_range]
-            message.append_floats 0, self.values.first, self.values.last
+            message.append_int FilterTypes[:float_range]
+            message.append_floats self.values.first, self.values.last
           else
-            append_int FilterTypes[:range]
-            message.append_ints 0, self.values.first, self.values.last
+            message.append_int FilterTypes[:range]
+            message.append_ints self.values.first, self.values.last
           end
         when Array
-          append_int FilterTypes[:values]
+          message.append_int FilterTypes[:values]
           message.append_int self.values.length
           message.append_ints *self.values
         end
