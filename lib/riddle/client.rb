@@ -327,21 +327,15 @@ module Riddle
       # Query
       message.append_string search
       
-      # puts message.to_s.length
-      
       # Weights
       message.append_int @weights.length
       message.append_ints *@weights
-      
-      # puts "#{message.to_s.length}, #{@weights.length}"
       
       # Index
       message.append_string index
       
       # ID Range
       message.append_ints 0, @id_range.first, @id_range.last
-      
-      # puts message.to_s.length
       
       # Filters
       message.append_int @filters.length
