@@ -150,7 +150,7 @@ module Riddle
           type           = response.next_int
 
           result[:attributes][attribute_name] = type
-          result[:attribute_names] = attribute_name
+          result[:attribute_names] << attribute_name
         end
 
         matches   = response.next_int
@@ -172,9 +172,9 @@ module Riddle
           end
         end
 
-        result[:total] = response.next_int
-        result[:total_found] = response.next_int
-        result[:time] = '%.3f' % (response.next_int / 1000.0)
+        result[:total] = response.next_int.to_i || 0
+        result[:total_found] = response.next_int.to_i || 0
+        result[:time] = ('%.3f' % (response.next_int / 1000.0)).to_f || 0.0
 
         words = response.next_int
         for i in 0...words

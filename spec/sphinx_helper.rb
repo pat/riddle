@@ -37,6 +37,11 @@ class SphinxHelper
     server.close
   end
   
+  def reset
+    setup_mysql
+    index
+  end
+  
   def generate_configuration
     template = File.open("spec/fixtures/sphinx/configuration.erb") { |f| f.read }
     File.open("spec/fixtures/sphinx/spec.conf", "w") { |f|
