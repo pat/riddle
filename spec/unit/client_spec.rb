@@ -127,4 +127,14 @@ describe Riddle::Client do
     client.queue.first.should == query_contents(:weights)
     client.queue.last.should  == query_contents(:index)
   end
+  
+  it "should build a basic update message correctly" do
+    client = Riddle::Client.new
+    client.send(
+      :update_message,
+      "people",
+      ["birthday"],
+      {1 => [191163600]}
+    ).should == query_contents(:update_simple)
+  end
 end

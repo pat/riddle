@@ -203,15 +203,17 @@ module Riddle
     # define:
     # * :docs
     # * :words
+    # * :index
     #
     # Optional settings include:
-    # * :index (defaults to all indexes)
     # * :before_match (defaults to <span class="match">)
     # * :after_match (defaults to </span>)
     # * :chunk_separator (defaults to ' &#8230; ' - which is an HTML ellipsis)
     # * :limit (defaults to 256)
     # * :around (defaults to 5)
     #
+    # The defaults differ from the official PHP client, as I've opted for
+    # semantic HTML markup.
     def excerpts(options = {})
       options[:index]           ||= '*'
       options[:before_match]    ||= '<span class="match">'
@@ -225,8 +227,7 @@ module Riddle
       options[:docs].collect { response.next }
     end
     
-    # Updates are pre-alpha in Sphinx, so I'm not supporting that functionality
-    # just yet. This method returns nil.
+    # Update attributes
     def update(index, attributes, values_by_doc)
       response = Response.new request(
         :update,
@@ -401,6 +402,8 @@ module Riddle
         message.append_int key # document ID
         message.append_ints *values # array of new values (integers)
       end
+      
+      message.to_s
     end
   end
 end

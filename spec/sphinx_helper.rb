@@ -30,9 +30,13 @@ class SphinxHelper
     server.query "USE riddle_sphinx_spec;"
     
     structure = File.open("spec/fixtures/sql/structure.sql") { |f| f.read }
-    data      = File.open("spec/fixtures/sql/data.sql") { |f| f.read }
     # Block ensures multiple statements can be run
-    server.query(structure + data) { }
+    server.query(structure) { }
+    data      = File.open("spec/fixtures/sql/data.sql") { |f|
+      while line = f.gets
+        server.query line
+      end
+    }
 
     server.close
   end

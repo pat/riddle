@@ -11,9 +11,9 @@ Spec::Runner.configure do |config|
     sphinx.start
   end
   
-  config.before :each do
-    sphinx.reset
-  end
+  # config.before :each do
+  #   sphinx.reset
+  # end
   
   config.after :all do
     sphinx.stop
