@@ -7,9 +7,22 @@ module Riddle
   # more Ruby-ish (ie. lowercase and underscored method names). I also have
   # used a few helper classes, just to neaten things up.
   #
-  # I do plan to release this part of the plugin as a standalone library at
-  # some point - if you're interested in using it, and are feeling impatient,
-  # feel free to hassle me.
+  # Feel free to use it wherever. Send bug reports, patches, comments and
+  # suggestions to pat at freelancing-gods dot com.
+  #
+  # Most properties of the client are accessible through attribute accessors,
+  # and where relevant use symboles instead of the long constants common in
+  # other clients.
+  # Some examples:
+  #
+  #   client.sort_mode  = :extended
+  #   client.sort_by    = "birthday DESC"
+  #   client.match_mode = :extended
+  #
+  # To add a filter, you will need to create a Filter object:
+  #
+  #   client.filters << Riddle::Client::Filter.new("birthday",
+  #     Time.at(1975, 1, 1).to_i..Time.at(1985, 1, 1).to_i, false)
   #
   class Client
     Commands = {
@@ -108,6 +121,12 @@ module Riddle
       @queue = []
     end
     
+    # Set the geo-anchor point - with the names of the attributes that contain
+    # the latitude and longtitude, and the reference position.
+    #
+    # Example:
+    #   client.set_anchor('lat', -37.767899, 'lon', 145.002451)
+    #
     def set_anchor(lat_attr, lat, long_attr, long)
       @anchor = {
         :latitude_attribute   => lat_attr,
@@ -117,10 +136,14 @@ module Riddle
       }
     end
     
+    # Append a query to the queue. This uses the same parameters as the query
+    # method.
     def append_query(search, index = '*')
       @queue << query_message(search, index)
     end
     
+    # Run all the queries currently in the queue. This will return an array of
+    # results hashes.
     def run
       response = Response.new request(:search, @queue)
       
@@ -194,6 +217,44 @@ module Riddle
     # Query the Sphinx daemon - defaulting to all indexes, but you can specify
     # a specific one if you wish. The search parameter should be a string
     # following Sphinx's expectations.
+    #
+    # The object returned from this method is a hash with the following keys:
+    # 
+    # * :matches
+    # * :fields
+    # * :attributes
+    # * :attribute_names
+    # * :words
+    # * :total
+    # * :total_found
+    # * :time
+    # * :status
+    # * :warning (if appropriate)
+    # * :error (if appropriate)
+    #
+    # The key <tt>:matches</tt> returns an array of hashes - the actual search
+    # results. Each hash has the document id (<tt>:doc</tt>), the result 
+    # weighting (<tt>:weight</tt>), and a hash of the attributes for the
+    # document (<tt>:attributes</tt>).
+    # 
+    # The <tt>:fields</tt> and <tt>:attribute_names</tt> keys return list of
+    # fields and attributes for the documents. The key <tt>:attributes</tt>
+    # will return a hash of attribute name and type pairs, and <tt>:words</tt>
+    # returns a hash of hashes representing the words from the search, with the
+    # number of documents and hits for each, along the lines of:
+    # 
+    #   results[:words]["Pat"] #=> {:docs => 12, :hits => 15}
+    # 
+    # <tt>:total</tt>, <tt>:total_found</tt> and <tt>:time</tt> return the
+    # number of matches available, the total number of matches (which may be
+    # greater than the maximum available, depending on the number of matches
+    # and your sphinx configuration), and the time in milliseconds that the
+    # query took to run.
+    # 
+    # <tt>:status</tt> is the error code for the query - and if there was a
+    # related warning, it will be under the <tt>:warning</tt> key. Fatal errors
+    # will be described under <tt>:error</tt>.
+    #
     def query(search, index = '*')      
       @queue << query_message(search, index)
       self.run.first
@@ -227,7 +288,15 @@ module Riddle
       options[:docs].collect { response.next }
     end
     
-    # Update attributes
+    # Update attributes - first parameter is the relevant index, second is an
+    # array of attributes to be updated, and the third is a hash, where the
+    # keys are the document ids, and the values are arrays with the attribute
+    # values - in the same order as the second parameter.
+    #
+    # Example:
+    # 
+    #   client.update('people', ['birthday'], {1 => [Time.at(1982, 20, 8).to_i]})
+    # 
     def update(index, attributes, values_by_doc)
       response = Response.new request(
         :update,

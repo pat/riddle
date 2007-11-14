@@ -4,6 +4,9 @@ require 'riddle/client/message'
 require 'riddle/client/response'
 
 module Riddle #:nodoc:
+  class ConnectionError < StandardError #:nodoc:
+  end
+  
   module Version #:nodoc:
     Major = 0
     Minor = 9

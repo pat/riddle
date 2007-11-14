@@ -24,6 +24,7 @@ module Riddle
         @message << [int].pack('N')
       end
       
+      # Append a float
       def append_float(float)
         @message << [float].pack('f')
       end
@@ -33,6 +34,7 @@ module Riddle
         ints.each { |int| append_int(int) }
       end
       
+      # Append multiple floats
       def append_floats(*floats)
         floats.each { |float| append_float(float) }
       end
