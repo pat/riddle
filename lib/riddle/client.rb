@@ -45,11 +45,13 @@ module Riddle
     }
     
     MatchModes = {
-      :all      => 0, # SPH_MATCH_ALL
-      :any      => 1, # SPH_MATCH_ANY
-      :phrase   => 2, # SPH_MATCH_PHRASE
-      :boolean  => 3, # SPH_MATCH_BOOLEAN
-      :extended => 4  # SPH_MATCH_EXTENDED
+      :all        => 0, # SPH_MATCH_ALL
+      :any        => 1, # SPH_MATCH_ANY
+      :phrase     => 2, # SPH_MATCH_PHRASE
+      :boolean    => 3, # SPH_MATCH_BOOLEAN
+      :extended   => 4, # SPH_MATCH_EXTENDED
+      :fullsacn   => 5, # SPH_MATCH_FULLSCAN
+      :extended2  => 6  # SPH_MATCH_EXTENDED2
     }
     
     SortModes = {
