@@ -274,6 +274,8 @@ module Riddle
     # * :chunk_separator (defaults to ' &#8230; ' - which is an HTML ellipsis)
     # * :limit (defaults to 256)
     # * :around (defaults to 5)
+    # * :exact_phrase (defaults to false)
+    # * :single_passage (defaults to false)
     #
     # The defaults differ from the official PHP client, as I've opted for
     # semantic HTML markup.
@@ -284,6 +286,8 @@ module Riddle
       options[:chunk_separator] ||= ' &#8230; ' # ellipsis
       options[:limit]           ||= 256
       options[:around]          ||= 5
+      options[:exact_phrase]    ||= false
+      options[:single_passage]  ||= false
       
       response = Response.new request(:excerpt, excerpts_message(options))
       
@@ -445,7 +449,13 @@ module Riddle
     def excerpts_message(options)
       message = Message.new
       
-      message.append [0, 1].pack('N2') # mode = 0, flags = 1
+      flags = 1
+      flags |= 2  if options[:exact_phrase]
+      flags |= 4  if options[:single_passage]
+      flags |= 8  if options[:use_boundaries]
+      flags |= 16 if options[:weight_order]
+      
+      message.append [0, flags].pack('N2') # 0 = mode
       message.append_string options[:index]
       message.append_string options[:words]
       
