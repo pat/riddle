@@ -1,3 +1,4 @@
+require 'socket'
 require 'riddle/client'
 require 'riddle/client/filter'
 require 'riddle/client/message'
