@@ -8,6 +8,7 @@ Spec::Runner.configure do |config|
   sphinx.index
   
   config.before :all do
+    `php -f spec/fixtures/data_generator.php`
     sphinx.start
   end
   

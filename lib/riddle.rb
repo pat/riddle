@@ -12,7 +12,7 @@ module Riddle #:nodoc:
     Major = 0
     Minor = 9
     Tiny  = 8
-    Rev   = 1065
+    Rev   = 1112
     
     String = [Major, Minor, Tiny].join('.') + "r#{Rev}"
   end

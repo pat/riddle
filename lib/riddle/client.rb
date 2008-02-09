@@ -57,7 +57,8 @@ module Riddle
     RankModes = {
       :proximity_bm25 => 0, # SPH_RANK_PROXIMITY_BM25
       :bm25           => 1, # SPH_RANK_BM25
-      :none           => 2  # SPH_RANK_NONE
+      :none           => 2, # SPH_RANK_NONE
+      :wordcount      => 3  # SPH_RANK_WORDCOUNT
     }
     
     SortModes = {
@@ -65,7 +66,8 @@ module Riddle
       :attr_desc     => 1, # SPH_SORT_ATTR_DESC
       :attr_asc      => 2, # SPH_SORT_ATTR_ASC
       :time_segments => 3, # SPH_SORT_TIME_SEGMENTS
-      :extended      => 4  # SPH_SORT_EXTENDED
+      :extended      => 4, # SPH_SORT_EXTENDED
+      :expr          => 5  # SPH_SORT_EXPR
     }
     
     AttributeTypes = {

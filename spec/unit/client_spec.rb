@@ -109,6 +109,20 @@ describe Riddle::Client do
     client.queue.first.should == query_contents(:anchor)
   end
   
+  it "should build a message with index weights correctly" do
+    client = Riddle::Client.new
+    client.index_weights = {"people" => 101}
+    client.append_query "test "
+    client.queue.first.should == query_contents(:index_weights)
+  end
+  
+  it "should build a message with field weights correctly" do
+    client = Riddle::Client.new
+    client.field_weights = {"city" => 101}
+    client.append_query "test "
+    client.queue.first.should == query_contents(:field_weights)
+  end
+  
   it "should keep multiple messages in the queue" do
     client = Riddle::Client.new
     client.weights = [100, 1]
