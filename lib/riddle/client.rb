@@ -275,7 +275,10 @@ module Riddle
       self.run.first
     end
     
-    # Grab excerpts from the indexes. As part of the options, you will need to
+    # Build excerpts from search terms (the +words+) and the text of documents. Excerpts are bodies of text that have the +words+ highlighted.
+    # They may also be abbreviated to fit within a word limit.
+    #
+    # As part of the options hash, you will need to
     # define:
     # * :docs
     # * :words
@@ -292,6 +295,31 @@ module Riddle
     #
     # The defaults differ from the official PHP client, as I've opted for
     # semantic HTML markup.
+    #
+    # Example:
+    #
+    #   client.excerpts(:docs => ["Pat Allan, Pat Cash"], :words => 'Pat', :index => 'pats')
+    #   #=> ["<span class=\"match\">Pat</span> Allan, <span class=\"match\">Pat</span> Cash"]
+    #
+    #   lorem_lipsum = "Lorem ipsum dolor..."
+    #
+    #   client.excerpts(:docs => ["Pat Allan, #{lorem_lipsum} Pat Cash"], :words => 'Pat', :index => 'pats')
+    #   #=> ["<span class=\"match\">Pat</span> Allan, Lorem ipsum dolor sit amet, consectetur adipisicing
+    #          elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua &#8230; . Excepteur 
+    #          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est 
+    #          laborum. <span class=\"match\">Pat</span> Cash"]  
+    #
+    # Workflow:
+    #
+    # Excerpt creation is completely isolated from searching the index. The nominated index is only used to 
+    # discover encoding and charset information.
+    #
+    # Therefore, the workflow goes:
+    #
+    # 1. Do the sphinx query.
+    # 2. Fetch the documents found by sphinx from their repositories.
+    # 3. Pass the documents' text to +excerpts+ for marking up of matched terms.
+    #
     def excerpts(options = {})
       options[:index]           ||= '*'
       options[:before_match]    ||= '<span class="match">'
