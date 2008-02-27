@@ -137,17 +137,22 @@ module Riddle
     end
     
     # Set the geo-anchor point - with the names of the attributes that contain
-    # the latitude and longtitude, and the reference position.
+    # the latitude and longitude (in radians), and the reference position.
+    # Note that for geocoding to work properly, you must also set
+    # match_mode to :extended. To sort results by distance, you will
+    # need to set sort_mode to '@geodist asc' for example. Sphinx
+    # expects latitude and longitude to be returned from you SQL source
+    # in radians.
     #
     # Example:
-    #   client.set_anchor('lat', -37.767899, 'lon', 145.002451)
+    #   client.set_anchor('lat', -0.6591741, 'long', 2.530770)
     #
     def set_anchor(lat_attr, lat, long_attr, long)
       @anchor = {
         :latitude_attribute   => lat_attr,
         :latitude             => lat,
-        :longtitude_attribute => long_attr,
-        :longtitude           => long
+        :longitude_attribute  => long_attr,
+        :longitude            => long
       }
     end
     
@@ -474,8 +479,8 @@ module Riddle
       else
         message.append_int 1
         message.append_string @anchor[:latitude_attribute]
-        message.append_string @anchor[:longtitude_attribute]
-        message.append_floats @anchor[:latitude], @anchor[:longtitude]
+        message.append_string @anchor[:longitude_attribute]
+        message.append_floats @anchor[:latitude], @anchor[:longitude]
       end
       
       # Per Index Weights

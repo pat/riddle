@@ -87,7 +87,7 @@ fclose($file);
 $client->SetWeights(array());
 
 // anchor
-$client->SetGeoAnchor("latitude", "longtitude", 10.0, 95.0);
+$client->SetGeoAnchor("latitude", "longitude", 10.0, 95.0);
 
 $file = fopen("spec/fixtures/data/anchor.bin", "w");
 fwrite($file, $client->_reqs[$client->AddQuery("test ")]);

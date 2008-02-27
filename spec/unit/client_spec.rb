@@ -15,12 +15,12 @@ describe Riddle::Client do
   
   it "should translate anchor arguments correctly" do
     client = Riddle::Client.new
-    client.set_anchor "latitude", 10.0, "longtitude", 95.0
+    client.set_anchor "latitude", 10.0, "longitude", 95.0
     client.anchor.should == {
       :latitude_attribute   => "latitude",
       :latitude             => 10.0,
-      :longtitude_attribute => "longtitude",
-      :longtitude           => 95.0
+      :longitude_attribute  => "longitude",
+      :longitude            => 95.0
     }
   end
   
@@ -104,7 +104,7 @@ describe Riddle::Client do
   
   it "should build a message with an anchor correctly" do
     client = Riddle::Client.new
-    client.set_anchor "latitude", 10.0, "longtitude", 95.0
+    client.set_anchor "latitude", 10.0, "longitude", 95.0
     client.append_query "test "
     client.queue.first.should == query_contents(:anchor)
   end
