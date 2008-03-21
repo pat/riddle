@@ -52,7 +52,7 @@ module Riddle
       :phrase     => 2, # SPH_MATCH_PHRASE
       :boolean    => 3, # SPH_MATCH_BOOLEAN
       :extended   => 4, # SPH_MATCH_EXTENDED
-      :fullsacn   => 5, # SPH_MATCH_FULLSCAN
+      :fullscan   => 5, # SPH_MATCH_FULLSCAN
       :extended2  => 6  # SPH_MATCH_EXTENDED2
     }
     
