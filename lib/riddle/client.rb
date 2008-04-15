@@ -507,7 +507,7 @@ module Riddle
       # Per Index Weights
       message.append_int @index_weights.length
       @index_weights.each do |key,val|
-        message.append_string key
+        message.append_string key.to_s
         message.append_int val
       end
       
@@ -517,7 +517,7 @@ module Riddle
       # Per Field Weights
       message.append_int @field_weights.length
       @field_weights.each do |key,val|
-        message.append_string key
+        message.append_string key.to_s
         message.append_int val
       end
       
