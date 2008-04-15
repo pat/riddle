@@ -72,3 +72,13 @@ that the query took to run.
 the <tt>:warning</tt> key. Fatal errors will be described under <tt>:error</tt>.
 
 If you've installed the gem and wondering why there's no tests - check out the svn version. I've kept the specs out of the gem as I have a decent amount of test data in there, which really isn't needed unless you want to submit patches.
+
+== Contributors
+
+Thanks to the following people who have contributed to Riddle in some shape or form:
+
+* Andrew Aksyonoff
+* Brad Greenlee
+* Lachie Cox
+* Jeremy Seitz
+* Mark Lane
