@@ -138,6 +138,34 @@ module Riddle
       @queue = []
     end
     
+    # Reset attributes and settings to defaults.
+    def reset
+      # defaults
+      @offset         = 0
+      @limit          = 20
+      @max_matches    = 1000
+      @match_mode     = :all
+      @sort_mode      = :relevance
+      @sort_by        = ''
+      @weights        = []
+      @id_range       = 0..0
+      @filters        = []
+      @group_by       = ''
+      @group_function = :day
+      @group_clause   = '@group desc'
+      @group_distinct = ''
+      @cut_off        = 0
+      @retry_count    = 0
+      @retry_delay    = 0
+      @anchor         = {}
+      # string keys are index names, integer values are weightings
+      @index_weights  = {}
+      @rank_mode      = :proximity_bm25
+      @max_query_time = 0
+      # string keys are field names, integer values are weightings
+      @field_weights  = {}
+    end
+    
     # Set the geo-anchor point - with the names of the attributes that contain
     # the latitude and longitude (in radians), and the reference position.
     # Note that for geocoding to work properly, you must also set
