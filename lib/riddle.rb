@@ -17,7 +17,7 @@ module Riddle #:nodoc:
     Rev     = 1231
     # Release number to mark my own fixes, beyond feature parity with
     # Sphinx itself.
-    Release = 0
+    Release = 1
     
     String      = [Major, Minor, Tiny].join('.') + "rc2"
     GemVersion  = [Major, Minor, Tiny, Rev, Release].join('.')
