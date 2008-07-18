@@ -180,10 +180,10 @@ describe Riddle::Client do
   
   it "should timeout after a specified time" do
     client = Riddle::Client.new
-    client.port     = 3313
-    client.timeout  = 3
+    client.port     = 3314
+    client.timeout  = 1
     
-    server = TCPServer.new "localhost", 3313
+    server = TCPServer.new "localhost", 3314
     
     lambda {
       client.send(:connect) { |socket| }
