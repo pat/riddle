@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name              = "riddle"
-  s.version           = "0.9.8.1231.1"
+  s.version           = "0.9.8.1371"
   s.summary           = "API for Sphinx, written in and for Ruby."
   s.description       = "API for Sphinx, written in and for Ruby."
   s.author            = "Pat Allan"

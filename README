@@ -5,18 +5,17 @@ client and the original PHP client - credit where credit's due, after all.
 It does not follow the same syntax as those two, though (not much point writing this otherwise) -
 opting for a more Ruby-like structure.
 
-The easiest way to install is to grab the gem (available since 0.9.8r1112 only):
+The easiest way to install is to grab the gem from GitHub:
 
-  sudo gem install riddle
+  sudo gem install freelancing-god-riddle --source http://gems.github.com/
 
-However, if you're so inclined, you can grab sourcecode via subversion. If you
-are after a specific release, use the tag as follows:
+However, if you're so inclined, you can grab sourcecode.
 
-  svn co http://rails-oceania.googlecode.com/svn/patallan/riddle/tags/0.9.8-rc2 riddle
+  git clone git://github.com/freelancing-god/thinking-sphinx.git
 
-Or for the most current, just use trunk:
+If you're looking for old versions - for older versions of Sphinx - you'll want to peruse the tagged versions in the old subversion repository
 
-  svn co http://rails-oceania.googlecode.com/svn/patallan/riddle/trunk riddle
+  svn co http://rails-oceania.googlecode.com/svn/patallan/riddle/tags riddle-tags
 
 Please note that at the time of writing, the following versions are supported (if you get the appropriate tag):
 
@@ -27,6 +26,7 @@ Please note that at the time of writing, the following versions are supported (i
 * 0.9.8-r1112
 * 0.9.8-rc1 (gem version: 0.9.8.1198)
 * 0.9.8-rc2 (gem version: 0.9.8.1231)
+* 0.9.8 (gem version: 0.9.8.1371)
 
 To get started, just instantiate a Client object:
 
