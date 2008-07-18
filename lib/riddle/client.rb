@@ -100,7 +100,7 @@ module Riddle
       :match_mode, :sort_mode, :sort_by, :weights, :id_range, :filters,
       :group_by, :group_function, :group_clause, :group_distinct, :cut_off,
       :retry_count, :retry_delay, :anchor, :index_weights, :rank_mode,
-      :max_query_time, :field_weights
+      :max_query_time, :field_weights, :timeout
     attr_reader :queue
     
     # Can instantiate with a specific server and port - otherwise it assumes
@@ -134,6 +134,7 @@ module Riddle
       @max_query_time = 0
       # string keys are field names, integer values are weightings
       @field_weights  = {}
+      @timeout        = 0
       
       @queue = []
     end
@@ -164,6 +165,7 @@ module Riddle
       @max_query_time = 0
       # string keys are field names, integer values are weightings
       @field_weights  = {}
+      @timeout        = 0
     end
     
     # Set the geo-anchor point - with the names of the attributes that contain
@@ -412,6 +414,26 @@ module Riddle
     # Connects to the Sphinx daemon, and yields a socket to use. The socket is
     # closed at the end of the block.
     def connect(&block)
+      socket = nil
+      if @timeout == 0
+        socket = initialise_connection
+      else
+        begin
+          Timeout.timeout(@timeout) { socket = initialise_connection }
+        rescue Timeout::Error
+          raise Riddle::ConnectionError,
+            "Connection to #{@server} on #{@port} timed out after #{@timeout} seconds"
+        end
+      end
+      
+      begin
+        yield socket
+      ensure
+        socket.close
+      end
+    end
+    
+    def initialise_connection
       socket = TCPSocket.new @server, @port
       
       # Checking version
@@ -424,11 +446,7 @@ module Riddle
       # Send version
       socket.send [1].pack('N'), 0
       
-      begin
-        yield socket
-      ensure
-        socket.close
-      end
+      socket
     end
     
     # Send a collection of messages, for a command type (eg, search, excerpts,

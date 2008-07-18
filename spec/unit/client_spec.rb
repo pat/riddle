@@ -177,4 +177,18 @@ describe Riddle::Client do
       true
     ).should == query_contents(:keywords_with_hits)
   end
+  
+  it "should timeout after a specified time" do
+    client = Riddle::Client.new
+    client.port     = 3313
+    client.timeout  = 3
+    
+    server = TCPServer.new "localhost", 3313
+    
+    lambda {
+      client.send(:connect) { |socket| }
+    }.should raise_error(Riddle::ConnectionError)
+    
+    server.close
+  end
 end
