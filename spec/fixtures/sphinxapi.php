@@ -1,7 +1,7 @@
 <?php
 
 //
-// $Id: sphinxapi.php 1163 2008-02-19 21:00:40Z glook $
+// $Id: sphinxapi.php 1365 2008-07-15 00:33:22Z shodan $
 //
 
 //
@@ -187,6 +187,7 @@ class SphinxClient
 	var $_reqs;			///< requests array for multi-query
 	var $_mbenc;		///< stored mbstring encoding
 	var $_arrayresult;	///< whether $result["matches"] should be a hash or an array
+	var $_timeout;		///< connect timeout
 
 	/////////////////////////////////////////////////////////////////////////////
 	// common stuff
@@ -228,6 +229,7 @@ class SphinxClient
 		$this->_reqs		= array ();	// requests storage (for multi-query case)
 		$this->_mbenc		= "";
 		$this->_arrayresult	= false;
+		$this->_timeout		= 0;
 	}
 
 	/// get last error message (string)
@@ -249,6 +251,13 @@ class SphinxClient
 		assert ( is_int($port) );
 		$this->_host = $host;
 		$this->_port = $port;
+	}
+
+	/// set server connection timeout (0 to remove)
+	function SetConnectTimeout ( $timeout )
+	{
+		assert ( is_numeric($timeout) );
+		$this->_timeout = $timeout;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -274,9 +283,17 @@ class SphinxClient
 	/// connect to searchd server
 	function _Connect ()
 	{
-		if (!( $fp = @fsockopen ( $this->_host, $this->_port ) ) )
+		$errno = 0;
+		$errstr = "";
+		if ( $this->_timeout<=0 )
+			$fp = @fsockopen ( $this->_host, $this->_port, $errno, $errstr );
+		else
+			$fp = @fsockopen ( $this->_host, $this->_port, $errno, $errstr, $this->_timeout );
+
+		if ( !$fp )
 		{
-			$this->_error = "connection to {$this->_host}:{$this->_port} failed";
+			$errstr = trim ( $errstr );
+			$this->_error = "connection to {$this->_host}:{$this->_port} failed (errno=$errno, msg=$errstr)";
 			return false;
 		}
 
@@ -399,6 +416,7 @@ class SphinxClient
 			|| $mode==SPH_MATCH_PHRASE
 			|| $mode==SPH_MATCH_BOOLEAN
 			|| $mode==SPH_MATCH_EXTENDED
+			|| $mode==SPH_MATCH_FULLSCAN
 			|| $mode==SPH_MATCH_EXTENDED2 );
 		$this->_mode = $mode;
 	}
@@ -599,6 +617,7 @@ class SphinxClient
 
 		$this->AddQuery ( $query, $index, $comment );
 		$results = $this->RunQueries ();
+		$this->_reqs = array (); // just in case it failed too early
 
 		if ( !is_array($results) )
 			return false; // probably network error; error message should be already filled
@@ -1094,8 +1113,8 @@ class SphinxClient
 
 	function EscapeString ( $string )
 	{
-		$from = array ( '(',')','|','-','!','@','~','\"','&' );
-		$to   = array ( '\\(','\\)','\\|','\\-','\\!','\\@','\\~','\\\"', '\\&' );
+		$from = array ( '(',')','|','-','!','@','~','"','&', '/' );
+		$to   = array ( '\(','\)','\|','\-','\!','\@','\~','\"', '\&', '\/' );
 
 		return str_replace ( $from, $to, $string );
 	}
@@ -1171,7 +1190,7 @@ class SphinxClient
 }
 
 //
-// $Id: sphinxapi.php 1163 2008-02-19 21:00:40Z glook $
+// $Id: sphinxapi.php 1365 2008-07-15 00:33:22Z shodan $
 //
 
 ?>
