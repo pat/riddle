@@ -1,3 +1,5 @@
+$:.unshift File.dirname(__FILE__) + '/../lib'
+
 require 'riddle'
 require 'spec'
 require 'spec/sphinx_helper'
