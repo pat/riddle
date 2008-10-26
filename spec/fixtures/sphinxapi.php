@@ -1187,6 +1187,37 @@ class SphinxClient
 		$this->_MBPop ();
 		return $updated;
 	}
+	
+	function FilterOutput()
+	{
+		foreach ( $this->_filters as $filter )
+		{
+			$req .= pack ( "N", strlen($filter["attr"]) ) . $filter["attr"];
+			$req .= pack ( "N", $filter["type"] );
+			switch ( $filter["type"] )
+			{
+				case SPH_FILTER_VALUES:
+					$req .= pack ( "N", count($filter["values"]) );
+					foreach ( $filter["values"] as $value )
+						$req .= pack ( "N", floatval($value) ); // this uberhack is to workaround 32bit signed int limit on x32 platforms
+					break;
+
+				case SPH_FILTER_RANGE:
+					$req .= pack ( "NN", $filter["min"], $filter["max"] );
+					break;
+
+				case SPH_FILTER_FLOATRANGE:
+					$req .= $this->_PackFloat ( $filter["min"] ) . $this->_PackFloat ( $filter["max"] );
+					break;
+
+				default:
+					assert ( 0 && "internal error: unhandled filter type" );
+			}
+			$req .= pack ( "N", $filter["exclude"] );
+		}
+		
+		return $req;
+	}
 }
 
 //

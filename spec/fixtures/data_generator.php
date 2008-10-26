@@ -142,4 +142,12 @@ $file = fopen("spec/fixtures/data/keywords_with_hits.bin", "w");
 fwrite($file, $client->BuildKeywords("pat", "people", true));
 fclose($file);
 
+// filter_boolean
+$client->SetFilter("field", array(0, 1));
+
+$file = fopen("spec/fixtures/data/filter_boolean.bin", "w");
+fwrite($file, $client->FilterOutput());
+fclose($file);
+
+$client->ResetFilters();
 ?>

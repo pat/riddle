@@ -30,4 +30,9 @@ describe Riddle::Client::Filter do
     filter = Riddle::Client::Filter.new("field", 5.4..13.5, true)
     filter.query_message.should == query_contents(:filter_floats_exclude)
   end
+  
+  it "should render a filter that is an array of boolean values correctly" do
+    filter = Riddle::Client::Filter.new("field", [false, true])
+    filter.query_message.should == query_contents(:filter_boolean)
+  end
 end
