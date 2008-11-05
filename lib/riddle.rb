@@ -15,10 +15,10 @@ module Riddle #:nodoc:
     Tiny    = 8
     # Revision number for RubyForge's sake, taken from what Sphinx
     # outputs to the command line.
-    Rev     = 1371
+    Rev     = 1533
     # Release number to mark my own fixes, beyond feature parity with
     # Sphinx itself.
-    Release = 2
+    Release = 0
     
     String      = [Major, Minor, Tiny].join('.')
     GemVersion  = [Major, Minor, Tiny, Rev, Release].join('.')
