@@ -17,10 +17,11 @@ module Riddle
         self.class.settings.select { |setting|
           !send(setting).nil?
         }.collect { |setting|
-          Array(send(setting)).collect { |set|
+          conf = Array(send(setting)).collect { |set|
             "  #{setting} = #{set}"  
-          }.join("\n")
-        }
+          }
+          conf.length == 0 ? nil : conf
+        }.flatten.compact
       end
     end
   end

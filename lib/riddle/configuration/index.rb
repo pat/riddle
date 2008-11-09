@@ -8,15 +8,15 @@ module Riddle
         :phrase_boundary, :phrase_boundary_step, :html_strip,
         :html_index_attrs, :html_remove_elements, :preopen]
       
-      attr_accessor :name, :parent, :sources, :path, :mlock, :morphologies,
-        :stopword_files, :wordform_files, :exception_files, :min_word_len,
-        :charset_type, :charset_table, :ignore_characters, :min_prefix_len,
-        :min_infix_len, :prefix_field_names, :infix_field_names, :enable_star,
-        :ngram_len, :ngram_characters, :phrase_boundaries,
-        :phrase_boundary_step, :html_strip, :html_index_attrs,
-        :html_remove_element_tags, :preopen
+      attr_accessor :name, :parent, :sources, :path, :docinfo, :mlock,
+        :morphologies, :stopword_files, :wordform_files, :exception_files,
+        :min_word_len, :charset_type, :charset_table, :ignore_characters,
+        :min_prefix_len, :min_infix_len, :prefix_field_names,
+        :infix_field_names, :enable_star, :ngram_len, :ngram_characters,
+        :phrase_boundaries, :phrase_boundary_step, :html_strip,
+        :html_index_attrs, :html_remove_element_tags, :preopen
       
-      def initialize(name, sources = [])
+      def initialize(name, *sources)
         @name                     = name
         @sources                  = sources
         @morphologies             = []
@@ -81,15 +81,15 @@ module Riddle
         inherited_name = "#{name}"
         inherited_name << " : #{parent}" if parent
         (
+          @sources.collect { |s| s.render } +
           ["index #{inherited_name}", "{"] +
           settings_body +
-          ["}", ""] +
-          @sources.collect { |s| s.render }
+          ["}", ""]
         ).join("\n")
       end
       
       def valid?
-        !( @sources.length == 0 || @path.nil? ) || !@parent.nil?
+        (!@name.nil?) && (!( @sources.length == 0 || @path.nil? ) || !@parent.nil?)
       end
     end
   end

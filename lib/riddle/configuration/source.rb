@@ -1,8 +1,6 @@
 module Riddle
   class Configuration
     class Source < Riddle::Configuration::Section
-      self.settings = [:type]
-      
       attr_accessor :name, :parent, :type
       
       def initialize(name, type)

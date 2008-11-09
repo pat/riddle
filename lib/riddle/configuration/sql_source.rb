@@ -1,8 +1,8 @@
 module Riddle
   class Configuration
     class SQLSource < Riddle::Configuration::Source
-      self.settings += [:sql_host, :sql_user, :sql_pass, :sql_db, :sql_port,
-        :sql_sock, :mysql_connect_flags, :sql_query_pre, :sql_query,
+      self.settings = [:name, :sql_host, :sql_user, :sql_pass, :sql_db,
+        :sql_port, :sql_sock, :mysql_connect_flags, :sql_query_pre, :sql_query,
         :sql_query_range, :sql_range_step, :sql_attr_uint, :sql_attr_bool,
         :sql_attr_timestamp, :sql_attr_str2ordinal, :sql_attr_float,
         :sql_attr_multi, :sql_query_post, :sql_query_post_index,
