@@ -1,3 +1,7 @@
+require 'riddle/client/filter'
+require 'riddle/client/message'
+require 'riddle/client/response'
+
 module Riddle
   class VersionError < StandardError;  end
   class ResponseError < StandardError; end

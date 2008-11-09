@@ -1,9 +1,8 @@
 require 'socket'
 require 'timeout'
+
 require 'riddle/client'
-require 'riddle/client/filter'
-require 'riddle/client/message'
-require 'riddle/client/response'
+require 'riddle/configuration'
 
 module Riddle #:nodoc:
   class ConnectionError < StandardError #:nodoc:
