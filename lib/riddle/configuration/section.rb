@@ -17,9 +17,13 @@ module Riddle
         self.class.settings.select { |setting|
           !send(setting).nil?
         }.collect { |setting|
-          conf = Array(send(setting)).collect { |set|
-            "  #{setting} = #{set}"  
-          }
+          if send(setting) == ""
+            conf = "  #{setting} = "
+          else
+            conf = Array(send(setting)).collect { |set|
+              "  #{setting} = #{set}"  
+            }
+          end
           conf.length == 0 ? nil : conf
         }.flatten.compact
       end
