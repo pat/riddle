@@ -2,12 +2,7 @@ module Riddle
   class Configuration
     class Source < Riddle::Configuration::Section
       attr_accessor :name, :parent, :type
-      
-      def initialize(name, type)
-        @name = name
-        @type = type
-      end
-      
+            
       def render
         raise ConfigurationError unless valid?
         

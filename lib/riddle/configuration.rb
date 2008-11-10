@@ -26,7 +26,7 @@ module Riddle
     def render
       (
         [@indexer.render, @searchd.render] +
-        @indexes.render
+        @indexes.collect { |index| index.render }
       ).join("\n")
     end
   end
