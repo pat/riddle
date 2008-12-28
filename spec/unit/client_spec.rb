@@ -1,8 +1,9 @@
 require 'spec/spec_helper'
 
 describe Riddle::Client do
-  it "should have the same keys for both commands and versions" do
-    Riddle::Client::Commands.keys.should == Riddle::Client::Versions.keys
+  it "should have the same keys for both commands and versions, except persist" do
+    
+    (Riddle::Client::Commands.keys - [:persist]).should == Riddle::Client::Versions.keys
   end
   
   it "should default to localhost as the server" do

@@ -142,6 +142,60 @@ $file = fopen("spec/fixtures/data/keywords_with_hits.bin", "w");
 fwrite($file, $client->BuildKeywords("pat", "people", true));
 fclose($file);
 
+// filter_array
+$client->SetFilter("field", array(1, 2, 3));
+
+$file = fopen("spec/fixtures/data/filter_array.bin", "w");
+fwrite($file, $client->FilterOutput());
+fclose($file);
+
+$client->ResetFilters();
+
+// filter_array_exclude
+$client->SetFilter("field", array(1, 2, 3), true);
+
+$file = fopen("spec/fixtures/data/filter_array_exclude.bin", "w");
+fwrite($file, $client->FilterOutput());
+fclose($file);
+
+$client->ResetFilters();
+
+// filter_range
+$client->SetFilterRange("field", 1, 3);
+
+$file = fopen("spec/fixtures/data/filter_range.bin", "w");
+fwrite($file, $client->FilterOutput());
+fclose($file);
+
+$client->ResetFilters();
+
+// filter_range_exclude
+$client->SetFilterRange("field", 1, 3, true);
+
+$file = fopen("spec/fixtures/data/filter_range_exclude.bin", "w");
+fwrite($file, $client->FilterOutput());
+fclose($file);
+
+$client->ResetFilters();
+
+// filter_floats
+$client->SetFilterFloatRange("field", 5.4, 13.5);
+
+$file = fopen("spec/fixtures/data/filter_floats.bin", "w");
+fwrite($file, $client->FilterOutput());
+fclose($file);
+
+$client->ResetFilters();
+
+// filter_floats_exclude
+$client->SetFilterFloatRange("field", 5.4, 13.5, true);
+
+$file = fopen("spec/fixtures/data/filter_floats_exclude.bin", "w");
+fwrite($file, $client->FilterOutput());
+fclose($file);
+
+$client->ResetFilters();
+
 // filter_boolean
 $client->SetFilter("field", array(0, 1));
 
