@@ -36,6 +36,7 @@ describe Riddle::Configuration::DistributedIndex do
       Riddle::Configuration::RemoteIndex.new("localhost", 3313, "remote1") <<
       Riddle::Configuration::RemoteIndex.new("localhost", 3314, "remote2") <<
       Riddle::Configuration::RemoteIndex.new("localhost", 3314, "remote3")
+    index.agent_blackhole << "testbox:3312:testindex1,testindex2"
     
     index.agent_connect_timeout = 1000
     index.agent_query_timeout   = 3000
@@ -48,6 +49,7 @@ index dist1
   local = test1stemmed
   agent = localhost:3313:remote1
   agent = localhost:3314:remote2,remote3
+  agent_blackhole = testbox:3312:testindex1,testindex2
   agent_connect_timeout = 1000
   agent_query_timeout = 3000
 }

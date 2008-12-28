@@ -52,8 +52,10 @@ describe Riddle::Configuration::SQLSource do
     source.sql_query = "SELECT id, group_id, UNIX_TIMESTAMP(date_added) AS date_added, title, content FROM documents WHERE id >= $start AND id <= $end"
     source.sql_query_range = "SELECT MIN(id), MAX(id) FROM documents"
     source.sql_range_step = 1000
+    source.sql_query_killlist = "SELECT id FROM documents WHERE edited>=@last_reindex"
     source.sql_attr_uint << "author_id" << "forum_id:9" << "group_id"
     source.sql_attr_bool << "is_deleted"
+    source.sql_attr_bigint << "my_bigint_id"
     source.sql_attr_timestamp << "posted_ts" << "last_edited_ts" << "date_added"
     source.sql_attr_str2ordinal << "author_name"
     source.sql_attr_float << "lat_radians" << "long_radians"
@@ -62,6 +64,11 @@ describe Riddle::Configuration::SQLSource do
     source.sql_query_post_index = "REPLACE INTO counters (id, val) VALUES ('max_indexed_id', $maxid)"
     source.sql_ranged_throttle = 0
     source.sql_query_info = "SELECT * FROM documents WHERE id = $id"
+    source.mssql_winauth = 1
+    source.mssql_unicode = 1
+    source.unpack_zlib << "zlib_column"
+    source.unpack_mysqlcompress << "compressed_column" << "compressed_column_2"
+    source.unpack_mysqlcompress_maxsize = "16M"
 
     source.render.should == <<-SQLSOURCE
 source src1
@@ -79,10 +86,12 @@ source src1
   sql_query = SELECT id, group_id, UNIX_TIMESTAMP(date_added) AS date_added, title, content FROM documents WHERE id >= $start AND id <= $end
   sql_query_range = SELECT MIN(id), MAX(id) FROM documents
   sql_range_step = 1000
+  sql_query_killlist = SELECT id FROM documents WHERE edited>=@last_reindex
   sql_attr_uint = author_id
   sql_attr_uint = forum_id:9
   sql_attr_uint = group_id
   sql_attr_bool = is_deleted
+  sql_attr_bigint = my_bigint_id
   sql_attr_timestamp = posted_ts
   sql_attr_timestamp = last_edited_ts
   sql_attr_timestamp = date_added
@@ -94,6 +103,12 @@ source src1
   sql_query_post_index = REPLACE INTO counters (id, val) VALUES ('max_indexed_id', $maxid)
   sql_ranged_throttle = 0
   sql_query_info = SELECT * FROM documents WHERE id = $id
+  mssql_winauth = 1
+  mssql_unicode = 1
+  unpack_zlib = zlib_column
+  unpack_mysqlcompress = compressed_column
+  unpack_mysqlcompress = compressed_column_2
+  unpack_mysqlcompress_maxsize = 16M
 }
     SQLSOURCE
   end

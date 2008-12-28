@@ -47,6 +47,7 @@ describe Riddle::Configuration::DistributedIndex do
     index.docinfo                   = "extern"
     index.mlock                     = 0
     index.morphologies             << "stem_en" << "stem_ru" << "soundex"
+    index.min_stemming_len          = 1
     index.stopword_files           << "/var/data/stopwords.txt" << "/var/data/stopwords2.txt"
     index.wordform_files           << "/var/data/wordforms.txt"
     index.exception_files          << "/var/data/exceptions.txt"
@@ -67,6 +68,13 @@ describe Riddle::Configuration::DistributedIndex do
     index.html_index_attrs          = "img=alt,title; a=title"
     index.html_remove_element_tags << "style" << "script"
     index.preopen                   = 1
+    index.ondisk_dict               = 1
+    index.inplace_enable            = 1
+    index.inplace_hit_gap           = 0
+    index.inplace_docinfo_gap       = 0
+    index.inplace_reloc_factor      = 0.1
+    index.inplace_write_factor      = 0.1
+    index.index_exact_words         = 1
     
     index.render.should == <<-INDEX
 source src1
@@ -82,6 +90,7 @@ index test1
   docinfo = extern
   mlock = 0
   morphology = stem_en, stem_ru, soundex
+  min_stemming_len = 1
   stopwords = /var/data/stopwords.txt /var/data/stopwords2.txt
   wordforms = /var/data/wordforms.txt
   exceptions = /var/data/exceptions.txt
@@ -102,6 +111,13 @@ index test1
   html_index_attrs = img=alt,title; a=title
   html_remove_elements = style, script
   preopen = 1
+  ondisk_dict = 1
+  inplace_enable = 1
+  inplace_hit_gap = 0
+  inplace_docinfo_gap = 0
+  inplace_reloc_factor = 0.1
+  inplace_write_factor = 0.1
+  index_exact_words = 1
 }
     INDEX
   end
