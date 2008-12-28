@@ -142,6 +142,24 @@ $file = fopen("spec/fixtures/data/keywords_with_hits.bin", "w");
 fwrite($file, $client->BuildKeywords("pat", "people", true));
 fclose($file);
 
+// overrides
+$client->SetOverride("rating", SPH_ATTR_FLOAT, array(1 => 10.0));
+
+$file = fopen("spec/fixtures/data/overrides.bin", "w");
+fwrite($file, $client->_reqs[$client->AddQuery("test ")]);
+fclose($file);
+
+$client->ResetOverrides();
+
+// select
+$client->SetSelect("selecting");
+
+$file = fopen("spec/fixtures/data/select.bin", "w");
+fwrite($file, $client->_reqs[$client->AddQuery("test ")]);
+fclose($file);
+
+$client->SetSelect("*");
+
 // filter_array
 $client->SetFilter("field", array(1, 2, 3));
 

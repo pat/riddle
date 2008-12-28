@@ -594,11 +594,11 @@ module Riddle
       # Overrides
       message.append_int @overrides.length
       @overrides.each do |key,val|
-        message.append_string key
+        message.append_string key.to_s
         message.append_int AttributeTypes[val[:type]]
         message.append_int val[:values].length
         val[:values].each do |id,map|
-          message.append_int id
+          message.append_64bit_int id
           method = case val[:type]
           when :float
             :append_float

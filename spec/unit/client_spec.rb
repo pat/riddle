@@ -124,10 +124,24 @@ describe Riddle::Client do
     client.queue.first.should == query_contents(:field_weights)
   end
   
-  it "should build a message with acomment correctly" do
+  it "should build a message with a comment correctly" do
     client = Riddle::Client.new
     client.append_query "test ", "*", "commenting"
     client.queue.first.should == query_contents(:comment)
+  end
+  
+  it "should build a message with overrides correctly" do
+    client = Riddle::Client.new
+    client.add_override("rating", :float, {1 => 10.0})
+    client.append_query "test "
+    client.queue.first.should == query_contents(:overrides)
+  end
+  
+  it "should build a message with selects correctly" do
+    client = Riddle::Client.new
+    client.select = "selecting"
+    client.append_query "test "
+    client.queue.first.should == query_contents(:select)
   end
   
   it "should keep multiple messages in the queue" do
