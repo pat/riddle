@@ -32,7 +32,7 @@ module Riddle
         return unless @listen.nil?
         
         @listen = @port.to_s if @port && @address.nil?
-        @listen = "@address:@port" if @address && @port
+        @listen = "#{@address}:#{@port}" if @address && @port
       end
       
       def clear_deprecated
