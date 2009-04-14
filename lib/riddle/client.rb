@@ -435,14 +435,23 @@ module Riddle
     def open_socket
       raise "Already Connected" unless @socket.nil?
       
-      if @timeout == 0
-        @socket = initialise_connection
-      else
-        begin
+      tries = 0
+      begin
+        if @timeout == 0
+          @socket = initialise_connection
+        else
           Timeout.timeout(@timeout) { @socket = initialise_connection }
-        rescue Timeout::Error
+        end
+      rescue Timeout::Error
+        raise Riddle::ConnectionError,
+          "Connection to #{@server} on #{@port} timed out after #{@timeout} seconds"
+      rescue Errno::ECONNREFUSED, Errno::ECONNRESET,  Errno::EPIPE => e
+        tries += 1
+        if tries < 5
+          retry
+        else
           raise Riddle::ConnectionError,
-            "Connection to #{@server} on #{@port} timed out after #{@timeout} seconds"
+            "Connection to #{@server} on #{@port} failed. #{e.message}"
         end
       end
       
