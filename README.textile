@@ -84,3 +84,4 @@ Thanks to the following people who have contributed to Riddle in some shape or f
 * Mark Lane
 * Xavier Noria
 * Henrik Nye
+* Kristopher Chambers
