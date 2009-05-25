@@ -59,7 +59,7 @@ describe Riddle::Configuration::DistributedIndex do
     index.min_infix_len             = 0
     index.prefix_field_names       << "filename"
     index.infix_field_names        << "url" << "domain"
-    index.enable_star               = 1
+    index.enable_star               = true
     index.ngram_len                 = 1
     index.ngram_characters         << "U+3000..U+2FA1F"
     index.phrase_boundaries        << "." << "?" << "!" << "U+2026"
