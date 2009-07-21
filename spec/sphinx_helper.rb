@@ -23,6 +23,7 @@ class SphinxHelper
   
   def setup_mysql
     server = Mysql.new @host, @username, @password
+    server.set_server_option(Mysql::OPTION_MULTI_STATEMENTS_ON)
 
     unless server.list_dbs.include?("riddle_sphinx_spec")
       server.create_db "riddle_sphinx_spec"
@@ -31,9 +32,9 @@ class SphinxHelper
     server.query "USE riddle_sphinx_spec;"
     
     structure = File.open("spec/fixtures/sql/structure.sql") { |f| f.read }
-    # Block ensures multiple statements can be run
-    server.query(structure) { }
-    data      = File.open("spec/fixtures/sql/data.sql") { |f|
+    # Block ensures multiple statement transaction is closed.
+    server.query(structure) { |response| }
+    data = File.open("spec/fixtures/sql/data.sql") { |f|
       while line = f.gets
         server.query line
       end
