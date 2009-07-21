@@ -15,16 +15,16 @@ module Riddle #:nodoc:
     Tiny    = 9
     # Revision number for RubyForge's sake, taken from what Sphinx
     # outputs to the command line.
-    Rev     = 1566
+    Rev     = 1785
     # Release number to mark my own fixes, beyond feature parity with
     # Sphinx itself.
-    Release = 2
+    Release = 0
     
     String      = [Major, Minor, Tiny].join('.')
     GemVersion  = [Major, Minor, Tiny, Rev, Release].join('.')
   end
   
   def self.escape(string)
-    string.gsub(/[\(\)\|\-!@~"&\/\\]/) { |char| "\\#{char}" }
+    string.gsub(/[\(\)\|\-!@~"&\/\\\^\$=]/) { |char| "\\#{char}" }
   end
 end

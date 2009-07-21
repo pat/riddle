@@ -1,7 +1,7 @@
 <?php
 
 //
-// $Id: sphinxapi.php 1566 2008-11-17 19:06:44Z shodan $
+// $Id: sphinxapi.php 1775 2009-04-06 22:15:58Z shodan $
 //
 
 //
@@ -23,12 +23,16 @@ define ( "SEARCHD_COMMAND_EXCERPT",	1 );
 define ( "SEARCHD_COMMAND_UPDATE",	2 );
 define ( "SEARCHD_COMMAND_KEYWORDS",3 );
 define ( "SEARCHD_COMMAND_PERSIST",	4 );
+define ( "SEARCHD_COMMAND_STATUS",	5 );
+define ( "SEARCHD_COMMAND_QUERY",	6 );
 
 /// current client-side command implementation versions
 define ( "VER_COMMAND_SEARCH",		0x116 );
 define ( "VER_COMMAND_EXCERPT",		0x100 );
 define ( "VER_COMMAND_UPDATE",		0x102 );
 define ( "VER_COMMAND_KEYWORDS",	0x100 );
+define ( "VER_COMMAND_STATUS",		0x100 );
+define ( "VER_COMMAND_QUERY",		0x100 );
 
 /// known searchd status codes
 define ( "SEARCHD_OK",				0 );
@@ -52,6 +56,7 @@ define ( "SPH_RANK_NONE",			2 );	///< no ranking, all matches get a weight of 1
 define ( "SPH_RANK_WORDCOUNT",		3 );	///< simple word-count weighting, rank is a weighted sum of per-field keyword occurence counts
 define ( "SPH_RANK_PROXIMITY",		4 );
 define ( "SPH_RANK_MATCHANY",		5 );
+define ( "SPH_RANK_FIELDMASK",		6 );
 
 /// known sort modes
 define ( "SPH_SORT_RELEVANCE",		0 );
@@ -560,6 +565,17 @@ class SphinxClient
 			return false;
 		}
 
+		// send my version
+		// this is a subtle part. we must do it before (!) reading back from searchd.
+		// because otherwise under some conditions (reported on FreeBSD for instance)
+		// TCP stack could throttle write-write-read pattern because of Nagle.
+		if ( !$this->_Send ( $fp, pack ( "N", 1 ), 4 ) )
+		{
+			fclose ( $fp );
+			$this->_error = "failed to send client protocol version";
+			return false;
+		}
+
 		// check version
 		list(,$v) = unpack ( "N*", fread ( $fp, 4 ) );
 		$v = (int)$v;
@@ -570,9 +586,6 @@ class SphinxClient
 			return false;
 		}
 
-		// all ok, send my version
-		if ( !$this->_Send ( $fp, pack ( "N", 1 ), 4 ) )
-			return false;
 		return $fp;
 	}
 
@@ -1061,10 +1074,7 @@ class SphinxClient
 			return false;
 		}
 
-		////////////////////////////
 		// send query, get response
-		////////////////////////////
-
 		$nreqs = count($this->_reqs);
 		$req = join ( "", $this->_reqs );
 		$len = 4+strlen($req);
@@ -1077,12 +1087,16 @@ class SphinxClient
 			return false;
 		}
 
+		// query sent ok; we can reset reqs now
 		$this->_reqs = array ();
 
-		//////////////////
-		// parse response
-		//////////////////
+		// parse and return response
+		return $this->_ParseSearchResponse ( $response, $nreqs );
+	}
 
+	/// parse and return search query (or queries) response
+	function _ParseSearchResponse ( $response, $nreqs )
+	{
 		$p = 0; // current position
 		$max = strlen($response); // max position for checks, to protect against broken responses
 
@@ -1436,8 +1450,8 @@ class SphinxClient
 
 	function EscapeString ( $string )
 	{
-		$from = array ( '(',')','|','-','!','@','~','"','&', '/', '\\' );
-		$to   = array ( '\(','\)','\|','\-','\!','\@','\~','\"', '\&', '\/', '\\\\' );
+		$from = array ( '\\', '(',')','|','-','!','@','~','"','&', '/', '^', '$', '=' );
+		$to   = array ( '\\\\', '\(','\)','\|','\-','\!','\@','\~','\"', '\&', '\/', '\^', '\$', '\=' );
 
 		return str_replace ( $from, $to, $string );
 	}
@@ -1555,6 +1569,43 @@ class SphinxClient
 		
 		return true;
 	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// status
+	//////////////////////////////////////////////////////////////////////////
+
+	function Status ()
+	{
+		$this->_MBPush ();
+		if (!( $fp = $this->_Connect() ))
+		{
+			$this->_MBPop();
+			return false;
+		}
+
+		$req = pack ( "nnNN", SEARCHD_COMMAND_STATUS, VER_COMMAND_STATUS, 4, 1 ); // len=4, body=1
+		if ( !( $this->_Send ( $fp, $req, 12 ) ) ||
+			 !( $response = $this->_GetResponse ( $fp, VER_COMMAND_STATUS ) ) )
+		{
+			$this->_MBPop ();
+			return false;
+		}
+
+		$res = substr ( $response, 4 ); // just ignore length, error handling, etc
+		$p = 0;
+		list ( $rows, $cols ) = array_values ( unpack ( "N*N*", substr ( $response, $p, 8 ) ) ); $p += 8;
+
+		$res = array();
+		for ( $i=0; $i<$rows; $i++ )
+			for ( $j=0; $j<$cols; $j++ )
+		{
+			list(,$len) = unpack ( "N*", substr ( $response, $p, 4 ) ); $p += 4;
+			$res[$i][] = substr ( $response, $p, $len ); $p += $len;
+		}
+
+		$this->_MBPop ();
+		return $res;
+	}
 	
 	// Added for Riddle - code is taken from AddQuery
 	function FilterOutput()
@@ -1591,5 +1642,5 @@ class SphinxClient
 }
 
 //
-// $Id: sphinxapi.php 1566 2008-11-17 19:06:44Z shodan $
+// $Id: sphinxapi.php 1775 2009-04-06 22:15:58Z shodan $
 //

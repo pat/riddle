@@ -34,14 +34,18 @@ module Riddle
       :excerpt  => 1, # SEARCHD_COMMAND_EXCERPT
       :update   => 2, # SEARCHD_COMMAND_UPDATE
       :keywords => 3, # SEARCHD_COMMAND_KEYWORDS
-      :persist  => 4  # SEARCHD_COMMAND_PERSIST
+      :persist  => 4, # SEARCHD_COMMAND_PERSIST
+      :status   => 5, # SEARCHD_COMMAND_STATUS
+      :query    => 6  # SEARCHD_COMMAND_QUERY
     }
     
     Versions = {
       :search   => 0x116, # VER_COMMAND_SEARCH
       :excerpt  => 0x100, # VER_COMMAND_EXCERPT
       :update   => 0x102, # VER_COMMAND_UPDATE
-      :keywords => 0x100  # VER_COMMAND_KEYWORDS
+      :keywords => 0x100, # VER_COMMAND_KEYWORDS
+      :status   => 0x100, # VER_COMMAND_STATUS
+      :query    => 0x100  # VER_COMMAND_QUERY
     }
     
     Statuses = {
@@ -67,7 +71,8 @@ module Riddle
       :none           => 2, # SPH_RANK_NONE
       :wordcount      => 3, # SPH_RANK_WORDCOUNT
       :proximity      => 4, # SPH_RANK_PROXIMITY
-      :match_any      => 5  # SPH_RANK_MATCHANY
+      :match_any      => 5, # SPH_RANK_MATCHANY
+      :fieldmask      => 6  # SPH_RANK_FIELDMASK
     }
     
     SortModes = {
@@ -396,6 +401,20 @@ module Riddle
       end
     end
     
+    def status
+      response = Response.new request(
+        :status, Message.new
+      )
+      
+      rows, cols = response.next_int, response.next_int
+      
+      (0...rows).collect do |row|
+        (0...cols).inject([]) do |array, col|
+          array << response.next
+        end
+      end
+    end
+    
     def add_override(attribute, type, values)
       @overrides[attribute] = {:type => type, :values => values}
     end
@@ -458,15 +477,15 @@ module Riddle
     def initialise_connection
       socket = TCPSocket.new @server, @port
       
+      # Send version
+      socket.send [1].pack('N'), 0
+      
       # Checking version
       version = socket.recv(4).unpack('N*').first
       if version < 1
         socket.close
         raise VersionError, "Can only connect to searchd version 1.0 or better, not version #{version}"
       end
-      
-      # Send version
-      socket.send [1].pack('N'), 0
       
       socket
     end

@@ -48,7 +48,7 @@ not. It's just my name: Pat.
     ).should == [
       <<-SENTENCE
 This is a really long sentence written by <em>Pat</em>. It has to be over 256
-characters long, between keywords. But what is the keyword?  &#8230;  interested in finding out,
+characters long, between keywords. But what is the  &#8230; 're really interested in finding out,
 yeah? Excerpts are particularly riveting. This keyword, however, is
 not. It's just my name: <em>Pat</em>.
       SENTENCE
@@ -77,7 +77,7 @@ not. It's just my name: Pat.
     ).should == [
       <<-SENTENCE
 This is a really long sentence written by <em>Pat</em>. It has to be over 256
-characters long, between keywords. But what is the keyword?  ---  interested in finding out,
+characters long, between keywords. But what is the  --- 're really interested in finding out,
 yeah? Excerpts are particularly riveting. This keyword, however, is
 not. It's just my name: <em>Pat</em>.
       SENTENCE
