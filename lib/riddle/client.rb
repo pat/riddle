@@ -113,8 +113,11 @@ module Riddle
       :match_mode, :sort_mode, :sort_by, :weights, :id_range, :filters,
       :group_by, :group_function, :group_clause, :group_distinct, :cut_off,
       :retry_count, :retry_delay, :anchor, :index_weights, :rank_mode,
-      :max_query_time, :field_weights, :timeout, :overrides, :select
+      :max_query_time, :field_weights, :timeout, :overrides, :select,
+      :connection_proc
     attr_reader :queue
+
+    @@connection_proc = nil
     
     # Can instantiate with a specific server and port - otherwise it assumes
     # defaults of localhost and 3312 respectively. All other settings can be
@@ -477,7 +480,7 @@ module Riddle
     
     def initialise_connection
       socket = initialise_socket
-
+      
       # Checking version
       version = socket.recv(4).unpack('N*').first
       if version < 1
@@ -494,7 +497,13 @@ module Riddle
     def initialise_socket
       tries = 0
       begin
-        socket = TCPSocket.new @server, @port
+        socket = if @connection_proc.respond_to?(:call)
+          @connection_proc.call(self)
+        elsif @@connection_proc.respond_to?(:call)
+          @@connection_proc.call(self)
+        else
+          TCPSocket.new @server, @port
+        end
       rescue Errno::ECONNREFUSED => e
         retry if (tries += 1) < 5
         raise Riddle::ConnectionError,
@@ -722,6 +731,14 @@ module Riddle
       else
         is_multi ? response.next_int_array      : response.next_int
       end
+    end
+
+    def self.connection_proc=(value)
+      @@connection_proc = value
+    end
+
+    def self.connection_proc
+      @@connection_proc
     end
   end
 end
