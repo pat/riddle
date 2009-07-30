@@ -46,7 +46,7 @@ spec = Gem::Specification.new do |s|
   s.files             = FileList[
     "lib/**/*.rb",
     "MIT-LICENCE",
-    "README"
+    "README.textile"
   ]
 end
 
