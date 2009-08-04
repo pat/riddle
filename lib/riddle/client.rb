@@ -435,23 +435,14 @@ module Riddle
     def open_socket
       raise "Already Connected" unless @socket.nil?
       
-      tries = 0
-      begin
-        if @timeout == 0
-          @socket = initialise_connection
-        else
+      if @timeout == 0
+        @socket = initialise_connection
+      else
+        begin
           Timeout.timeout(@timeout) { @socket = initialise_connection }
-        end
-      rescue Timeout::Error
-        raise Riddle::ConnectionError,
-          "Connection to #{@server} on #{@port} timed out after #{@timeout} seconds"
-      rescue Errno::ECONNREFUSED, Errno::ECONNRESET,  Errno::EPIPE => e
-        tries += 1
-        if tries < 5
-          retry
-        else
+        rescue Timeout::Error
           raise Riddle::ConnectionError,
-            "Connection to #{@server} on #{@port} failed. #{e.message}"
+            "Connection to #{@server} on #{@port} timed out after #{@timeout} seconds"
         end
       end
       
@@ -483,8 +474,15 @@ module Riddle
     end
     
     def initialise_connection
-      socket = TCPSocket.new @server, @port
-      
+      tries = 0
+      begin
+        socket = TCPSocket.new @server, @port
+      rescue Errno::ECONNREFUSED, Errno::ECONNRESET, Errno::EPIPE => e
+        retry if (tries += 1) < 5
+        raise Riddle::ConnectionError,
+          "Connection to #{@server} on #{@port} failed. #{e.message}"
+      end
+
       # Send version
       socket.send [1].pack('N'), 0
       

@@ -206,4 +206,17 @@ describe Riddle::Client do
     
     server.close
   end
+
+  context "connection retrying" do
+    it "should try fives time when connection refused" do
+      client = Riddle::Client.new
+      client.port    = 3314
+
+      TCPSocket.should_receive(:new).with('localhost', 3314).exactly(5).times.and_raise(Errno::ECONNREFUSED)
+
+      lambda {
+        client.send(:connect) { |socket| }
+      }.should raise_error(Riddle::ConnectionError)
+    end
+  end
 end
