@@ -1,4 +1,4 @@
-DROP TABLE `people`;
+DROP TABLE IF EXISTS `people`;
 
 CREATE TABLE `people` (
   `id` int(11) NOT NULL auto_increment,
