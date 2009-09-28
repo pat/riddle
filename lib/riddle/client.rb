@@ -474,14 +474,7 @@ module Riddle
     end
     
     def initialise_connection
-      tries = 0
-      begin
-        socket = TCPSocket.new @server, @port
-      rescue Errno::ECONNREFUSED => e
-        retry if (tries += 1) < 5
-        raise Riddle::ConnectionError,
-          "Connection to #{@server} on #{@port} failed. #{e.message}"
-      end
+      socket = initialise_socket
 
       # Send version
       socket.send [1].pack('N'), 0
@@ -491,6 +484,19 @@ module Riddle
       if version < 1
         socket.close
         raise VersionError, "Can only connect to searchd version 1.0 or better, not version #{version}"
+      end
+      
+      socket
+    end
+    
+    def initialise_socket
+      tries = 0
+      begin
+        socket = TCPSocket.new @server, @port
+      rescue Errno::ECONNREFUSED => e
+        retry if (tries += 1) < 5
+        raise Riddle::ConnectionError,
+          "Connection to #{@server} on #{@port} failed. #{e.message}"
       end
       
       socket
