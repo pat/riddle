@@ -5,14 +5,14 @@ module Riddle
       @path           = path
     end
     
-    def index
-      run_index('--all')
+    def index(*indexes)
+      indexes << '--all' if indexes.empty?
+      
+      cmd = "indexer --config #{@path} #{indexes.join(' ')}"
+      cmd << " --rotate" if running?
+      `#{cmd}`
     end
-
-    def partially_index(indexes)
-      run_index(indexes.join(" "))
-    end
-
+    
     def start
       return if running?
       
@@ -50,13 +50,6 @@ module Riddle
       !!pid && !!Process.kill(0, pid.to_i)
     rescue
       false
-    end
-
-    private
-    def run_index(name)
-      cmd = "indexer --config #{@path} #{name}"
-      cmd << " --rotate" if running?
-      `#{cmd}`
     end
   end
 end
