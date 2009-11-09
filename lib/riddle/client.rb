@@ -40,9 +40,9 @@ module Riddle
     }
     
     Versions = {
-      :search   => 0x116, # VER_COMMAND_SEARCH
+      :search   => 0x113, # VER_COMMAND_SEARCH
       :excerpt  => 0x100, # VER_COMMAND_EXCERPT
-      :update   => 0x102, # VER_COMMAND_UPDATE
+      :update   => 0x101, # VER_COMMAND_UPDATE
       :keywords => 0x100, # VER_COMMAND_KEYWORDS
       :status   => 0x100, # VER_COMMAND_STATUS
       :query    => 0x100  # VER_COMMAND_QUERY
@@ -421,6 +421,8 @@ module Riddle
     def open
       open_socket
       
+      return if Versions[:search] < 0x116
+      
       @socket.send [
         Commands[:persist], 0, 4, 1
       ].pack("nnNN"), 0
@@ -476,15 +478,15 @@ module Riddle
     def initialise_connection
       socket = initialise_socket
 
-      # Send version
-      socket.send [1].pack('N'), 0
-      
       # Checking version
       version = socket.recv(4).unpack('N*').first
       if version < 1
         socket.close
         raise VersionError, "Can only connect to searchd version 1.0 or better, not version #{version}"
       end
+      
+      # Send version
+      socket.send [1].pack('N'), 0
       
       socket
     end
@@ -629,7 +631,9 @@ module Riddle
       
       message.append_string comments
       
-      # Overrides
+      return message.to_s if Versions[:search] < 0x116
+      
+      # Overrides  
       message.append_int @overrides.length
       @overrides.each do |key,val|
         message.append_string key.to_s
@@ -685,24 +689,12 @@ module Riddle
       message = Message.new
       
       message.append_string index
-      message.append_int attributes.length
-      attributes.each_with_index do |attribute, index|
-        message.append_string attribute
-        message.append_boolean values_by_doc.values.first[index].is_a?(Array)
-      end
+      message.append_array attributes
       
       message.append_int values_by_doc.length
       values_by_doc.each do |key,values|
         message.append_64bit_int key # document ID
-        values.each do |value|
-          case value
-          when Array
-            message.append_int value.length
-            message.append_ints *value
-          else
-            message.append_int value
-          end
-        end
+        message.append_ints *values # array of new values (integers)
       end
       
       message.to_s

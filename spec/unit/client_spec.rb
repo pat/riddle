@@ -130,18 +130,20 @@ describe Riddle::Client do
     client.queue.first.should == query_contents(:comment)
   end
   
-  it "should build a message with overrides correctly" do
-    client = Riddle::Client.new
-    client.add_override("rating", :float, {1 => 10.0})
-    client.append_query "test "
-    client.queue.first.should == query_contents(:overrides)
-  end
+  if SphinxVersion == '0.9.9'
+    it "should build a message with overrides correctly" do
+      client = Riddle::Client.new
+      client.add_override("rating", :float, {1 => 10.0})
+      client.append_query "test "
+      client.queue.first.should == query_contents(:overrides)
+    end
   
-  it "should build a message with selects correctly" do
-    client = Riddle::Client.new
-    client.select = "selecting"
-    client.append_query "test "
-    client.queue.first.should == query_contents(:select)
+    it "should build a message with selects correctly" do
+      client = Riddle::Client.new
+      client.select = "selecting"
+      client.append_query "test "
+      client.queue.first.should == query_contents(:select)
+    end
   end
   
   it "should keep multiple messages in the queue" do

@@ -28,7 +28,7 @@ describe "Sphinx Excepts" do
   end
   
   it "should separate matches that are far apart by an ellipsis by default" do
-    @client.excerpts(
+    excerpts = @client.excerpts(
       :index        => "people",
       :words        => "Pat",
       :docs         => [
@@ -45,18 +45,32 @@ not. It's just my name: Pat.
         ],
       :before_match => "<em>",
       :after_match  => "</em>"
-    ).should == [
-      <<-SENTENCE
+    )
+    
+    
+    if SphinxVersion == '0.9.9'
+      excerpts.should == [
+        <<-SENTENCE
 This is a really long sentence written by <em>Pat</em>. It has to be over 256
 characters long, between keywords. But what is the  &#8230; 're really interested in finding out,
 yeah? Excerpts are particularly riveting. This keyword, however, is
 not. It's just my name: <em>Pat</em>.
-      SENTENCE
-    ]
+        SENTENCE
+      ]
+    else
+      excerpts.should == [
+        <<-SENTENCE
+This is a really long sentence written by <em>Pat</em>. It has to be over 256
+characters long, between keywords. But what is the keyword?  &#8230;  interested in finding out,
+yeah? Excerpts are particularly riveting. This keyword, however, is
+not. It's just my name: <em>Pat</em>.
+        SENTENCE
+      ]
+    end
   end
   
   it "should use the provided separator" do
-    @client.excerpts(
+    excerpts = @client.excerpts(
       :index           => "people",
       :words           => "Pat",
       :docs            => [
@@ -74,14 +88,27 @@ not. It's just my name: Pat.
       :before_match    => "<em>",
       :after_match     => "</em>",
       :chunk_separator => " --- "
-    ).should == [
-      <<-SENTENCE
+    )
+    
+    if SphinxVersion == '0.9.9'
+      excerpts.should == [
+        <<-SENTENCE
 This is a really long sentence written by <em>Pat</em>. It has to be over 256
 characters long, between keywords. But what is the  --- 're really interested in finding out,
 yeah? Excerpts are particularly riveting. This keyword, however, is
 not. It's just my name: <em>Pat</em>.
-      SENTENCE
-    ]
+        SENTENCE
+      ]
+    else
+      excerpts.should == [
+        <<-SENTENCE
+This is a really long sentence written by <em>Pat</em>. It has to be over 256
+characters long, between keywords. But what is the keyword?  ---  interested in finding out,
+yeah? Excerpts are particularly riveting. This keyword, however, is
+not. It's just my name: <em>Pat</em>.
+        SENTENCE
+      ]
+    end
   end
   
   it "should return multiple results for multiple documents" do
