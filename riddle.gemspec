@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{riddle}
-  s.version = "1.0.0"
+  s.version = "1.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Pat Allan"]
-  s.date = %q{2009-11-09}
+  s.date = %q{2009-11-16}
   s.description = %q{A Ruby API and configuration helper for the Sphinx search service.}
   s.email = %q{pat@freelancing-gods.com}
   s.extra_rdoc_files = [
@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
      "lib/riddle/0.9.9.rb",
      "lib/riddle/0.9.9/client.rb",
      "lib/riddle/0.9.9/client/filter.rb",
+     "lib/riddle/0.9.9/configuration/searchd.rb",
      "lib/riddle/client.rb",
      "lib/riddle/client/filter.rb",
      "lib/riddle/client/message.rb",
@@ -58,7 +59,6 @@ Gem::Specification.new do |s|
      "spec/fixtures/data/filter_boolean.bin",
      "spec/fixtures/data/filter_floats.bin",
      "spec/fixtures/data/filter_floats_exclude.bin",
-     "spec/fixtures/data/filter_floats_range.bin",
      "spec/fixtures/data/filter_range.bin",
      "spec/fixtures/data/filter_range_exclude.bin",
      "spec/fixtures/data/group.bin",
