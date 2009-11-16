@@ -8,33 +8,51 @@ describe "Sphinx Client" do
   end
 
   after :each do
-    # change connection_proc back to nil, so other specs will not use it
-    Riddle::Client.connection_proc = nil
+    Riddle::Client.connection = nil
   end
   
-  it "should work with given @connection_proc" do
-    @client.connection_proc = lambda { |client| TCPsocket.new(client.server, client.port) }
-    @client.query("smith").should be_kind_of(Hash)
-  end
-
-  it "should work with given @@connection_proc" do
-    Riddle::Client.connection_proc = lambda { |client| TCPsocket.new(client.server, client.port) }
-    @client.query("smith").should be_kind_of(Hash)
-  end
-
-  it "should run @@connection_proc" do
-    Riddle::Client.connection_proc = lambda { |client| raise RiddleSpecConnectionProcError }
-    lambda { @client.query("smith") }.should raise_error(RiddleSpecConnectionProcError)
+  describe '.connection' do
+    it "should use the given block" do
+      Riddle::Client.connection = lambda { |client|
+        TCPsocket.new(client.server, client.port)
+      }
+      @client.query("smith").should be_kind_of(Hash)
+    end
+    
+    it "should fail with errors from the given block" do
+      Riddle::Client.connection = lambda { |client|
+        raise RiddleSpecConnectionProcError
+      }
+      lambda { @client.query("smith") }.
+        should raise_error(RiddleSpecConnectionProcError)
+    end
   end
   
-  it "should run @connection_proc" do
-    @client.connection_proc = lambda { |client| raise RiddleSpecConnectionProcError }
-    lambda { @client.query("smith") }.should raise_error(RiddleSpecConnectionProcError)
-  end
+  describe '#connection' do
+    it "use the given block" do
+      @client.connection = lambda { |client|
+        TCPsocket.new(client.server, client.port)
+      }
+      @client.query("smith").should be_kind_of(Hash)
+    end
 
-  it "should run @connection_proc first to allow per object customization" do
-    Riddle::Client.connection_proc = lambda { |client| raise RiddleSpecConnectionProcError }
-    @client.connection_proc = lambda { |client| TCPsocket.new(client.server, client.port) }
-    lambda { @client.query("smith") }.should_not raise_error
+    it "should fail with errors from the given block" do
+      @client.connection = lambda { |client|
+        raise RiddleSpecConnectionProcError
+      }
+      lambda { @client.query("smith") }.
+        should raise_error(RiddleSpecConnectionProcError)
+    end
+
+    it "should prioritise instance over class connection" do
+      Riddle::Client.connection = lambda { |client|
+        raise RiddleSpecConnectionProcError
+      }
+      @client.connection = lambda { |client|
+        TCPsocket.new(client.server, client.port)
+      }
+    
+      lambda { @client.query("smith") }.should_not raise_error
+    end
   end
 end

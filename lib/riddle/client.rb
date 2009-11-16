@@ -114,10 +114,16 @@ module Riddle
       :group_by, :group_function, :group_clause, :group_distinct, :cut_off,
       :retry_count, :retry_delay, :anchor, :index_weights, :rank_mode,
       :max_query_time, :field_weights, :timeout, :overrides, :select,
-      :connection_proc
+      :connection
     attr_reader :queue
+    
+    def self.connection=(value)
+      Thread.current[:riddle_connection] = value
+    end
 
-    @@connection_proc = nil
+    def self.connection
+      Thread.current[:riddle_connection]
+    end
     
     # Can instantiate with a specific server and port - otherwise it assumes
     # defaults of localhost and 3312 respectively. All other settings can be
@@ -497,10 +503,10 @@ module Riddle
     def initialise_socket
       tries = 0
       begin
-        socket = if @connection_proc.respond_to?(:call)
-          @connection_proc.call(self)
-        elsif @@connection_proc.respond_to?(:call)
-          @@connection_proc.call(self)
+        socket = if self.connection
+          self.connection.call(self)
+        elsif self.class.connection
+          self.class.connection.call(self)
         else
           TCPSocket.new @server, @port
         end
@@ -731,14 +737,6 @@ module Riddle
       else
         is_multi ? response.next_int_array      : response.next_int
       end
-    end
-
-    def self.connection_proc=(value)
-      @@connection_proc = value
-    end
-
-    def self.connection_proc
-      @@connection_proc
     end
   end
 end
