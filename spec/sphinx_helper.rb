@@ -26,7 +26,7 @@ class SphinxHelper
     server.set_server_option(Mysql::OPTION_MULTI_STATEMENTS_ON)
 
     unless server.list_dbs.include?("riddle")
-      server.create_db "riddle"
+      server.query "CREATE DATABASE riddle;"
     end
 
     server.query "USE riddle;"
