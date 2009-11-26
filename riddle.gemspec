@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{riddle}
-  s.version = "1.0.1"
+  s.version = "1.0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Pat Allan"]
@@ -96,6 +96,7 @@ Gem::Specification.new do |s|
      "spec/fixtures/sql/data.sql",
      "spec/fixtures/sql/structure.sql",
      "spec/functional",
+     "spec/functional/connection_spec.rb",
      "spec/functional/excerpt_spec.rb",
      "spec/functional/keywords_spec.rb",
      "spec/functional/persistance_spec.rb",
