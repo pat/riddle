@@ -3,6 +3,7 @@ require 'spec/rake/spectask'
 Spec::Rake::SpecTask.new(:spec) do |spec|
   spec.libs      << 'lib' << 'spec'
   spec.spec_files = FileList['spec/**/*_spec.rb']
+  spec.spec_opts << "-c"
 end
 
 Spec::Rake::SpecTask.new(:rcov) do |spec|
@@ -12,4 +13,4 @@ Spec::Rake::SpecTask.new(:rcov) do |spec|
   spec.rcov      = true
 end
 
-task :spec      => :check_dependencies
+task :spec => :check_dependencies
