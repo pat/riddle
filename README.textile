@@ -79,3 +79,4 @@ Thanks to the following people who have contributed to Riddle in some shape or f
 * Dylan Egan
 * Jerry Vos
 * Piotr Sarnacki
+* Tim Preston
