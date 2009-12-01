@@ -1,10 +1,6 @@
 require 'socket'
 require 'timeout'
 
-require 'riddle/client'
-require 'riddle/configuration'
-require 'riddle/controller'
-
 module Riddle #:nodoc:
   class ConnectionError < StandardError #:nodoc:
     #
@@ -22,3 +18,10 @@ module Riddle #:nodoc:
     string.gsub(escape_pattern) { |char| "\\#{char}" }
   end
 end
+
+require 'riddle/auto_version'
+require 'riddle/client'
+require 'riddle/configuration'
+require 'riddle/controller'
+
+Riddle::AutoVersion.configure
