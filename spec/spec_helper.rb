@@ -13,7 +13,7 @@ Spec::Runner.configure do |config|
   sphinx.generate_configuration
   sphinx.index
   
-  controller = Riddle::Controller.new(Riddle::Configuration.new, '')
+  controller = Riddle::Controller.new(nil, '')
   SphinxVersion = controller.sphinx_version
   
   config.before :all do

@@ -12,7 +12,14 @@ module Riddle
     end
     
     def sphinx_version
+      stderr      = $stderr.dup
+      read, write = IO.pipe
+      $stderr.reopen(write)
       `#{indexer}`[/^Sphinx (\d\.\d\.\d)/, 1]
+    rescue
+      nil
+    ensure
+      $stderr.reopen(stderr)
     end
     
     def index(*indexes)
