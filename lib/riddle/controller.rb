@@ -15,7 +15,7 @@ module Riddle
       stderr      = $stderr.dup
       read, write = IO.pipe
       $stderr.reopen(write)
-      `#{indexer}`[/^Sphinx (\d\.\d\.\d)/, 1]
+      `#{indexer}`[/^Sphinx (\d+\.\d+\.\d+)/, 1]
     rescue
       nil
     ensure
