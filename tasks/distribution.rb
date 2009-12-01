@@ -19,9 +19,6 @@ Jeweler::Tasks.new do |gem|
     'LICENSE',
     'README.textile'
   ]
-  gem.test_files = FileList[
-    'spec/**/*'
-  ]
 end
 
 Jeweler::GemcutterTasks.new
