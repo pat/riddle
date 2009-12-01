@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{riddle}
-  s.version = "1.0.3"
+  s.version = "1.0.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Pat Allan"]
@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
      "lib/riddle/0.9.9/client.rb",
      "lib/riddle/0.9.9/client/filter.rb",
      "lib/riddle/0.9.9/configuration/searchd.rb",
+     "lib/riddle/auto_version.rb",
      "lib/riddle/client.rb",
      "lib/riddle/client/filter.rb",
      "lib/riddle/client/message.rb",
@@ -52,7 +53,11 @@ Gem::Specification.new do |s|
      "spec/functional/search_spec.rb",
      "spec/functional/status_spec.rb",
      "spec/functional/update_spec.rb",
+     "spec/riddle/auto_version_spec.rb",
+     "spec/riddle/client_spec.rb",
+     "spec/riddle/configuration_spec.rb",
      "spec/riddle/controller_spec.rb",
+     "spec/riddle_spec.rb",
      "spec/spec_helper.rb",
      "spec/sphinx_helper.rb",
      "spec/unit/client_spec.rb",
