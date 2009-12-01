@@ -48,7 +48,7 @@ not. It's just my name: Pat.
     )
     
     
-    if SphinxVersion == '0.9.9'
+    if Riddle.loaded_version == '0.9.9'
       excerpts.should == [
         <<-SENTENCE
 This is a really long sentence written by <em>Pat</em>. It has to be over 256
@@ -90,7 +90,7 @@ not. It's just my name: Pat.
       :chunk_separator => " --- "
     )
     
-    if SphinxVersion == '0.9.9'
+    if Riddle.loaded_version == '0.9.9'
       excerpts.should == [
         <<-SENTENCE
 This is a really long sentence written by <em>Pat</em>. It has to be over 256

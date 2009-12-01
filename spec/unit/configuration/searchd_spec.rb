@@ -1,7 +1,7 @@
 require 'spec/spec_helper'
 
 describe Riddle::Configuration::Searchd do
-  if SphinxVersion == '0.9.9'
+  if Riddle.loaded_version == '0.9.9'
     it "should be invalid without a listen or pid_file" do
       searchd = Riddle::Configuration::Searchd.new
       searchd.should_not be_valid
@@ -60,7 +60,7 @@ describe Riddle::Configuration::Searchd do
     searchd.port      = 3312
     searchd.pid_file  = "file.pid"
     
-    if SphinxVersion == '0.9.9'
+    if Riddle.loaded_version == '0.9.9'
       searchd.render.should == <<-SEARCHD
 searchd
 {

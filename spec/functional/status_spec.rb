@@ -1,6 +1,6 @@
 require 'spec/spec_helper'
 
-if SphinxVersion == '0.9.9'
+if Riddle.loaded_version == '0.9.9'
   describe "Sphinx Status" do
     before :each do
       @client = Riddle::Client.new("localhost", 3313)

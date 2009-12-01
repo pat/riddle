@@ -1,9 +1,6 @@
 $:.unshift File.dirname(__FILE__) + '/../lib'
 
-# SphinxVersion = ENV['VERSION'] || '0.9.8'
-
 require 'riddle'
-# require "riddle/#{SphinxVersion}"
 require 'spec'
 require 'spec/sphinx_helper'
 
@@ -13,11 +10,8 @@ Spec::Runner.configure do |config|
   sphinx.generate_configuration
   sphinx.index
   
-  controller = Riddle::Controller.new(nil, '')
-  SphinxVersion = controller.sphinx_version
-  
   config.before :all do
-    `php -f spec/fixtures/data_generator.#{SphinxVersion}.php`
+    `php -f spec/fixtures/data_generator.#{Riddle.loaded_version}.php`
     sphinx.start
   end
   
