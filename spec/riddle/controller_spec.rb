@@ -6,6 +6,11 @@ describe Riddle::Controller do
       @controller = Riddle::Controller.new stub('controller'), 'sphinx.conf'
     end
     
+    it "should return 0.9.9 if using 0.9.9" do
+      @controller.stub!(:` => 'Sphinx 0.9.9-release (r2117)')
+      @controller.sphinx_version.should == '0.9.9'
+    end
+    
     it "should return 0.9.9 if using 0.9.9 rc2" do
       @controller.stub!(:` => 'Sphinx 0.9.9-rc2 (r1785)')
       @controller.sphinx_version.should == '0.9.9'

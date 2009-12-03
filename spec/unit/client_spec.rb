@@ -10,8 +10,8 @@ describe Riddle::Client do
     Riddle::Client.new.server.should == "localhost"
   end
   
-  it "should default to port 3312" do
-    Riddle::Client.new.port.should == 3312
+  it "should default to port 9312" do
+    Riddle::Client.new.port.should == 9312
   end
   
   it "should translate anchor arguments correctly" do
