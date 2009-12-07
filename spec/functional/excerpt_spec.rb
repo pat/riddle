@@ -2,7 +2,7 @@ require 'spec/spec_helper'
 
 describe "Sphinx Excepts" do
   before :each do
-    @client = Riddle::Client.new("localhost", 3313)
+    @client = Riddle::Client.new("localhost", 9313)
   end
   
   it "should highlight a single word multiple times in a document" do

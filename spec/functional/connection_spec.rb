@@ -4,7 +4,7 @@ class RiddleSpecConnectionProcError < StandardError; end
 
 describe "Sphinx Client" do
   before :each do
-    @client = Riddle::Client.new("localhost", 3313)
+    @client = Riddle::Client.new("localhost", 9313)
   end
 
   after :each do

@@ -2,7 +2,7 @@ require 'spec/spec_helper'
 
 describe "Sphinx Updates" do
   before :each do
-    @client = Riddle::Client.new("localhost", 3313)
+    @client = Riddle::Client.new("localhost", 9313)
   end
   
   it "should update a single record appropriately" do

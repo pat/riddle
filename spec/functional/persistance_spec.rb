@@ -2,7 +2,7 @@ require 'spec/spec_helper'
 
 describe "Sphinx Persistance Connection" do
   before :each do
-    @client = Riddle::Client.new("localhost", 3313)
+    @client = Riddle::Client.new("localhost", 9313)
   end
   
   it "should raise errors once already opened" do
