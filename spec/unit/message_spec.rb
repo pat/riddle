@@ -22,7 +22,37 @@ describe Riddle::Client::Message do
   it "should append integers correctly - packed with N" do
     message = Riddle::Client::Message.new
     message.append_int 234
-    message.to_s.should == [234].pack('N')
+    message.to_s.should == "\x00\x00\x00\xEA"
+  end
+
+  it "should append integers as strings correctly - packed with N" do
+    message = Riddle::Client::Message.new
+    message.append_int "234"
+    message.to_s.should == "\x00\x00\x00\xEA"
+  end
+
+  it "should append 64bit integers correctly" do
+    message = Riddle::Client::Message.new
+    message.append_64bit_int 234
+    message.to_s.should == "\x00\x00\x00\x00\x00\x00\x00\xEA"
+  end
+
+  it "should append 64bit integers that use exactly 32bits correctly" do
+    message = Riddle::Client::Message.new
+    message.append_64bit_int 4294967295
+    message.to_s.should == "\x00\x00\x00\x00\xFF\xFF\xFF\xFF"
+  end
+
+  it "should append 64bit integers that use more than 32 bits correctly" do
+    message = Riddle::Client::Message.new
+    message.append_64bit_int 4294967296
+    message.to_s.should == "\x00\x00\x00\x01\x00\x00\x00\x00"
+  end
+
+  it "should append 64bit integers as strings correctly" do
+    message = Riddle::Client::Message.new
+    message.append_64bit_int "234"
+    message.to_s.should == "\x00\x00\x00\x00\x00\x00\x00\xEA"
   end
   
   it "should append floats correctly - packed with f" do
