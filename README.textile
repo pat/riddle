@@ -61,7 +61,7 @@ that the query took to run.
 @:status@ is the error code for the query - and if there was a related warning, it will be under
 the @:warning@ key. Fatal errors will be described under @:error@.
 
-If you've installed the gem and wondering why there's no tests - check out the svn version. I've kept the specs out of the gem as I have a decent amount of test data in there, which really isn't needed unless you want to submit patches.
+If you've installed the gem and wondering why there's no tests - check out the git version. I've kept the specs out of the gem as I have a decent amount of test data in there, which really isn't needed unless you want to submit patches.
 
 h2. Contributors
 
