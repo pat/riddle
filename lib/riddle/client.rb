@@ -175,9 +175,9 @@ module Riddle
     # the latitude and longitude (in radians), and the reference position.
     # Note that for geocoding to work properly, you must also set
     # match_mode to :extended. To sort results by distance, you will
-    # need to set sort_mode to '@geodist asc' for example. Sphinx
-    # expects latitude and longitude to be returned from you SQL source
-    # in radians.
+    # need to set sort_by to '@geodist asc', and sort_mode to extended (as an
+    # example). Sphinx expects latitude and longitude to be returned from you
+    # SQL source in radians.
     #
     # Example:
     #   client.set_anchor('lat', -0.6591741, 'long', 2.530770)
