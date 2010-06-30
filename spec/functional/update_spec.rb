@@ -11,17 +11,17 @@ describe "Sphinx Updates" do
     result[:matches].should_not be_empty
     result[:matches].length.should == 1
     ellie = result[:matches].first
-    ellie[:attributes]["birthday"].should == Time.utc(1970, 1, 23).to_i
+    ellie[:attributes]["birthday"].should == Time.local(1970, 1, 23).to_i
     
     # make Ellie younger by 6 years
-    @client.update("people", ["birthday"], {ellie[:doc] => [Time.utc(1976, 1, 23).to_i]})
+    @client.update("people", ["birthday"], {ellie[:doc] => [Time.local(1976, 1, 23).to_i]})
     
     # check attribute's value
     result = @client.query("Ellie K Ford")
     result[:matches].should_not be_empty
     result[:matches].length.should == 1
     ellie = result[:matches].first
-    ellie[:attributes]["birthday"].should == Time.utc(1976, 1, 23).to_i
+    ellie[:attributes]["birthday"].should == Time.local(1976, 1, 23).to_i
   end
   
   it "should update multiple records appropriately" do
