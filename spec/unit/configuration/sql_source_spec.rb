@@ -116,16 +116,17 @@ source src1
   it "should insert a backslash-newline into an sql_query when greater than 8178 characters" do
     source = Riddle::Configuration::SQLSource.new("src1", "mysql")
     source.sql_query = big_query_string[0, 8200]
+    source.parent = 'src0'
     
-    (source.sql_query.index("\\\n") < 8178).should be_true
+    source.render.should match(/sql_query\s=\s[^\n]+\\\n/)
   end
   
   it "should insert two backslash-newlines into an sql_query when greater than 16,356 characters" do
     source = Riddle::Configuration::SQLSource.new("src1", "mysql")
     source.sql_query = big_query_string
+    source.parent = 'src0'
     
-    (source.sql_query.index("\\\n") < 8178).should be_true
-    (source.sql_query.index("\\\n", 8178) < 16356).should be_true
+    source.render.should match(/sql_query\s=\s[^\n]+\\\n[^\n]+\\\n/)    
   end
   
   def big_query_string
