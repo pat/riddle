@@ -130,7 +130,7 @@ describe Riddle::Client do
     client.queue.first.should == query_contents(:comment)
   end
   
-  if Riddle.loaded_version == '0.9.9'
+  if Riddle.loaded_version == '0.9.9' || Riddle.loaded_version == '1.10'
     it "should build a message with overrides correctly" do
       client = Riddle::Client.new
       client.add_override("rating", :float, {1 => 10.0})

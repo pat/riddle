@@ -48,7 +48,8 @@ not. It's just my name: Pat.
     )
     
     
-    if Riddle.loaded_version == '0.9.9'
+    case Riddle.loaded_version
+    when '0.9.9'
       excerpts.should == [
         <<-SENTENCE
 This is a really long sentence written by <em>Pat</em>. It has to be over 256
@@ -57,6 +58,8 @@ yeah? Excerpts are particularly riveting. This keyword, however, is
 not. It's just my name: <em>Pat</em>.
         SENTENCE
       ]
+    when '1.10'
+      excerpts.should == [" &#8230;  really long sentence written by <em>Pat</em>. It has to be over &#8230; . This keyword, however, is\nnot. It's just my name: <em>Pat</em> &#8230; "]
     else
       excerpts.should == [
         <<-SENTENCE
@@ -90,7 +93,8 @@ not. It's just my name: Pat.
       :chunk_separator => " --- "
     )
     
-    if Riddle.loaded_version == '0.9.9'
+    case Riddle.loaded_version
+    when '0.9.9'
       excerpts.should == [
         <<-SENTENCE
 This is a really long sentence written by <em>Pat</em>. It has to be over 256
@@ -99,6 +103,8 @@ yeah? Excerpts are particularly riveting. This keyword, however, is
 not. It's just my name: <em>Pat</em>.
         SENTENCE
       ]
+    when '1.10'
+      excerpts.should == [" ---  really long sentence written by <em>Pat</em>. It has to be over --- . This keyword, however, is\nnot. It's just my name: <em>Pat</em> --- "]
     else
       excerpts.should == [
         <<-SENTENCE
