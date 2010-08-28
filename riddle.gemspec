@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{riddle}
-  s.version = "1.0.12"
+  s.version = "1.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Pat Allan"]
-  s.date = %q{2010-07-27}
+  s.date = %q{2010-08-29}
   s.description = %q{A Ruby API and configuration helper for the Sphinx search service.}
   s.email = %q{pat@freelancing-gods.com}
   s.extra_rdoc_files = [
@@ -34,6 +34,7 @@ Gem::Specification.new do |s|
      "lib/riddle/configuration/distributed_index.rb",
      "lib/riddle/configuration/index.rb",
      "lib/riddle/configuration/indexer.rb",
+     "lib/riddle/configuration/realtime_index.rb",
      "lib/riddle/configuration/remote_index.rb",
      "lib/riddle/configuration/searchd.rb",
      "lib/riddle/configuration/section.rb",
@@ -66,6 +67,7 @@ Gem::Specification.new do |s|
      "spec/unit/configuration/distributed_index_spec.rb",
      "spec/unit/configuration/index_spec.rb",
      "spec/unit/configuration/indexer_spec.rb",
+     "spec/unit/configuration/realtime_index_spec.rb",
      "spec/unit/configuration/searchd_spec.rb",
      "spec/unit/configuration/source_spec.rb",
      "spec/unit/configuration/sql_source_spec.rb",
