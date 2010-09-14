@@ -499,11 +499,13 @@ module Riddle
       if @socket.nil? || @socket.closed?
         @socket = nil
         open_socket
-      end
-      begin
+        begin
+          yield @socket
+        ensure
+          close_socket
+        end
+      else
         yield @socket
-      ensure
-        close_socket
       end
     end
     
