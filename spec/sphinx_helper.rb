@@ -34,11 +34,12 @@ class SphinxHelper
     structure = File.open("spec/fixtures/sql/structure.sql") { |f| f.read }
     # Block ensures multiple statement transaction is closed.
     server.query(structure) { |response| }
-    data = File.open("spec/fixtures/sql/data.sql") { |f|
-      while line = f.gets
-        server.query line
-      end
-    }
+    server.query <<-QUERY
+      LOAD DATA LOCAL INFILE '#{@path}/fixtures/sql/data.tsv' INTO TABLE
+      `riddle`.`people` FIELDS TERMINATED BY ',' ENCLOSED BY "'" (gender,
+      first_name, middle_initial, last_name, street_address, city, state,
+      postcode, email, birthday)
+    QUERY
 
     server.close
   end
