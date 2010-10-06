@@ -222,4 +222,21 @@ describe Riddle::Client do
       }.should raise_error(Riddle::ConnectionError)
     end
   end
+
+  context "connection fail over" do
+    it "should try each of several server addresses after timeouts" do
+      client = Riddle::Client.new
+      client.port    = 3314
+      client.servers = %w[localhost 127.0.0.1 0.0.0.0]
+      client.timeout  = 1
+
+      TCPSocket.should_receive(:new).with(
+        an_instance_of(String), 3314
+      ).exactly(3).and_raise Timeout::Error
+
+      lambda {
+        client.send(:connect) { |socket| }
+      }.should raise_error(Riddle::ConnectionError)
+    end
+  end
 end
