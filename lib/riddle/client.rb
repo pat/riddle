@@ -486,12 +486,20 @@ module Riddle
       else
         begin
           Timeout.timeout(@timeout) { @socket = initialise_connection }
-        rescue Timeout::Error
+        rescue Timeout::Error, Riddle::ConnectionError => e
           failed_servers ||= []
           failed_servers << servers.shift
           retry if !servers.empty?
           raise Riddle::ConnectionError,
             "Connection to #{failed_servers.inspect} on #{@port} timed out after #{@timeout} seconds"
+
+          case e
+          when Timeout::Error
+            raise Riddle::ConnectionError,
+              "Connection to #{failed_servers.inspect} on #{@port} timed out after #{@timeout} seconds"
+          else
+            raise e
+          end
         end
       end
       

@@ -238,5 +238,23 @@ describe Riddle::Client do
         client.send(:connect) { |socket| }
       }.should raise_error(Riddle::ConnectionError)
     end
+
+    it "should try each of several server addresses after a connection refused" do
+      client = Riddle::Client.new
+      client.port    = 3314
+      client.servers = %w[localhost 127.0.0.1 0.0.0.0]
+      client.timeout  = 1
+
+      # initialise_socket will retry 5 times before failing,
+      # these combined with the multiple server failover should result in 15
+      # calls to TCPSocket.new
+      TCPSocket.should_receive(:new).with(
+        an_instance_of(String), 3314
+      ).exactly(3 * 5).and_raise Errno::ECONNREFUSED
+
+      lambda {
+        client.send(:connect) { |socket| }
+      }.should raise_error(Riddle::ConnectionError)
+    end
   end
 end
