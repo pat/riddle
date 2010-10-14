@@ -490,8 +490,6 @@ module Riddle
           failed_servers ||= []
           failed_servers << servers.shift
           retry if !servers.empty?
-          raise Riddle::ConnectionError,
-            "Connection to #{failed_servers.inspect} on #{@port} timed out after #{@timeout} seconds"
 
           case e
           when Timeout::Error
