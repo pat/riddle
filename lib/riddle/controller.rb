@@ -46,7 +46,10 @@ module Riddle
     
     def stop
       return true unless running?
-      cmd = %(#{searchd} --pidfile --config "#{@path}" --stopwait)
+      
+      stop_flag = 'stopwait'
+      stop_flag = 'stop' if Riddle.loaded_version.split('.').first == '0'
+      cmd = %(#{searchd} --pidfile --config "#{@path}" --#{stop_flag})
       
       if RUBY_PLATFORM =~ /mswin/
         system("start /B #{cmd} 1> NUL 2>&1")
