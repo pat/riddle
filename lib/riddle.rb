@@ -48,6 +48,7 @@ require 'riddle/auto_version'
 require 'riddle/client'
 require 'riddle/configuration'
 require 'riddle/controller'
+require 'riddle/ruby_backports'
 
 Riddle.loaded_version = nil
 Riddle::AutoVersion.configure
