@@ -514,8 +514,9 @@ module Riddle
       true
     end
     
-    # Connects to the Sphinx daemon, and yields a socket to use. The socket is
-    # closed at the end of the block.
+    # If there's an active connection to the Sphinx daemon, this will yield the
+    # socket. If there's no active connection, then it will connect, yield the
+    # new socket, then close it.
     def connect(&block)
       if @socket.nil? || @socket.closed?
         @socket = nil
