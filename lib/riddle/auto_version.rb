@@ -8,6 +8,9 @@ class Riddle::AutoVersion
       require "riddle/#{version}"
     when '1.10-beta', '1.10-id64-beta', '1.10-dev'
       require 'riddle/1.10'
+    else
+      puts "found version: #{version}"
+      exit
     end
   end
 end
