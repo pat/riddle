@@ -1,4 +1,4 @@
-require 'spec/spec_helper'
+require 'spec_helper'
 
 describe Riddle::Configuration::DistributedIndex do
   it "should be invalid without a name, sources or path if there's no parent" do

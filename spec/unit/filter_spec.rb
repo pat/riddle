@@ -1,4 +1,4 @@
-require 'spec/spec_helper'
+require 'spec_helper'
 
 describe Riddle::Client::Filter do
   it "should render a filter that uses an array of ints correctly" do

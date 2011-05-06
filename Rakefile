@@ -1,6 +1,7 @@
 require 'rubygems'
+require 'bundler'
 
-require 'tasks/distribution'
-require 'tasks/testing'
+Bundler.require :default, :development
 
-task :default => :spec
+require "#{File.dirname(__FILE__)}/tasks/distribution"
+require "#{File.dirname(__FILE__)}/tasks/testing"

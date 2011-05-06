@@ -1,4 +1,4 @@
-require 'spec/spec_helper'
+require 'spec_helper'
 
 describe Riddle::Client::Message do
   it "should start with an empty string" do

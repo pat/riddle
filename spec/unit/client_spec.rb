@@ -1,4 +1,4 @@
-require 'spec/spec_helper'
+require 'spec_helper'
 
 describe Riddle::Client do
   it "should have the same keys for both commands and versions, except persist" do

@@ -1,4 +1,4 @@
-require 'spec/spec_helper'
+require 'spec_helper'
 
 describe "Sphinx Persistance Connection" do
   before :each do

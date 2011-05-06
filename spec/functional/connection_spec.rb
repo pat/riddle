@@ -1,4 +1,4 @@
-require 'spec/spec_helper'
+require 'spec_helper'
 
 class RiddleSpecConnectionProcError < StandardError; end
 
@@ -14,7 +14,7 @@ describe "Sphinx Client" do
   describe '.connection' do
     it "should use the given block" do
       Riddle::Client.connection = lambda { |client|
-        TCPsocket.new(client.server, client.port)
+        TCPSocket.new(client.server, client.port)
       }
       @client.query("smith").should be_kind_of(Hash)
     end
@@ -31,7 +31,7 @@ describe "Sphinx Client" do
   describe '#connection' do
     it "use the given block" do
       @client.connection = lambda { |client|
-        TCPsocket.new(client.server, client.port)
+        TCPSocket.new(client.server, client.port)
       }
       @client.query("smith").should be_kind_of(Hash)
     end
@@ -49,7 +49,7 @@ describe "Sphinx Client" do
         raise RiddleSpecConnectionProcError
       }
       @client.connection = lambda { |client|
-        TCPsocket.new(client.server, client.port)
+        TCPSocket.new(client.server, client.port)
       }
     
       lambda { @client.query("smith") }.should_not raise_error

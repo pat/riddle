@@ -1,4 +1,4 @@
-require 'spec/spec_helper'
+require 'spec_helper'
 
 describe Riddle::Configuration do
   it "should render all given indexes and sources, plus the indexer and search sections" do

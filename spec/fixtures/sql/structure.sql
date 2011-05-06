@@ -13,4 +13,4 @@ CREATE TABLE `people` (
   `email` varchar(100) NOT NULL,
   `birthday` datetime NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

@@ -1,4 +1,4 @@
-require 'spec/spec_helper'
+require 'spec_helper'
 
 describe Riddle::Configuration::RealtimeIndex do
   let(:index) { Riddle::Configuration::RealtimeIndex.new('rt1') }

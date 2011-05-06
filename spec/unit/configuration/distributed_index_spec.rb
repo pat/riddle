@@ -1,4 +1,4 @@
-require 'spec/spec_helper'
+require 'spec_helper'
 
 describe Riddle::Configuration::DistributedIndex do
   it "should not be valid without any indexes" do

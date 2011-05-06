@@ -1,4 +1,3 @@
-require 'mysql'
 require 'erb'
 require 'yaml'
 
@@ -22,26 +21,29 @@ class SphinxHelper
   end
   
   def setup_mysql
-    server = Mysql.new @host, @username, @password
-    server.set_server_option(Mysql::OPTION_MULTI_STATEMENTS_ON)
+    client = Mysql2::Client.new(
+      :host => @host,
+      :username => @username,
+      :password => @password
+    )
 
-    unless server.list_dbs.include?("riddle")
-      server.query "CREATE DATABASE riddle;"
+    databases = client.query('SHOW DATABASES', :as => :array).to_a.flatten
+    unless databases.include?('riddle')
+      client.query 'CREATE DATABASE riddle'
     end
 
-    server.query "USE riddle;"
+    client.query "USE riddle"
     
     structure = File.open("spec/fixtures/sql/structure.sql") { |f| f.read }
-    # Block ensures multiple statement transaction is closed.
-    server.query(structure) { |response| }
-    server.query <<-QUERY
+    structure.split(/;/).each { |sql| client.query sql }
+    client.query <<-SQL
       LOAD DATA LOCAL INFILE '#{@path}/fixtures/sql/data.tsv' INTO TABLE
       `riddle`.`people` FIELDS TERMINATED BY ',' ENCLOSED BY "'" (gender,
       first_name, middle_initial, last_name, street_address, city, state,
       postcode, email, birthday)
-    QUERY
+    SQL
 
-    server.close
+    client.close
   end
   
   def reset

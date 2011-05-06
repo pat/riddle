@@ -1,4 +1,4 @@
-require 'spec/spec_helper'
+require 'spec_helper'
 
 describe Riddle::Configuration::XMLSource do
   it "should be invalid without an xmlpipe command, name and type if there's no parent" do

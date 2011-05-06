@@ -1,6 +1,3 @@
-require 'jeweler'
-require 'yard'
-
 YARD::Rake::YardocTask.new
 
 Jeweler::Tasks.new do |gem|
@@ -10,9 +7,6 @@ Jeweler::Tasks.new do |gem|
   gem.email       = "pat@freelancing-gods.com"
   gem.homepage    = "http://freelancing-god.github.com/riddle/"
   gem.authors     = ["Pat Allan"]
-  
-  gem.add_development_dependency "rspec",    ">= 1.2.9"
-  gem.add_development_dependency "yard",     ">= 0"
   
   gem.files = FileList[
     'lib/**/*.rb',

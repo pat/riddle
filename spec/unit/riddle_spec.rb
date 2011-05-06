@@ -1,4 +1,4 @@
-require 'spec/spec_helper'
+require 'spec_helper'
 
 describe "Riddle" do
   it "should escape characters correctly" do

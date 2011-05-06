@@ -1,12 +1,15 @@
 require 'rubygems'
+require 'bundler'
 
 $:.unshift File.dirname(__FILE__) + '/../lib'
+$:.unshift File.dirname(__FILE__) + '/..'
+
+Bundler.require :default, :development
 
 require 'riddle'
-require 'spec'
-require 'spec/sphinx_helper'
+require 'sphinx_helper'
 
-Spec::Runner.configure do |config|
+RSpec.configure do |config|
   sphinx = SphinxHelper.new
   sphinx.setup_mysql
   sphinx.generate_configuration
