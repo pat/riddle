@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{riddle}
-  s.version = "1.2.2"
+  s.version = "1.3.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Pat Allan"]
-  s.date = %q{2010-12-22}
+  s.date = %q{2011-05-07}
   s.description = %q{A Ruby API and configuration helper for the Sphinx search service.}
   s.email = %q{pat@freelancing-gods.com}
   s.extra_rdoc_files = [
@@ -25,6 +25,8 @@ Gem::Specification.new do |s|
     "lib/riddle/0.9.9/configuration/searchd.rb",
     "lib/riddle/1.10.rb",
     "lib/riddle/1.10/client.rb",
+    "lib/riddle/2.0.1.rb",
+    "lib/riddle/2.0.1/client.rb",
     "lib/riddle/auto_version.rb",
     "lib/riddle/client.rb",
     "lib/riddle/client/filter.rb",
@@ -43,9 +45,9 @@ Gem::Specification.new do |s|
     "lib/riddle/configuration/xml_source.rb",
     "lib/riddle/controller.rb"
   ]
-  s.homepage = %q{http://riddle.freelancing-gods.com}
+  s.homepage = %q{http://freelancing-god.github.com/riddle/}
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.7}
+  s.rubygems_version = %q{1.6.2}
   s.summary = %q{An API for Sphinx, written in and for Ruby.}
   s.test_files = [
     "spec/functional/connection_spec.rb",
@@ -79,19 +81,24 @@ Gem::Specification.new do |s|
   ]
 
   if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<rspec>, [">= 1.2.9"])
-      s.add_development_dependency(%q<yard>, [">= 0"])
+      s.add_development_dependency(%q<mysql2>, ["= 0.3.2"])
+      s.add_development_dependency(%q<jeweler>, ["= 1.5.1"])
+      s.add_development_dependency(%q<rspec>, [">= 2.5.0"])
+      s.add_development_dependency(%q<yard>, [">= 0.6.8"])
     else
-      s.add_dependency(%q<rspec>, [">= 1.2.9"])
-      s.add_dependency(%q<yard>, [">= 0"])
+      s.add_dependency(%q<mysql2>, ["= 0.3.2"])
+      s.add_dependency(%q<jeweler>, ["= 1.5.1"])
+      s.add_dependency(%q<rspec>, [">= 2.5.0"])
+      s.add_dependency(%q<yard>, [">= 0.6.8"])
     end
   else
-    s.add_dependency(%q<rspec>, [">= 1.2.9"])
-    s.add_dependency(%q<yard>, [">= 0"])
+    s.add_dependency(%q<mysql2>, ["= 0.3.2"])
+    s.add_dependency(%q<jeweler>, ["= 1.5.1"])
+    s.add_dependency(%q<rspec>, [">= 2.5.0"])
+    s.add_dependency(%q<yard>, [">= 0.6.8"])
   end
 end
 
