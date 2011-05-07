@@ -34,5 +34,12 @@ describe Riddle::AutoVersion do
       @controller.stub!(:sphinx_version => '1.10-id64-beta')
       Riddle::AutoVersion.configure
     end
+    
+    it "should require 2.0.1 if that is the known version" do
+      Riddle::AutoVersion.should_receive(:require).with('riddle/2.0.1')
+      
+      @controller.stub!(:sphinx_version => '2.0.1-beta')
+      Riddle::AutoVersion.configure
+    end
   end
 end

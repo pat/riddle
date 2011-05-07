@@ -390,6 +390,8 @@ module Riddle
       options[:load_files]       ||= false
       options[:html_strip_mode]  ||= 'index'
       options[:allow_empty]      ||= false
+      options[:passage_boundary] ||= 'none'
+      options[:emit_zones]       ||= false
       
       response = Response.new request(:excerpt, excerpts_message(options))
       
@@ -585,10 +587,17 @@ module Riddle
         when :search
           # Message length is +4 to account for the following count value for
           # the number of messages (well, that's what I'm assuming).
-          socket.send [
-            Commands[command], Versions[command],
-            4+message.length,  messages.length
-          ].pack("nnNN") + message, 0
+          if Versions[command] >= 0x118
+            socket.send [
+              Commands[command], Versions[command],
+              8+message.length,  messages.length, 0
+            ].pack("nnNNN") + message, 0
+          else
+            socket.send [
+              Commands[command], Versions[command],
+              4+message.length,  messages.length
+            ].pack("nnNN") + message, 0
+          end
         when :status
           socket.send [
             Commands[command], Versions[command], 4, 1
@@ -796,6 +805,7 @@ module Riddle
       flags |= 64  if options[:force_all_words]
       flags |= 128 if options[:load_files]
       flags |= 256 if options[:allow_empty]
+      flags |= 512 if options[:emit_zones]
       flags
     end
   end

@@ -1,5 +1,5 @@
 <?php
-include 'sphinxapi.1.10.php';
+include 'sphinxapi.2.0.1.php';
 
 $client = new SphinxClient();
 $client->SetServer("localhost", 3312);
