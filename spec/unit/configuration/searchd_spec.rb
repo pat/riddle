@@ -78,4 +78,31 @@ searchd
       SEARCHD
     end
   end
+  
+  it "should render with a client key if one is provided" do
+    searchd = Riddle::Configuration::Searchd.new
+    searchd.port       = 3312
+    searchd.pid_file   = 'file.pid'
+    searchd.client_key = 'secret'
+    
+    if Riddle.loaded_version == '0.9.9' || Riddle.loaded_version == '1.10'
+      searchd.render.should == <<-SEARCHD
+searchd
+{
+  listen = 3312
+  pid_file = file.pid
+  client_key = secret
+}
+      SEARCHD
+    else
+      searchd.render.should == <<-SEARCHD
+searchd
+{
+  port = 3312
+  pid_file = file.pid
+  client_key = secret
+}
+      SEARCHD
+    end
+  end
 end

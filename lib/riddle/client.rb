@@ -120,7 +120,7 @@ module Riddle
       :group_by, :group_function, :group_clause, :group_distinct, :cut_off,
       :retry_count, :retry_delay, :anchor, :index_weights, :rank_mode,
       :max_query_time, :field_weights, :timeout, :overrides, :select,
-      :connection
+      :connection, :key
     attr_reader :queue
     
     def self.connection=(value)
@@ -134,13 +134,14 @@ module Riddle
     # Can instantiate with a specific server and port - otherwise it assumes
     # defaults of localhost and 3312 respectively. All other settings can be
     # accessed and changed via the attribute accessors.
-    def initialize(servers=nil, port=nil)
+    def initialize(servers = nil, port = nil, key = nil)
       Riddle.version_warning
 
       servers = Array(servers || "localhost")
       @servers = servers.respond_to?(:shuffle) ? servers.shuffle : servers.sort_by{ rand }
       @port   = port     || 9312
       @socket = nil
+      @key    = key
       
       reset
       
@@ -578,8 +579,15 @@ module Riddle
       version  = 0
       length   = 0
       message  = Array(messages).join("")
+      
       if message.respond_to?(:force_encoding)
         message = message.force_encoding('ASCII-8BIT')
+      end
+      
+      if key
+        prefix = Message.new
+        prefix.append_string key
+        message = prefix.to_s + message
       end
       
       connect do |socket|
