@@ -10,8 +10,6 @@ class Riddle::AutoVersion
       require 'riddle/1.10'
     when /2.0.1/
       require 'riddle/2.0.1'
-    else
-      puts "Unknown Sphinx Version: #{version}"
     end
   end
 end
