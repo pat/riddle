@@ -575,6 +575,34 @@ module Riddle
       socket
     end
     
+    def request_header(command, length = 0)
+      length += key_message.length if key
+      core_header = case command
+      when :search
+        # Message length is +4/+8 to account for the following count value for
+        # the number of messages.
+        if Versions[command] >= 0x118
+          [Commands[command], Versions[command], 8 + length].pack("nnN")
+        else
+          [Commands[command], Versions[command], 4 + length].pack("nnN")
+        end
+      when :status
+        [Commands[command], Versions[command], 4, 1].pack("nnNN")
+      else
+        [Commands[command], Versions[command], length].pack("nnN")
+      end
+      
+      key ? core_header + key_message : core_header
+    end
+    
+    def key_message
+      @key_message ||= begin
+        message = Message.new
+        message.append_string key
+        message.to_s
+      end
+    end
+    
     # Send a collection of messages, for a command type (eg, search, excerpts,
     # update), to the Sphinx daemon.
     def request(command, messages)
@@ -588,36 +616,20 @@ module Riddle
         message = message.force_encoding('ASCII-8BIT')
       end
       
-      if key
-        prefix = Message.new
-        prefix.append_string key
-        message = prefix.to_s + message
-      end
-      
       connect do |socket|
         case command
         when :search
-          # Message length is +4 to account for the following count value for
-          # the number of messages (well, that's what I'm assuming).
           if Versions[command] >= 0x118
-            socket.send [
-              Commands[command], Versions[command],
-              8+message.length,  messages.length, 0
-            ].pack("nnNNN") + message, 0
+            socket.send request_header(command, message.length) + 
+              [messages.length, 0].pack('NN') + message, 0
           else
-            socket.send [
-              Commands[command], Versions[command],
-              4+message.length,  messages.length
-            ].pack("nnNN") + message, 0
+            socket.send request_header(command, message.length) +
+              [messages.length].pack('N') + message, 0
           end
         when :status
-          socket.send [
-            Commands[command], Versions[command], 4, 1
-          ].pack("nnNN"), 0
+          socket.send request_header(command, message.length), 0
         else
-          socket.send [
-            Commands[command], Versions[command], message.length
-          ].pack("nnN") + message, 0
+          socket.send request_header(command, message.length) + message, 0
         end
         
         header = socket.recv(8)
