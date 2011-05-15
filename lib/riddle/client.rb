@@ -621,7 +621,7 @@ module Riddle
         when :search
           if Versions[command] >= 0x118
             socket.send request_header(command, message.length) + 
-              [messages.length, 0].pack('NN') + message, 0
+              [0, messages.length].pack('NN') + message, 0
           else
             socket.send request_header(command, message.length) +
               [messages.length].pack('N') + message, 0

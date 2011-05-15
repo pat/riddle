@@ -60,6 +60,8 @@ not. It's just my name: <em>Pat</em>.
       ]
     when '1.10'
       excerpts.should == [" &#8230;  really long sentence written by <em>Pat</em>. It has to be over &#8230; . This keyword, however, is\nnot. It's just my name: <em>Pat</em> &#8230; "]
+    when '2.0.1'
+      excerpts.should == [" &#8230;  really long sentence written by <em>Pat</em>. It has to be over &#8230; . It's just my name: <em>Pat</em>.\n"]
     else
       excerpts.should == [
         <<-SENTENCE
@@ -105,6 +107,8 @@ not. It's just my name: <em>Pat</em>.
       ]
     when '1.10'
       excerpts.should == [" ---  really long sentence written by <em>Pat</em>. It has to be over --- . This keyword, however, is\nnot. It's just my name: <em>Pat</em> --- "]
+    when '2.0.1'
+      excerpts.should == [" ---  really long sentence written by <em>Pat</em>. It has to be over --- . It's just my name: <em>Pat</em>.\n"]
     else
       excerpts.should == [
         <<-SENTENCE
