@@ -254,18 +254,23 @@ module Riddle
           result[:attribute_names] << attribute_name
         end
 
+        result_attribute_names_and_types = result[:attribute_names].
+          inject([]) { |array, attr| array.push([ attr, result[:attributes][attr] ]) }
+
         matches   = response.next_int
         is_64_bit = response.next_int
-        for i in 0...matches
+        
+        result[:matches] = (0...matches).map do |i|
           doc = is_64_bit > 0 ? response.next_64bit_int : response.next_int
           weight = response.next_int
 
-          result[:matches] << {:doc => doc, :weight => weight, :index => i, :attributes => {}}
-          result[:attribute_names].each do |attr|
-            result[:matches].last[:attributes][attr] = attribute_from_type(
-              result[:attributes][attr], response
-            )
+          current_match_attributes = {}
+
+          result_attribute_names_and_types.each do |attr, type|
+            current_match_attributes[attr] = attribute_from_type(type, response)
           end
+          
+          {:doc => doc, :weight => weight, :index => i, :attributes => current_match_attributes}
         end
 
         result[:total] = response.next_int.to_i || 0
