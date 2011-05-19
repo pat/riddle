@@ -803,20 +803,28 @@ module Riddle
       
       message.to_s
     end
+
+    AttributeHandlers = {
+      AttributeTypes[:integer] =>           :next_int,
+      AttributeTypes[:timestamp] =>         :next_int,
+      AttributeTypes[:ordinal] =>           :next_int,
+      AttributeTypes[:bool] =>              :next_int,
+      AttributeTypes[:float] =>             :next_float,
+      AttributeTypes[:bigint] =>            :next_64bit_int,
+      AttributeTypes[:string] =>            :next,
+
+      AttributeTypes[:multi] + AttributeTypes[:integer]   => :next_int_array,
+      AttributeTypes[:multi] + AttributeTypes[:timestamp] => :next_int_array,
+      AttributeTypes[:multi] + AttributeTypes[:ordinal]   => :next_int_array,
+      AttributeTypes[:multi] + AttributeTypes[:bool]      => :next_int_array,
+      AttributeTypes[:multi] + AttributeTypes[:float]     => :next_float_array,
+      AttributeTypes[:multi] + AttributeTypes[:bigint]    => :next_64bit_int_array,
+      AttributeTypes[:multi] + AttributeTypes[:string]    => :next_array
+    }
     
     def attribute_from_type(type, response)
-      type -= AttributeTypes[:multi] if is_multi = type > AttributeTypes[:multi]
-      
-      case type
-      when AttributeTypes[:float]
-        is_multi ? response.next_float_array    : response.next_float
-      when AttributeTypes[:bigint]
-        is_multi ? response.next_64bit_int_arry : response.next_64bit_int
-      when AttributeTypes[:string]
-        is_multi ? response.next_array          : response.next
-      else
-        is_multi ? response.next_int_array      : response.next_int
-      end
+      handler = AttributeHandlers[type]
+      response.send handler
     end
     
     def excerpt_flags(options)
