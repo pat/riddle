@@ -1,6 +1,20 @@
 require 'spec_helper'
 
 describe Riddle::Query do
+  describe '.connection' do
+    let(:connection) { Riddle::Query.connection 'localhost', 9306 }
+    
+    it "returns a MySQL Client" do
+      connection.should be_a(Mysql2::Client)
+    end
+    
+    it "should handle search requests" do
+      connection.query(Riddle::Query.tables).first.should == {
+        'Index' => 'people', 'Type' => 'local'
+      }
+    end
+  end
+  
   describe '.set' do
     it 'handles a single value' do
       Riddle::Query.set('foo', 'bar').should == 'SET GLOBAL foo = bar'
@@ -28,12 +42,16 @@ describe Riddle::Query do
   end
   
   describe '.create_function' do
-    Riddle::Query.create_function('foo', :bigint, 'foo.sh').
-      should == "CREATE FUNCTION foo RETURNS BIGINT SONAME 'foo.sh'"
+    it 'handles a basic create request' do
+      Riddle::Query.create_function('foo', :bigint, 'foo.sh').
+        should == "CREATE FUNCTION foo RETURNS BIGINT SONAME 'foo.sh'"
+    end
   end
   
   describe '.update' do
-    Riddle::Query.update('foo_core', 5, :deleted => 1).
-      should == 'UPDATE foo_core SET deleted = 1 WHERE id = 5'
+    it 'handles a basic update request' do
+      Riddle::Query.update('foo_core', 5, :deleted => 1).
+        should == 'UPDATE foo_core SET deleted = 1 WHERE id = 5'
+    end
   end
 end
