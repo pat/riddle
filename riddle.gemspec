@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{riddle}
-  s.version = "1.3.2"
+  s.version = "1.3.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Pat Allan"]
-  s.date = %q{2011-05-12}
+  s.date = %q{2011-05-25}
   s.description = %q{A Ruby API and configuration helper for the Sphinx search service.}
   s.email = %q{pat@freelancing-gods.com}
   s.extra_rdoc_files = [
@@ -43,7 +43,11 @@ Gem::Specification.new do |s|
     "lib/riddle/configuration/source.rb",
     "lib/riddle/configuration/sql_source.rb",
     "lib/riddle/configuration/xml_source.rb",
-    "lib/riddle/controller.rb"
+    "lib/riddle/controller.rb",
+    "lib/riddle/query.rb",
+    "lib/riddle/query/delete.rb",
+    "lib/riddle/query/insert.rb",
+    "lib/riddle/query/select.rb"
   ]
   s.homepage = %q{http://freelancing-god.github.com/riddle/}
   s.require_paths = ["lib"]
@@ -61,6 +65,10 @@ Gem::Specification.new do |s|
     "spec/riddle/client_spec.rb",
     "spec/riddle/configuration_spec.rb",
     "spec/riddle/controller_spec.rb",
+    "spec/riddle/query/delete_spec.rb",
+    "spec/riddle/query/insert_spec.rb",
+    "spec/riddle/query/select_spec.rb",
+    "spec/riddle/query_spec.rb",
     "spec/riddle_spec.rb",
     "spec/spec_helper.rb",
     "spec/sphinx_helper.rb",
