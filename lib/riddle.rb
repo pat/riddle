@@ -1,3 +1,4 @@
+require 'thread'
 require 'socket'
 require 'timeout'
 
