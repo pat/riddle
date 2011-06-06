@@ -5,16 +5,20 @@ module Riddle
         set_listen
         clear_deprecated
         
-        !( @listen.nil? || @pid_file.nil? )
+        !( @listen.nil? || @listen.empty? || @pid_file.nil? )
       end
       
       private
       
       def set_listen
-        return unless @listen.nil?
+        return unless @listen.nil? || @listen.empty?
         
-        @listen = @port.to_s if @port && @address.nil?
-        @listen = "#{@address}:#{@port}" if @address && @port
+        @listen = []
+        @listen << @port.to_s if @port
+        @listen << "9306:mysql41" if @mysql41.is_a?(TrueClass)
+        @listen << "#{@mysql41}:mysql41" if @mysql41.is_a?(Fixnum)
+        
+        @listen.each { |l| l.insert(0, "#{@address}:") } if @address
       end
       
       def clear_deprecated

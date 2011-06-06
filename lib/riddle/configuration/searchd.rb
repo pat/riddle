@@ -14,6 +14,7 @@ module Riddle
         :compat_sphinxql_magics, :watchdog, :client_key]
       
       attr_accessor *self.settings
+      attr_accessor :mysql41
             
       def render
         raise ConfigurationError unless valid?
