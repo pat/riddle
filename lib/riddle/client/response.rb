@@ -29,14 +29,14 @@ module Riddle
         int = @str[@marker, 4].unpack('N*').first
         @marker += 4
         
-        return int
+        int
       end
       
       def next_64bit_int
         high, low = @str[@marker, 8].unpack('N*N*')[0..1]
         @marker += 8
         
-        return (high << 32) + low
+        (high << 32) + low
       end
       
       # Return the next float value from the stream
@@ -44,7 +44,7 @@ module Riddle
         float = @str[@marker, 4].unpack('N*').pack('L').unpack('f*').first
         @marker += 4
         
-        return float
+        float
       end
       
       # Returns an array of string items
@@ -55,7 +55,7 @@ module Riddle
           items << self.next
         end
         
-        return items
+        items
       end
       
       # Returns an array of int items
@@ -66,7 +66,7 @@ module Riddle
           items << self.next_int
         end
         
-        return items
+        items
       end
       
       def next_float_array
@@ -76,7 +76,7 @@ module Riddle
           items << self.next_float
         end
         
-        return items
+        items
       end
       
       def next_64bit_int_array
@@ -86,7 +86,7 @@ module Riddle
           items << self.next_64bit_int
         end
         
-        return items
+        items
       end
       
       # Returns the length of the streamed data
