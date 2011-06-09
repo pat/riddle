@@ -642,6 +642,10 @@ module Riddle
         
         while response.length < (length || 0)
           part = socket.recv(length - response.length)
+
+          # will return 0 bytes if remote side closed TCP connection, e.g, searchd segfaulted.
+          break if part.length == 0 && socket.is_a?(TcpSocket)
+
           response << part if part
         end
       end
