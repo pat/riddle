@@ -17,7 +17,11 @@ module Riddle
         result = @str[@marker, len]
         @marker += len
         
-        return result
+        if defined?(Encoding) && Encoding.respond_to?(:default_external)
+          result.force_encoding(Encoding.default_external)
+        else
+          result
+        end
       end
       
       # Return the next integer value from the stream
