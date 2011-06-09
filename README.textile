@@ -86,3 +86,4 @@ Thanks to the following people who have contributed to Riddle in some shape or f
 * Paco Guzmán
 * Greg Weber
 * Enrico Thierbach
+* Jason Lambert
