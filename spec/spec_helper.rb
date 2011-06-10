@@ -23,6 +23,10 @@ RSpec.configure do |config|
   config.after :all do
     sphinx.stop
   end
+
+  # enable filtering for examples
+  config.filter_run :wip => true
+  config.run_all_when_everything_filtered = true
 end
 
 def query_contents(key)

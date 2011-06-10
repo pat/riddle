@@ -1,15 +1,13 @@
 module Riddle
   class Configuration
     class XMLSource < Riddle::Configuration::Source
-      class << self
-        def settings 
-          [
-            :type, :xmlpipe_command, :xmlpipe_field,
-            :xmlpipe_attr_uint, :xmlpipe_attr_bool, :xmlpipe_attr_timestamp,
-            :xmlpipe_attr_str2ordinal, :xmlpipe_attr_float, :xmlpipe_attr_multi,
-            :xmlpipe_fixup_utf8
-          ]
-        end
+      def self.settings 
+        [
+          :type, :xmlpipe_command, :xmlpipe_field,
+          :xmlpipe_attr_uint, :xmlpipe_attr_bool, :xmlpipe_attr_timestamp,
+          :xmlpipe_attr_str2ordinal, :xmlpipe_attr_float, :xmlpipe_attr_multi,
+          :xmlpipe_fixup_utf8
+        ]
       end
       
       attr_accessor *self.settings
