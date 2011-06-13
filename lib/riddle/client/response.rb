@@ -18,7 +18,7 @@ module Riddle
         result = @str[@marker, len]
         @marker += len
         
-        Response.encoding_proc.call result # use call instead of yield for 1.8 compatibility
+        Response.encoding_proc.call(result, ::Encoding.default_external) # use call instead of yield for 1.8 compatibility
       end
       
       # Return the next integer value from the stream
@@ -94,9 +94,9 @@ module Riddle
       # Use default encoding if available (1.9)
       def self.encoding_proc
         @@encoding_proc ||= if (defined?(::Encoding) && ::Encoding.respond_to?(:default_external))
-                              lambda{|s| s.force_encoding(::Encoding.default_external) }
+                              lambda{|s,e| s.force_encoding(e) }
                             else
-                              lambda{|s| s }
+                              lambda{|s,e| s }
                             end
       end
     end
