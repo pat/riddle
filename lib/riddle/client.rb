@@ -615,11 +615,7 @@ module Riddle
       status   = -1
       version  = 0
       length   = 0
-      message  = Array(messages).join("")
-      
-      if message.respond_to?(:force_encoding)
-        message = message.force_encoding('ASCII-8BIT')
-      end
+      message  = Riddle.encode(Array(messages).join(""), 'ASCII-8BIT')
       
       connect do |socket|
         case command
