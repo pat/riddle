@@ -89,3 +89,4 @@ Thanks to the following people who have contributed to Riddle in some shape or f
 * Jason Lambert
 * Saberma
 * James Cook
+* Alexey Artamonov
