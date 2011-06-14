@@ -1,8 +1,12 @@
 module Riddle
   class Configuration
     class DistributedIndex < Riddle::Configuration::Section
-      self.settings = [:type, :local, :agent, :agent_blackhole,
-        :agent_connect_timeout, :agent_query_timeout]
+      def self.settings
+        [ 
+          :type, :local, :agent, :agent_blackhole,
+          :agent_connect_timeout, :agent_query_timeout
+        ]
+      end
       
       attr_accessor :name, :local_indexes, :remote_indexes, :agent_blackhole,
         :agent_connect_timeout, :agent_query_timeout
