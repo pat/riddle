@@ -5,13 +5,14 @@ require 'timeout'
 module Riddle #:nodoc:
   @@mutex          = Mutex.new
   @@escape_pattern = /[\(\)\|\-!@~"&\/]/
-  @@use_encoding   = defined?(::Encoding) && ::Encoding.respond_to?(:default_external)
+  @@use_encoding   = defined?(::Encoding) &&
+                     ::Encoding.respond_to?(:default_external)
   
   class ConnectionError < StandardError #:nodoc:
     #
   end
 
-  def self.encode data, encoding=::Encoding.default_external
+  def self.encode(data, encoding = ::Encoding.default_external)
     if @@use_encoding
       data.force_encoding(encoding)
     else
