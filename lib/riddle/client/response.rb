@@ -5,6 +5,7 @@ module Riddle
     # user expects - it just assumes the user knows what the data stream is
     # made up of.
     class Response
+
       # Create with the data to interpret
       def initialize(str)
         @str = str
@@ -17,11 +18,7 @@ module Riddle
         result = @str[@marker, len]
         @marker += len
         
-        if defined?(Encoding) && Encoding.respond_to?(:default_external)
-          result.force_encoding(Encoding.default_external)
-        else
-          result
-        end
+        Response.encoding_proc.call(result, ::Encoding.default_external) # use call instead of yield for 1.8 compatibility
       end
       
       # Return the next integer value from the stream
@@ -92,6 +89,15 @@ module Riddle
       # Returns the length of the streamed data
       def length
         @str.length
+      end
+
+      # Use default encoding if available (1.9)
+      def self.encoding_proc
+        @@encoding_proc ||= if (defined?(::Encoding) && ::Encoding.respond_to?(:default_external))
+                              lambda{|s,e| s.force_encoding(e) }
+                            else
+                              lambda{|s,e| s }
+                            end
       end
     end
   end
