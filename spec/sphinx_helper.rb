@@ -37,7 +37,7 @@ class SphinxHelper
     structure = File.open("spec/fixtures/sql/structure.sql") { |f| f.read }
     structure.split(/;/).each { |sql| client.query sql }
     client.query <<-SQL
-      LOAD DATA LOCAL INFILE '#{@path}/fixtures/sql/data.tsv' INTO TABLE
+      LOAD DATA INFILE '#{@path}/fixtures/sql/data.tsv' INTO TABLE
       `riddle`.`people` FIELDS TERMINATED BY ',' ENCLOSED BY "'" (gender,
       first_name, middle_initial, last_name, street_address, city, state,
       postcode, email, birthday)
