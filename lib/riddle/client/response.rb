@@ -47,7 +47,7 @@ module Riddle
       def next_array
         count = next_int
         items = []
-        for i in 0...count
+        count.times do
           items << self.next
         end
         
@@ -58,7 +58,7 @@ module Riddle
       def next_int_array
         count = next_int
         items = []
-        for i in 0...count
+        count.times do
           items << self.next_int
         end
         
@@ -68,7 +68,7 @@ module Riddle
       def next_float_array
         count = next_int
         items = []
-        for i in 0...count
+        count.times do
           items << self.next_float
         end
         
@@ -78,7 +78,7 @@ module Riddle
       def next_64bit_int_array
         count = next_int
         items = []
-        for i in 0...count
+        count.times do
           items << self.next_64bit_int
         end
         

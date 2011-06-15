@@ -246,7 +246,7 @@ module Riddle
         result[:fields] = response.next_array
 
         attributes = response.next_int
-        for i in 0...attributes
+        attributes.times do
           attribute_name = response.next
           type           = response.next_int
 
@@ -278,7 +278,7 @@ module Riddle
         result[:time] = ('%.3f' % (response.next_int / 1000.0)).to_f || 0.0
 
         words = response.next_int
-        for i in 0...words
+        words.times do
           word = response.next
           docs = response.next_int
           hits = response.next_int
