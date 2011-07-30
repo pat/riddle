@@ -32,7 +32,7 @@ module Riddle
       
       cmd = "#{searchd} --pidfile --config \"#{@path}\""
       
-      if RUBY_PLATFORM =~ /mswin/
+      if RUBY_PLATFORM =~ /mswin|mingw/
         system("start /B #{cmd} 1> NUL 2>&1")
       else
         `#{cmd}`
@@ -53,7 +53,7 @@ module Riddle
       stop_flag = 'stop' if Riddle.loaded_version.split('.').first == '0'
       cmd = %(#{searchd} --pidfile --config "#{@path}" --#{stop_flag})
       
-      if RUBY_PLATFORM =~ /mswin/
+      if RUBY_PLATFORM =~ /mswin|mingw/
         system("start /B #{cmd} 1> NUL 2>&1")
       else
         `#{cmd}`
