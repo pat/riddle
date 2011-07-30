@@ -1,17 +1,24 @@
 module Riddle::Query
   def self.connection(address = '127.0.0.1', port = 9312)
+    connect( host: address, port: port )
+  end
+
+  # create a mysql2 connection to sphinx, passing through the connect options
+  def self.connect(options={})
     require 'mysql2'
+    host = options.delete(:host) || '127.0.0.1'
+    port = options.delete(:port) || 9312
     
     # If you use localhost, MySQL insists on a socket connection, but Sphinx
     # requires a TCP connection. Using 127.0.0.1 fixes that.
-    address = '127.0.0.1' if address == 'localhost'
+    # so does passing in the socket file e.g. socket:'/usr/local/sphinx/var/run/sphinx.sock'
+    # nb: sphinx.conf listen definition must specify mysql41 as the protocol, e.g.,
+    #     listen = localhost:9312:mysql41
+    host = '127.0.0.1' if host == 'localhost'
     
-    Mysql2::Client.new(
-      :host => address,
-      :port => port
-    )
+    Mysql2::Client.new( { host: host, port: port }.merge(options) )
   end
-  
+
   def self.meta
     'SHOW META'
   end
