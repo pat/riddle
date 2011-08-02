@@ -1,4 +1,4 @@
-Edge
+1.4.0 - August 2nd 2011
 - Checking against both Windows platforms for Ruby (Paul Gibler)
 - Encoding improvements (Alexey Artamonov)
 - More Rubyish syntax (James Cook)
