@@ -51,7 +51,7 @@ class Sphinx
   end
   
   def index
-    cmd = "indexer --config #{fixtures_path}/sphinx/spec.conf --all"
+    cmd = "#{bin_path}indexer --config #{fixtures_path}/sphinx/spec.conf --all"
     cmd << ' --rotate' if running?
     `#{cmd}`
   end
@@ -59,7 +59,7 @@ class Sphinx
   def start
     return if running?
 
-    `searchd --config #{fixtures_path}/sphinx/spec.conf`
+    `#{bin_path}searchd --config #{fixtures_path}/sphinx/spec.conf`
 
     sleep(1)
 
@@ -87,8 +87,13 @@ class Sphinx
     pid && `ps #{pid} | wc -l`.to_i > 1
   end
   
-  
   def fixtures_path
     File.expand_path File.join(File.dirname(__FILE__), '..', 'fixtures')
+  end
+  
+  def bin_path
+    @bin_path ||= (ENV['SPHINX_BIN'] || '').dup.tap do |path|
+      path.insert -1, '/' if path.length > 0 && path[/\/$/].nil?
+    end
   end
 end
