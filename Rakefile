@@ -14,3 +14,5 @@ RSpec::Core::RakeTask.new(:rcov) do |spec|
 end
 
 YARD::Rake::YardocTask.new
+
+task :default => :spec
