@@ -70,6 +70,7 @@ require 'riddle/client'
 require 'riddle/configuration'
 require 'riddle/controller'
 require 'riddle/query'
+require 'riddle/version'
 
 Riddle.loaded_version = nil
 Riddle::AutoVersion.configure
