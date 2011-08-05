@@ -6,7 +6,7 @@ class Sphinx
   
   def initialize
     self.host     = 'localhost'
-    self.username = 'anonymous'
+    self.username = 'root'
     self.password = ''
 
     if File.exist?('spec/fixtures/sql/conf.yml')
