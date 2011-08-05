@@ -18,7 +18,9 @@ RSpec.configure do |config|
   sphinx.generate_configuration
   sphinx.index
   
-  `php -f spec/fixtures/data_generator.#{Riddle.loaded_version}.php`
+  unless ENV['TRAVIS']
+    `php -f spec/fixtures/data_generator.#{Riddle.loaded_version}.php`
+  end
   
   config.before :all do |group|
     sphinx.start if group.class.metadata[:live]
@@ -30,5 +32,6 @@ RSpec.configure do |config|
 
   # enable filtering for examples
   config.filter_run :wip => true
+  config.exclusion_filter = {:ci => false} if ENV['TRAVIS']
   config.run_all_when_everything_filtered = true
 end
