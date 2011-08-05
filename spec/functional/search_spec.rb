@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Sphinx Searches" do
+describe "Sphinx Searches", :live => true do
   let(:client) { Riddle::Client.new 'localhost', 9313 }
   
   it "should return a single hash if a single query" do

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Riddle::Query do
+describe Riddle::Query, :live => true do
   describe '.connection' do
     let(:connection) { Riddle::Query.connection 'localhost', 9306 }
     
@@ -14,7 +14,9 @@ describe Riddle::Query do
       }
     end
   end
-  
+end
+
+describe Riddle::Query do
   describe '.set' do
     it 'handles a single value' do
       Riddle::Query.set('foo', 'bar').should == 'SET GLOBAL foo = bar'

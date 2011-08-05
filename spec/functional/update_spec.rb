@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Sphinx Updates" do
+describe "Sphinx Updates", :live => true do
   before :each do
     @client = Riddle::Client.new("localhost", 9313)
   end

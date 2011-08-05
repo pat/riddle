@@ -11,19 +11,19 @@ searchd
   listen        = 9313
   listen        = 9306:mysql41
   <% end %>
-  log           = <%= @path %>/fixtures/sphinx/searchd.log
-  query_log     = <%= @path %>/fixtures/sphinx/searchd.query.log
+  log           = <%= fixtures_path %>/sphinx/searchd.log
+  query_log     = <%= fixtures_path %>/sphinx/searchd.query.log
   read_timeout  = 5
   max_children  = 30
-  pid_file      = <%= @path %>/fixtures/sphinx/searchd.pid
+  pid_file      = <%= fixtures_path %>/sphinx/searchd.pid
 }
 
 source peoples
 {
   type 	    = mysql
-  sql_host  = <%= @host %>
-  sql_user  = <%= @username %>
-  sql_pass  = <%= @password %>
+  sql_host  = <%= host %>
+  sql_user  = <%= username %>
+  sql_pass  = <%= password %>
   sql_db    = riddle
 
   sql_query           = SELECT id, first_name, middle_initial, last_name, gender, street_address, city, state, postcode, email, UNIX_TIMESTAMP(birthday) AS birthday FROM people WHERE id >= $start AND id <= $end
@@ -36,7 +36,7 @@ index people
 {
   source          = peoples
   morphology      = stem_en
-  path            = <%= @path %>/fixtures/sphinx/people
+  path            = <%= fixtures_path %>/sphinx/people
   charset_type    = utf-8
   enable_star     = 1
   min_prefix_len  = 1

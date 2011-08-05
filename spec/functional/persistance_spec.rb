@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Sphinx Persistance Connection" do
+describe "Sphinx Persistance Connection", :live => true do
   before :each do
     @client = Riddle::Client.new("localhost", 9313)
   end

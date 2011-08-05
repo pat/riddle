@@ -2,10 +2,8 @@ require 'spec_helper'
 
 class RiddleSpecConnectionProcError < StandardError; end
 
-describe "Sphinx Client" do
-  before :each do
-    @client = Riddle::Client.new("localhost", 9313)
-  end
+describe 'Sphinx Client', :live => true do
+  let(:client) { Riddle::Client.new 'localhost', 9313 }
 
   after :each do
     Riddle::Client.connection = nil
@@ -16,31 +14,31 @@ describe "Sphinx Client" do
       Riddle::Client.connection = lambda { |client|
         TCPSocket.new(client.server, client.port)
       }
-      @client.query("smith").should be_kind_of(Hash)
+      client.query('smith').should be_kind_of(Hash)
     end
     
     it "should fail with errors from the given block" do
       Riddle::Client.connection = lambda { |client|
         raise RiddleSpecConnectionProcError
       }
-      lambda { @client.query("smith") }.
+      lambda { client.query('smith') }.
         should raise_error(RiddleSpecConnectionProcError)
     end
   end
   
   describe '#connection' do
     it "use the given block" do
-      @client.connection = lambda { |client|
+      client.connection = lambda { |client|
         TCPSocket.new(client.server, client.port)
       }
-      @client.query("smith").should be_kind_of(Hash)
+      client.query('smith').should be_kind_of(Hash)
     end
 
     it "should fail with errors from the given block" do
-      @client.connection = lambda { |client|
+      client.connection = lambda { |client|
         raise RiddleSpecConnectionProcError
       }
-      lambda { @client.query("smith") }.
+      lambda { client.query('smith') }.
         should raise_error(RiddleSpecConnectionProcError)
     end
 
@@ -48,11 +46,11 @@ describe "Sphinx Client" do
       Riddle::Client.connection = lambda { |client|
         raise RiddleSpecConnectionProcError
       }
-      @client.connection = lambda { |client|
+      client.connection = lambda { |client|
         TCPSocket.new(client.server, client.port)
       }
     
-      lambda { @client.query("smith") }.should_not raise_error
+      lambda { client.query('smith') }.should_not raise_error
     end
   end
 end

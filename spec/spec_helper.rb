@@ -4,33 +4,31 @@ require 'bundler'
 $:.unshift File.dirname(__FILE__) + '/../lib'
 $:.unshift File.dirname(__FILE__) + '/..'
 
+Dir['spec/support/**/*.rb'].each {|f| require f}
+
 Bundler.require :default, :development
 
 require 'riddle'
-require 'sphinx_helper'
 
 RSpec.configure do |config|
-  sphinx = SphinxHelper.new
+  config.include BinaryReader
+  
+  sphinx = Sphinx.new
   sphinx.setup_mysql
   sphinx.generate_configuration
   sphinx.index
   
-  config.before :all do
-    `php -f spec/fixtures/data_generator.#{Riddle.loaded_version}.php`
-    sphinx.start
+  `php -f spec/fixtures/data_generator.#{Riddle.loaded_version}.php`
+  
+  config.before :all do |group|
+    sphinx.start if group.class.metadata[:live]
   end
   
-  config.after :all do
-    sphinx.stop
+  config.after :all do |group|
+    sphinx.stop if group.class.metadata[:live]
   end
 
   # enable filtering for examples
   config.filter_run :wip => true
   config.run_all_when_everything_filtered = true
-end
-
-def query_contents(key)
-  contents = open("spec/fixtures/data/#{key.to_s}.bin") { |f| f.read }
-  contents.respond_to?(:encoding) ?
-    contents.force_encoding('ASCII-8BIT') : contents
 end
