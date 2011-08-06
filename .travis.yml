@@ -5,9 +5,8 @@ rvm:
   - rbx
   - rbx-2.0
   - ree
-  - jruby
   - ruby-head
 env:
-  - TRAVIS=true SPHINX_BIN=/usr/local/sphinx-0.9.9/bin
-  - TRAVIS=true SPHINX_BIN=/usr/local/sphinx-1.10/bin
-  - TRAVIS=true SPHINX_BIN=/usr/local/sphinx-2.0.1/bin
+  - SPHINX_BIN=/usr/local/sphinx-0.9.9/bin
+  - SPHINX_BIN=/usr/local/sphinx-1.10/bin
+  - SPHINX_BIN=/usr/local/sphinx-2.0.1/bin
