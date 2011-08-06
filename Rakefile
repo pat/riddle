@@ -16,3 +16,8 @@ end
 YARD::Rake::YardocTask.new
 
 task :default => :spec
+
+task :fixtures do
+  require './spec/spec_helper'
+  BinaryFixtures.build_fixtures
+end

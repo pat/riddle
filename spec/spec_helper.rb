@@ -11,16 +11,14 @@ Bundler.require :default, :development
 require 'riddle'
 
 RSpec.configure do |config|
-  config.include BinaryReader
+  config.include BinaryFixtures
   
   sphinx = Sphinx.new
   sphinx.setup_mysql
   sphinx.generate_configuration
   sphinx.index
   
-  unless ENV['TRAVIS']
-    `php -f spec/fixtures/data_generator.#{Riddle.loaded_version}.php`
-  end
+  BinaryFixtures.build_fixtures Riddle.loaded_version
   
   config.before :all do |group|
     sphinx.start if group.class.metadata[:live]
@@ -32,6 +30,5 @@ RSpec.configure do |config|
 
   # enable filtering for examples
   config.filter_run :wip => true
-  config.exclusion_filter = {:ci => false} if ENV['TRAVIS']
   config.run_all_when_everything_filtered = true
 end

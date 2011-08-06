@@ -32,7 +32,7 @@ describe Riddle::Client do
     client.queue.should_not be_empty
   end
   
-  describe 'query contents', :ci => false do
+  describe 'query contents' do
     it "should build a basic search message correctly" do
       client = Riddle::Client.new
       client.append_query "test "

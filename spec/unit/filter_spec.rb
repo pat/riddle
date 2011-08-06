@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Riddle::Client::Filter, :ci => false do
+describe Riddle::Client::Filter do
   it "should render a filter that uses an array of ints correctly" do
     filter = Riddle::Client::Filter.new("field", [1, 2, 3])
     filter.query_message.should == query_contents(:filter_array)
