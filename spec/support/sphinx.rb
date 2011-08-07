@@ -92,8 +92,10 @@ class Sphinx
   end
   
   def bin_path
-    @bin_path ||= (ENV['SPHINX_BIN'] || '').dup.tap do |path|
+    @bin_path ||= begin
+      path = (ENV['SPHINX_BIN'] || '').dup
       path.insert -1, '/' if path.length > 0 && path[/\/$/].nil?
+      path
     end
   end
 end
