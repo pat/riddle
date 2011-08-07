@@ -8,7 +8,7 @@ rvm:
   - ree
   - jruby
   - ruby-head
-env:
-  - SPHINX_BIN=/usr/local/sphinx-0.9.9/bin
-  - SPHINX_BIN=/usr/local/sphinx-1.10/bin
-  - SPHINX_BIN=/usr/local/sphinx-2.0.1/bin
+# env:
+#   - SPHINX_BIN=/usr/local/sphinx-0.9.9/bin
+#   - SPHINX_BIN=/usr/local/sphinx-1.10/bin
+#   - SPHINX_BIN=/usr/local/sphinx-2.0.1/bin
