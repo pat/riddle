@@ -1,12 +1,13 @@
 YARD::Rake::YardocTask.new
 
 Jeweler::Tasks.new do |gem|
-  gem.name        = 'riddle'
-  gem.summary     = 'An API for Sphinx, written in and for Ruby.'
-  gem.description = 'A Ruby API and configuration helper for the Sphinx search service.'
-  gem.email       = "pat@freelancing-gods.com"
-  gem.homepage    = "http://freelancing-god.github.com/riddle/"
-  gem.authors     = ["Pat Allan"]
+  gem.name        = 'widdle'
+  gem.version     = '0.1.0'
+  gem.summary     = 'A modern ruby wrapper for SphinxQL'
+  gem.description = 'A ruby SphinxQL wrapper and configuration helper for the Sphinx search service.'
+  gem.email       = "tribalvibes@tribalvibes.com"
+  gem.homepage    = "https://github.com/tribalvibes/widdle/"
+  gem.authors     = ["tribalvibes"]
   
   gem.files = FileList[
     'lib/**/*.rb',
