@@ -9,7 +9,7 @@ describe Riddle::Query, :live => true do
     end
     
     it "should handle search requests" do
-      connection.query(Riddle::Query.tables).first.should == {
+      connection.query(Riddle::Query.tables).to_a[0].should == {
         'Index' => 'people', 'Type' => 'local'
       }
     end

@@ -58,7 +58,9 @@ describe Riddle::Query::Select do
   end
   
   it 'handles multiple options' do
-    query.from('foo_core').with_options(:bar => :baz, :qux => :quux).to_sql.
-      should == 'SELECT * FROM foo_core OPTION bar=baz, qux=quux'
+    sql = query.from('foo_core').with_options(:bar => :baz, :qux => :quux).
+      to_sql
+    sql.should match(/OPTION .*bar=baz/)
+    sql.should match(/OPTION .*qux=quux/)
   end
 end
