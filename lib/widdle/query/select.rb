@@ -1,8 +1,10 @@
 module Widdle::Query
   class Select < Result
     attr :client
-    def initialize(client, args={})
+    def initialize(client, *params)
       @client = client
+      args = ( params.pop if Hash === params.last ) || {}
+      @columns               = params
       @indices               = Array.wrap(args.delete(:from))
       @match                 = Array.wrap(args.delete(:match))
       @wheres                = Array.wrap(args.delete(:where))
@@ -14,6 +16,11 @@ module Widdle::Query
       @options               = args.delete(:options) || {}
     end
   
+    def columns(*cols)
+      @columns += cols
+      self
+    end
+    
     def from(*indices)
       @indices += indices
       self
@@ -61,7 +68,8 @@ module Widdle::Query
     end
   
     def to_s
-      sql = "SELECT * FROM #{ @indices.join(', ') }"
+      #FIXME validate everything to avoid injection
+      sql = "SELECT #{columns_clause} FROM #{ @indices.join(', ') }"
       sql << " WHERE #{ combined_wheres }" if wheres?
       sql << " GROUP BY #{@group_by}"      if !@group_by.nil?
       sql << " ORDER BY #{@order_by}"      if !@order_by.nil?
@@ -75,13 +83,25 @@ module Widdle::Query
     end
   
     private
-  
+    
+    def columns_clause
+      cols = @columns.map {|c|
+        if Hash === c
+          c.map{|k,v| "#{v} as `#{k}`" }
+        else
+          c
+        end
+      }.flatten.reject(&:empty?)
+      cols.push('*') if cols.empty?
+      cols.join(', ')
+    end
+    
     def wheres?
       @wheres.presence || @match.presence
     end
   
     def combined_wheres
-      [ *@match.map{|v| "MATCH('#{v}')"}, where_clause(@wheres) ].reject(&:empty?).join(' AND ')
+      [ *@match.map{|v| "MATCH('#{client.escape(v)}')"}, where_clause(@wheres) ].reject(&:empty?).join(' AND ')
     end
   
     # where: [ conditions ]
@@ -95,6 +115,7 @@ module Widdle::Query
     #       numeric, e.g.  class_id: 4 =>  class_id = 4
     #       String with bind values, e.g.  lng: "> :lngval"    =>  lng > 2.8173   (where hash also contains key :lngval)
     def where_clause( conditions )
+      #FIXME validate everything to avoid injection
       binds = conditions.last if Hash === conditions.last
       bound = []  # remember which binds we consumed from options hash
       conditions.map{ |condition|
@@ -137,11 +158,24 @@ module Widdle::Query
   
     def limit_clause
       @offset ||= @limit.first if @limit.size > 1
-      limit = [@offset, @limit.last]
+      limit = [(Integer(@offset) rescue nil), (Integer(@limit.last) rescue nil)]
       "LIMIT #{limit.compact.join(', ')}" if limit.any?
     end
   
     def options_clause
+      #FIXME  the keys and values need to be validated and filtered/escaped to prevent injection
+      # preferrably in a way that doesn't require updating with each sphinx version
+      # see http://sphinxsearch.com/docs/2.0.1/sphinxql-select.html
+      # Supported options and respectively allowed values are:
+      # 'ranker' - any of 'proximity_bm25', 'bm25', 'none', 'wordcount', 'proximity', 'matchany', or 'fieldmask'
+      # 'max_matches' - integer (per-query max matches value)
+      # 'cutoff' - integer (max found matches threshold)
+      # 'max_query_time' - integer (max search time threshold, msec)
+      # 'retry_count' - integer (distributed retries count)
+      # 'retry_delay' - integer (distributed retry delay, msec)
+      # 'field_weights' - a named integer list (per-field user weights for ranking)
+      # 'index_weights' - a named integer list (per-index user weights for ranking)
+      # 'reverse_scan' - 0 or 1, lets you control the order in which full-scan query processes the rows
       'OPTION ' + @options.map { |k,v| "#{k}=#{v}" }.join(', ')
     end
   end
