@@ -6,7 +6,7 @@ rvm:
   - rbx
   - rbx-2.0
   - ree
-  - jruby
+  # - jruby
   - ruby-head
 # env:
 #   - SPHINX_BIN=/usr/local/sphinx-0.9.9/bin
