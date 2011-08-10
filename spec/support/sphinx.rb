@@ -51,8 +51,18 @@ class Sphinx
   end
   
   def setup_mysql_on_jruby
-    address = "jdbc:mysql://#{host}/riddle"
+    address = "jdbc:mysql://#{host}"
     client = java.sql.DriverManager.getConnection(address, username, password)
+    
+    set       = client.createStatement.executeQuery('SHOW DATABASES')
+    databases = []
+    databases << set.getString(1) while set.next
+    
+    unless databases.include?('riddle')
+      client.createStatement.execute 'CREATE DATABASE riddle'
+    end
+
+    client.createStatement.execute 'USE riddle'
     
     structure = File.open('spec/fixtures/sql/structure.sql') { |f| f.read }
     structure.split(/;/).each { |sql| client.createStatement.execute sql }
