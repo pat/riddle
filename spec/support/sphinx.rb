@@ -1,6 +1,11 @@
 require 'erb'
 require 'yaml'
 
+if RUBY_PLATFORM == 'java'
+  require 'java'
+  require 'jdbc/mysql'
+end
+
 class Sphinx
   attr_accessor :host, :username, :password
   
@@ -18,6 +23,8 @@ class Sphinx
   end
   
   def setup_mysql
+    return setup_mysql_on_jruby if RUBY_PLATFORM == 'java'
+    
     client = Mysql2::Client.new(
       :host     => host,
       :username => username,
@@ -41,6 +48,20 @@ class Sphinx
     SQL
 
     client.close
+  end
+  
+  def setup_mysql_on_jruby
+    address = "jdbc:mysql://#{host}/riddle"
+    client = java.sql.DriverManager.getConnection(address, username, password)
+    
+    structure = File.open('spec/fixtures/sql/structure.sql') { |f| f.read }
+    structure.split(/;/).each { |sql| client.createStatement.execute sql }
+    client.createStatement.execute <<-SQL
+      LOAD DATA INFILE '#{fixtures_path}/sql/data.tsv' INTO TABLE
+      `riddle`.`people` FIELDS TERMINATED BY ',' ENCLOSED BY "'" (gender,
+      first_name, middle_initial, last_name, street_address, city, state,
+      postcode, email, birthday)
+    SQL
   end
   
   def generate_configuration

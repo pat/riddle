@@ -199,17 +199,17 @@ describe Riddle::Client do
   
   it "should timeout after a specified time" do
     client = Riddle::Client.new
-    client.port     = 3314
+    client.port     = 9314
     client.timeout  = 1
     
-    server = TCPServer.new "localhost", 3314
+    server = TCPServer.new "localhost", 9314
     
     lambda {
       client.send(:connect) { |socket| }
     }.should raise_error(Riddle::ConnectionError)
     
     server.close
-  end
+  end unless RUBY_PLATFORM == 'java' # JRuby doesn't like Timeout
 
   context "connection retrying" do
     it "should try fives time when connection refused" do
@@ -239,7 +239,7 @@ describe Riddle::Client do
       lambda {
         client.send(:connect) { |socket| }
       }.should raise_error(Riddle::ConnectionError)
-    end
+    end unless RUBY_PLATFORM == 'java' # JRuby doesn't like Timeout
 
     it "should try each of several server addresses after a connection refused" do
       client = Riddle::Client.new
@@ -257,6 +257,6 @@ describe Riddle::Client do
       lambda {
         client.send(:connect) { |socket| }
       }.should raise_error(Riddle::ConnectionError)
-    end
+    end unless RUBY_PLATFORM == 'java' # JRuby doesn't like Timeout
   end
 end
