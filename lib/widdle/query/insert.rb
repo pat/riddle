@@ -2,12 +2,23 @@ module Widdle::Query
   class Insert < Result
     attr :columns, :values
     
-    def insert(index, columns = [], values = [])
-      
+    def initialize(client, index, columns = [], values = [])
+      @client  = client
       @index   = index
-      @columns = columns
-      @values  = values.first.is_a?(Array) ? values : [values]
+      
+      # insert a tuple as a hash, or array of hashes (assumed to all have same keys)
+      if Hash === columns
+        @columns = columns.keys
+        @values = [columns.values]
+      elsif Hash === columns.first
+        @columns = columns.first.keys
+        @values = columns
+      else
+        @columns = columns
+        @values  = values.first.is_a?(Array) ? values : [values]
+      end
       @replace = false
+      puts "insert.init: client=#{@client} idx=#{@index} cols=#{@columns}  vals=#{@values}"
     end
     
     def replace!
@@ -16,33 +27,34 @@ module Widdle::Query
     end
     
     def to_s
-      "#{command} INTO #{@index} (#{columns_to_s}) VALUES (#{values_to_s})"
+      "#{command} INTO #{@client.escape(@index)} (#{columns_to_s}) VALUES (#{values_to_s})"
     end
     
-   private
+   protected
     
     def command
       @replace ? 'REPLACE' : 'INSERT'
     end
     
     def columns_to_s
-      columns.join(', ')
+      columns.map{|c| "`#{@client.escape(c)}`" }.join(', ')
     end
-          
+
     def values_to_s
-      values.collect { |value_set|
-        value_set.collect { |value|
-          translated_value(value)
-        }.join(', ')
+      values.map { |v|
+        if Hash === v
+          v.values.map{|v| translated_value(v) }
+        else
+          v.map{|v| translated_value(v) }
+        end.join(', ')
       }.join('), (')
     end
-    
+
     def translated_value(value)
       case value
-      when String
-        "'#{value}'"
-      when TrueClass, FalseClass
-        value ? 1 : 0
+      when String then "'#{@client.escape(value)}'"
+      when TrueClass then 1
+      when FalseClass then 0
       else
         value
       end

@@ -4,12 +4,42 @@ require 'logger'
 
 module Widdle::Query
 
-    def self.connect(*options)
-      Client.new(*options)
+    def self.client
+      threaded[:client] ||= connection(options)
     end
-    
-    def self.connection(host = '127.0.0.1', port = 9312)
-      Client.new( host: host, port: port )
+    def self.client=(connection)
+      threaded[:client] = connection
+    end
+
+    def self.threaded
+      Thread.current[:widdle] ||= {}
+    end
+
+    def self.connection( options={} )
+      options[:host] ||= self.options[:host] || '127.0.0.1'
+      options[:port] ||= self.options[:port] || 9312
+      Client.new( self.options.merge( options ) )
+    end
+
+    def self.options
+      threaded[:options] ||= {}
+    end
+
+    def self.connect( options={} )
+      disconnect!
+      threaded[:options] = options
+    end
+
+    def self.disconnect!
+      if threaded[:client]
+        client.close
+        client = nil
+      end
+    end
+
+    def reconnect!
+      disconnect!
+      connect
     end
 
     class Client < Mysql2::Client
@@ -91,7 +121,7 @@ module Widdle::Query
       end
       
       def insert(*args)
-        query(Insert.new(*args))
+        Insert.new(self, *args)
       end
 
       def replace(*args)
