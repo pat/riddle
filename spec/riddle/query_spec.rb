@@ -14,7 +14,7 @@ describe Riddle::Query, :live => true do
       }
     end
   end
-end unless RUBY_PLATFORM == 'java'
+end unless RUBY_PLATFORM == 'java' || Riddle.loaded_version.to_i < 2
 
 describe Riddle::Query do
   describe '.set' do
