@@ -18,7 +18,7 @@ module Widdle::Query
         @values  = values.first.is_a?(Array) ? values : [values]
       end
       @replace = false
-      puts "insert.init: client=#{@client} idx=#{@index} cols=#{@columns}  vals=#{@values}"
+#      puts "insert.init: client=#{@client} idx=#{@index} cols=#{@columns}  vals=#{@values}"
     end
     
     def replace!
@@ -29,9 +29,9 @@ module Widdle::Query
     def to_s
       "#{command} INTO #{@client.escape(@index)} (#{columns_to_s}) VALUES (#{values_to_s})"
     end
-    
+
    protected
-    
+
     def command
       @replace ? 'REPLACE' : 'INSERT'
     end
@@ -52,7 +52,7 @@ module Widdle::Query
 
     def translated_value(value)
       case value
-      when String then "'#{@client.escape(value)}'"
+      when String, NilClass then "'#{@client.escape(value)}'"
       when TrueClass then 1
       when FalseClass then 0
       else

@@ -26,20 +26,23 @@ module Widdle::Query
     end
 
     def self.connect( options={} )
-      disconnect!
       threaded[:options] = options
     end
 
     def self.disconnect!
       if threaded[:client]
         client.close
-        client = nil
+        self.client = nil
       end
     end
 
-    def reconnect!
+    def self.reconnect!
       disconnect!
-      connect
+      connect( options )
+    end
+    
+    def self.active?
+      client && client.ping
     end
 
     class Client < Mysql2::Client
@@ -66,10 +69,15 @@ module Widdle::Query
         super( { symbolize_keys: true, database_timezone: :utc, application_timezone: :local }.merge( options ) )
       end
 
+      def active?
+        ping
+      end
+      
+      alias_method :_query, :query
       def query(*args)
         q = args.shift.to_s
         logger.debug("Widdle.query: #{q}")
-        super(q,*args)
+        try_query(q,*args)
       end
 
       def escape( arg )
@@ -125,7 +133,7 @@ module Widdle::Query
       end
 
       def replace(*args)
-        query(Insert.new(*args).replace!)
+        Insert.new(self, *args).replace!
       end
 
       def delete(index, *ids)
@@ -166,9 +174,27 @@ module Widdle::Query
       def drop_function(name)
         query("DROP FUNCTION #{name}")
       end
-      
+
+     protected
+
+      def try_query(q,*args)
+        # fix the scope...connection pool?
+        client = self
+        tries = 3
+        begin
+          client._query(q, *args) #super
+        rescue Mysql2::Error => e
+          if e.message =~ /server has gone away|closed MySQL connection/ && ( tries -= 1 ) > 0
+            Widdle::Query.reconnect! unless active?
+            client = Widdle::Query.client
+            logger.debug( "Widdle#try_query: reconnect: #{e.message}" )
+            retry
+          end
+          raise
+        end
+      end
     end
-    
+
     class Result < DelegateClass(Mysql2::Result)
       attr :client
       def initialize(client, *args)

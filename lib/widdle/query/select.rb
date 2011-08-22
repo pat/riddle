@@ -4,7 +4,7 @@ module Widdle::Query
     def initialize(client, *params)
       @client = client
       args = ( params.pop if Hash === params.last ) || {}
-      @columns               = params
+      @columns               = params # || []
       @indices               = Array.wrap(args.delete(:from))
       @match                 = Array.wrap(args.delete(:match))
       @wheres                = Array.wrap(args.delete(:where))
@@ -14,6 +14,7 @@ module Widdle::Query
       @offset                = args.delete(:offset)
       @limit                 = Array.wrap(args.delete(:limit) || 20)
       @options               = args.delete(:options) || {}
+#      puts "select.init: client=#{@client} idx=#{@indices} cols=#{@columns}  wheres=#{@wheres}"
     end
   
     def columns(*cols)
@@ -87,7 +88,7 @@ module Widdle::Query
     def columns_clause
       cols = @columns.map {|c|
         if Hash === c
-          c.map{|k,v| "#{v} as `#{k}`" }
+          c.map{|k,v| v == true ? "#{k}" : "#{v} as `#{k}`" }
         else
           c
         end
@@ -95,13 +96,13 @@ module Widdle::Query
       cols.push('*') if cols.empty?
       cols.join(', ')
     end
-    
+
     def wheres?
       @wheres.presence || @match.presence
     end
   
     def combined_wheres
-      [ *@match.map{|v| "MATCH('#{client.escape(v)}')"}, where_clause(@wheres) ].reject(&:empty?).join(' AND ')
+      [ *@match.map{|v| "MATCH('#{client.escape(v)}')"}, where_clause(@wheres.compact!) ].reject(&:empty?).join(' AND ')
     end
   
     # where: [ conditions ]
