@@ -212,5 +212,5 @@ module Widdle::Query
     end
 end
 
-require 'Widdle/query/insert'
-require 'Widdle/query/select'
+require 'widdle/query/insert'
+require 'widdle/query/select'
