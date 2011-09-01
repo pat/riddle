@@ -141,9 +141,8 @@ module Riddle
     def initialize(servers = nil, port = nil, key = nil)
       Riddle.version_warning
 
-      servers = Array(servers || "localhost")
-      @servers = servers.respond_to?(:shuffle) ? servers.shuffle : servers.sort_by{ rand }
-      @port   = port     || 9312
+      @servers = Array(servers || "localhost")
+      @port   = port || 9312
       @socket = nil
       @key    = key
       

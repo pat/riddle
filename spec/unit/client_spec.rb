@@ -13,6 +13,12 @@ describe Riddle::Client do
   it "should default to port 9312" do
     Riddle::Client.new.port.should == 9312
   end
+
+  it "should accept an array of servers" do
+    servers = ["1.1.1.1", "2.2.2.2", "3.3.3.3"]
+    client = Riddle::Client.new(servers)
+    client.servers.should == servers
+  end
   
   it "should translate anchor arguments correctly" do
     client = Riddle::Client.new
