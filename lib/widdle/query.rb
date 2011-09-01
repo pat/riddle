@@ -137,12 +137,7 @@ module Widdle::Query
       end
 
       def delete(index, *ids)
-        s = if ids.length > 1
-          "DELETE FROM #{@index} WHERE id IN (#{ids.join(', ')})"
-        else
-          "DELETE FROM #{@index} WHERE id = #{ids.first}"
-        end
-        query(s)
+        query("DELETE FROM #{index} WHERE id IN (#{ids.flatten.join(', ')})")
       end
 
       def update(index, id, values = {})

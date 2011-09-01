@@ -1,14 +1,14 @@
-require 'riddle/configuration/section'
+require 'widdle/configuration/section'
 
-require 'riddle/configuration/distributed_index'
-require 'riddle/configuration/index'
-require 'riddle/configuration/indexer'
-require 'riddle/configuration/realtime_index'
-require 'riddle/configuration/remote_index'
-require 'riddle/configuration/searchd'
-require 'riddle/configuration/source'
-require 'riddle/configuration/sql_source'
-require 'riddle/configuration/xml_source'
+require 'widdle/configuration/distributed_index'
+require 'widdle/configuration/index'
+require 'widdle/configuration/indexer'
+require 'widdle/configuration/realtime_index'
+require 'widdle/configuration/remote_index'
+require 'widdle/configuration/searchd'
+require 'widdle/configuration/source'
+require 'widdle/configuration/sql_source'
+require 'widdle/configuration/xml_source'
 
 module Riddle
   class Configuration

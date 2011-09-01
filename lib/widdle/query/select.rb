@@ -14,7 +14,7 @@ module Widdle::Query
       @offset                = args.delete(:offset)
       @limit                 = Array.wrap(args.delete(:limit) || 20)
       @options               = args.delete(:options) || {}
-#      puts "select.init: client=#{@client} idx=#{@indices} cols=#{@columns}  wheres=#{@wheres}"
+#      client.logger.debug "Widdle::Query#select.init: client=#{@client} idx=#{@indices} cols=#{@columns}  wheres=#{@wheres}"
     end
   
     def columns(*cols)
@@ -102,7 +102,8 @@ module Widdle::Query
     end
   
     def combined_wheres
-      [ *@match.map{|v| "MATCH('#{client.escape(v)}')"}, where_clause(@wheres.compact!) ].reject(&:empty?).join(' AND ')
+      @wheres.reject!(&:empty?)
+      [ *@match.map{|v| "MATCH('#{client.escape(v)}')"}, where_clause(@wheres) ].reject(&:empty?).join(' AND ')
     end
   
     # where: [ conditions ]
@@ -111,7 +112,7 @@ module Widdle::Query
     #     bind values are drawn from hash which must be last entry of conditions array
     #   Hash of attributes and values: { attr1: val1, ... }
     #     and remaining keys in Hash not consumed by bind values are processed according to value type:
-    #       Array, e.g. id: [1,2,3,4]  =>  id IN [1,2,3,4]
+    #       Array, e.g. id: [1,2,3,4]  =>  id IN (1,2,3,4)
     #       Range, e.g. kine: 3.0..4.0 =>  kine BETWEEN 3.0 and 4.0
     #       numeric, e.g.  class_id: 4 =>  class_id = 4
     #       String with bind values, e.g.  lng: "> :lngval"    =>  lng > 2.8173   (where hash also contains key :lngval)
@@ -119,6 +120,7 @@ module Widdle::Query
       #FIXME validate everything to avoid injection
       binds = conditions.last if Hash === conditions.last
       bound = []  # remember which binds we consumed from options hash
+#      client.logger.debug "Widdle::Query:where_clause: #{conditions.inspect}"
       conditions.map{ |condition|
         if Hash === condition
           condition.map{|k,v|
@@ -126,7 +128,7 @@ module Widdle::Query
             case v
             when Array
               vals = v.map{|val| client.escape(val) }
-              "#{k} IN #{vals}"
+              "#{k} IN (#{vals.to_s[1..-2]})"
             when Range
               if v.exclude_end?
                 "#{k} >= #{v.min} AND #{k} < #{v.max}"
