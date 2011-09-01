@@ -22,12 +22,12 @@ To get started, just instantiate a Client object:
 
   client = Riddle::Client.new # defaults to localhost and port 3312
   client = Riddle::Client.new "sphinxserver.domain.tld", 3333 # custom settings
-  
+
 And then set the parameters to what you want, before running a query:
 
   client.match_mode = :extended
   client.query "Pat Allan @state Victoria"
-  
+
 The results from a query are similar to the other clients - but here's the details. It's a hash with
 the following keys:
 
@@ -53,7 +53,7 @@ documents. The key @:attributes@ will return a hash of attribute name and type p
 documents and hits for each, along the lines of:
 
   results[:words]["Pat"] #=> {:docs => 12, :hits => 15}
-  
+
 @:total@, @:total_found@ and @:time@ return the number of matches available, the
 total number of matches (which may be greater than the maximum available), and the time in milliseconds
 that the query took to run.
@@ -91,3 +91,4 @@ Thanks to the following people who have contributed to Riddle in some shape or f
 * James Cook
 * Alexey Artamonov
 * Paul Gibler
+* Ngan Pham

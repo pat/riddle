@@ -1,3 +1,6 @@
+Edge:
+- Don't shuffle servers (if there's more than one) - let developers (or Thinking Sphinx) manage that (Ngan Pham).
+
 1.4.0 - August 2nd 2011
 - Checking against both Windows platforms for Ruby (Paul Gibler)
 - Encoding improvements (Alexey Artamonov)
