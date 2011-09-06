@@ -26,11 +26,12 @@ module Riddle
       options[:verbose] ? system(cmd) : `#{cmd}`
     end
     
-    def start
+    def start(options={})
       return if running?
       check_for_configuration_file
       
       cmd = "#{searchd} --pidfile --config \"#{@path}\""
+      cmd << " --nodetach" if options[:nodetach]
       
       if RUBY_PLATFORM =~ /mswin|mingw/
         system("start /B #{cmd} 1> NUL 2>&1")
