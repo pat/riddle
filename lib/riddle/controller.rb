@@ -33,7 +33,9 @@ module Riddle
       cmd = "#{searchd} --pidfile --config \"#{@path}\""
       cmd << " --nodetach" if options[:nodetach]
       
-      if RUBY_PLATFORM =~ /mswin|mingw/
+      if options[:nodetach]
+        exec(cmd)
+      elsif RUBY_PLATFORM =~ /mswin|mingw/
         system("start /B #{cmd} 1> NUL 2>&1")
       else
         `#{cmd}`
