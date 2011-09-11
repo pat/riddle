@@ -66,7 +66,7 @@ class Riddle::Query::Select
     end
     sql << " #{limit_clause}"   unless @limit.nil? && @offset.nil?
     sql << " #{options_clause}" unless @options.empty?
-  
+
     sql
   end
 
@@ -88,8 +88,19 @@ class Riddle::Query::Select
 
   def wheres_to_s
     @wheres.keys.collect { |key|
-      "#{key} = #{@wheres[key]}"
+      "#{key} = #{filter_value @wheres[key]}"
     }.join(' AND ')
+  end
+
+  def filter_value(value)
+    case value
+    when TrueClass
+      1
+    when FalseClass
+      0
+    else
+      value
+    end
   end
 
   def limit_clause
