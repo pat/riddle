@@ -37,6 +37,11 @@ describe Riddle::Query::Select do
       should == "SELECT * FROM foo_core WHERE MATCH('foo') AND bar = 0"
   end
 
+  it "handles filters with arrays" do
+    query.from('foo_core').matching('foo').where(:bars => [1, 2]).to_sql.
+      should == "SELECT * FROM foo_core WHERE MATCH('foo') AND bars IN (1, 2)"
+  end
+
   it 'handles grouping' do
     query.from('foo_core').group_by('bar_id').to_sql.
       should == "SELECT * FROM foo_core GROUP BY bar_id"

@@ -88,8 +88,17 @@ class Riddle::Query::Select
 
   def wheres_to_s
     @wheres.keys.collect { |key|
-      "#{key} = #{filter_value @wheres[key]}"
+      "#{key} #{filter_comparison_and_value @wheres[key]}"
     }.join(' AND ')
+  end
+
+  def filter_comparison_and_value(value)
+    case value
+    when Array
+      "IN (#{value.collect { |val| filter_value(val) }.join(', ')})"
+    else
+      "= #{filter_value(value)}"
+    end
   end
 
   def filter_value(value)
