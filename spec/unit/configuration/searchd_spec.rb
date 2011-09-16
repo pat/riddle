@@ -54,12 +54,13 @@ describe Riddle::Configuration::Searchd do
       searchd.should respond_to("#{setting}=".to_sym)
     end
   end
-  
-  it "should render a correct configuration with valid settings" do
+
+  it "should support setting listen to a port number" do
     searchd = Riddle::Configuration::Searchd.new
-    searchd.port      = 3312
-    searchd.pid_file  = "file.pid"
-    
+    searchd.port = 3312
+    searchd.pid_file = "file.pid"
+    searchd.listen = 3312
+
     if Riddle.loaded_version.to_f >= 0.9
       searchd.render.should == <<-SEARCHD
 searchd
@@ -78,7 +79,31 @@ searchd
       SEARCHD
     end
   end
-  
+
+  it "should render a correct configuration with valid settings" do
+    searchd = Riddle::Configuration::Searchd.new
+    searchd.port      = 3312
+    searchd.pid_file  = "file.pid"
+
+    if Riddle.loaded_version.to_f >= 0.9
+      searchd.render.should == <<-SEARCHD
+searchd
+{
+  listen = 3312
+  pid_file = file.pid
+}
+      SEARCHD
+    else
+      searchd.render.should == <<-SEARCHD
+searchd
+{
+  port = 3312
+  pid_file = file.pid
+}
+      SEARCHD
+    end
+  end
+
   it "should render with a client key if one is provided" do
     searchd = Riddle::Configuration::Searchd.new
     searchd.port       = 3312
