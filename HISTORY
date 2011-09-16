@@ -1,4 +1,5 @@
 Edge:
+- Handle port numbers as integers for listen setting (Ngan Pham).
 - Provide the option to start searchd with the nodetach flag (Aaron Gilbralter).
 - Don't shuffle servers (if there's more than one) - let developers (or Thinking Sphinx) manage that (Ngan Pham).
 
