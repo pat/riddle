@@ -96,6 +96,8 @@ class Riddle::Query::Select
     case value
     when Array
       "IN (#{value.collect { |val| filter_value(val) }.join(', ')})"
+    when Range
+      "BETWEEN #{filter_value(value.first)} AND #{filter_value(value.last)}"
     else
       "= #{filter_value(value)}"
     end
@@ -107,6 +109,8 @@ class Riddle::Query::Select
       1
     when FalseClass
       0
+    when Time
+      value.to_i
     else
       value
     end

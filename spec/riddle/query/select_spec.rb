@@ -42,6 +42,17 @@ describe Riddle::Query::Select do
       should == "SELECT * FROM foo_core WHERE MATCH('foo') AND bars IN (1, 2)"
   end
 
+  it "handles filters with timestamps" do
+    time = Time.now
+    query.from('foo_core').matching('foo').where(:created_at => time).to_sql.
+      should == "SELECT * FROM foo_core WHERE MATCH('foo') AND created_at = #{time.to_i}"
+  end
+
+  it "handles filters with ranges" do
+    query.from('foo_core').matching('foo').where(:bar => 1..5).to_sql.
+      should == "SELECT * FROM foo_core WHERE MATCH('foo') AND bar BETWEEN 1 AND 5"
+  end
+
   it 'handles grouping' do
     query.from('foo_core').group_by('bar_id').to_sql.
       should == "SELECT * FROM foo_core GROUP BY bar_id"
