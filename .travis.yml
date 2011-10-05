@@ -12,5 +12,5 @@ env:
   - SPHINX_BIN=/usr/local/sphinx-0.9.9/bin SPHINX_VERSION=0.9.9
   - SPHINX_BIN=/usr/local/sphinx-1.10/bin SPHINX_VERSION=1.10
   - SPHINX_BIN=/usr/local/sphinx-2.0.1/bin SPHINX_VERSION=2.0.1
-before_script: killall searchd; 1
-after_script:  killall searchd; 1
+before_script: killall searchd; echo ''
+after_script:  killall searchd; echo ''
