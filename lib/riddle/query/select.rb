@@ -1,5 +1,6 @@
 class Riddle::Query::Select
   def initialize
+    @values                = ['*']
     @indices               = []
     @matching              = nil
     @wheres                = {}
@@ -9,6 +10,11 @@ class Riddle::Query::Select
     @offset                = nil
     @limit                 = nil
     @options               = {}
+  end
+
+  def values(*values)
+    @values += values
+    self
   end
 
   def from(*indices)
@@ -57,7 +63,7 @@ class Riddle::Query::Select
   end
 
   def to_sql
-    sql = "SELECT * FROM #{ @indices.join(', ') }"
+    sql = "SELECT #{ @values.join(', ') } FROM #{ @indices.join(', ') }"
     sql << " WHERE #{ combined_wheres }" if wheres?
     sql << " GROUP BY #{@group_by}"      if !@group_by.nil?
     sql << " ORDER BY #{@order_by}"      if !@order_by.nil?

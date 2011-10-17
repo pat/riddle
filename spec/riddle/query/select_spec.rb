@@ -17,6 +17,11 @@ describe Riddle::Query::Select do
       should == 'SELECT * FROM foo_core, foo_delta'
   end
 
+  it "handles custom select values" do
+    query.values('@weight').from('foo_core').to_sql.
+      should == 'SELECT *, @weight FROM foo_core'
+  end
+
   it 'handles basic queries with a search term' do
     query.from('foo_core').matching('foo').to_sql.
       should == "SELECT * FROM foo_core WHERE MATCH('foo')"
