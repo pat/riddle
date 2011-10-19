@@ -94,4 +94,9 @@ describe Riddle::Query::Select do
     sql.should match(/OPTION .*bar=baz/)
     sql.should match(/OPTION .*qux=quux/)
   end
+
+  it "handles options of hashes" do
+    query.from('foo_core').with_options(:weights => {:foo => 5}).to_sql.
+      should == 'SELECT * FROM foo_core OPTION weights=(foo=5)'
+  end
 end

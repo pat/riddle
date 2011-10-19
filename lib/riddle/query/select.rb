@@ -132,7 +132,16 @@ class Riddle::Query::Select
 
   def options_clause
     'OPTION ' + @options.keys.collect { |key|
-      "#{key}=#{@options[key]}"
+      "#{key}=#{option_value @options[key]}"
     }.join(', ')
+  end
+
+  def option_value(value)
+    case value
+    when Hash
+      '(' + value.collect { |key, value| "#{key}=#{value}" }.join(', ') + ')'
+    else
+      value
+    end
   end
 end
