@@ -291,7 +291,7 @@ module Riddle
       results
     end
 
-    # Query the Sphinx daemon - defaulting to all indexes, but you can specify
+    # Query the Sphinx daemon - defaulting to all indices, but you can specify
     # a specific one if you wish. The search parameter should be a string
     # following Sphinx's expectations.
     #
