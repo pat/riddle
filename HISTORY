@@ -1,4 +1,12 @@
 Edge:
+- Handle exclusive filters in SphinxQL SELECT commands.
+- Allow for native Ruby objects in SphinxQL UPDATE commands.
+- Handle options of hashes in SphinxQL SELECT commands.
+- Allow for SphinxQL select clauses.
+- Improving SphinxQL filter handling of native Ruby objects.
+- Switch plural index references from indexes to indices, to distinguish beside indexes (the action).
+- Rescue against timeouts and connection resets.
+- Fixing reference to TCPSocket.
 - Handle port numbers as integers for listen setting (Ngan Pham).
 - Provide the option to start searchd with the nodetach flag (Aaron Gilbralter).
 - Don't shuffle servers (if there's more than one) - let developers (or Thinking Sphinx) manage that (Ngan Pham).
