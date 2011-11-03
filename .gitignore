@@ -1,5 +1,6 @@
-*.tmproj
 *.gem
-coverage
-*.swp
 *.rbc
+*.swp
+*.tmproj
+coverage
+Gemfile.lock
