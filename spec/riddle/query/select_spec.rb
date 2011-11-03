@@ -32,9 +32,19 @@ describe Riddle::Query::Select do
       should == "SELECT * FROM foo_core WHERE MATCH('foo') AND bar_id = 10"
   end
 
+  it "handles exclusive filters with integers" do
+    query.from('foo_core').matching('foo').where_not(:bar_id => 10).to_sql.
+      should == "SELECT * FROM foo_core WHERE MATCH('foo') AND bar_id <> 10"
+  end
+
   it "handles filters with true" do
     query.from('foo_core').matching('foo').where(:bar => true).to_sql.
       should == "SELECT * FROM foo_core WHERE MATCH('foo') AND bar = 1"
+  end
+
+  it "handles exclusive filters with true" do
+    query.from('foo_core').matching('foo').where_not(:bar => true).to_sql.
+      should == "SELECT * FROM foo_core WHERE MATCH('foo') AND bar <> 1"
   end
 
   it "handles filters with false" do
@@ -42,15 +52,31 @@ describe Riddle::Query::Select do
       should == "SELECT * FROM foo_core WHERE MATCH('foo') AND bar = 0"
   end
 
+  it "handles exclusive filters with false" do
+    query.from('foo_core').matching('foo').where_not(:bar => false).to_sql.
+      should == "SELECT * FROM foo_core WHERE MATCH('foo') AND bar <> 0"
+  end
+
   it "handles filters with arrays" do
     query.from('foo_core').matching('foo').where(:bars => [1, 2]).to_sql.
       should == "SELECT * FROM foo_core WHERE MATCH('foo') AND bars IN (1, 2)"
+  end
+
+  it "handles exclusive filters with arrays" do
+    query.from('foo_core').matching('foo').where_not(:bars => [1, 2]).to_sql.
+      should == "SELECT * FROM foo_core WHERE MATCH('foo') AND bars NOT IN (1, 2)"
   end
 
   it "handles filters with timestamps" do
     time = Time.now
     query.from('foo_core').matching('foo').where(:created_at => time).to_sql.
       should == "SELECT * FROM foo_core WHERE MATCH('foo') AND created_at = #{time.to_i}"
+  end
+
+  it "handles exclusive filters with timestamps" do
+    time = Time.now
+    query.from('foo_core').matching('foo').where_not(:created_at => time).
+      to_sql.should == "SELECT * FROM foo_core WHERE MATCH('foo') AND created_at <> #{time.to_i}"
   end
 
   it "handles filters with ranges" do

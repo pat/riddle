@@ -4,6 +4,7 @@ class Riddle::Query::Select
     @indices               = []
     @matching              = nil
     @wheres                = {}
+    @where_nots            = {}
     @group_by              = nil
     @order_by              = nil
     @order_within_group_by = nil
@@ -29,6 +30,11 @@ class Riddle::Query::Select
 
   def where(filters = {})
     @wheres.merge!(filters)
+    self
+  end
+
+  def where_not(filters = {})
+    @where_nots.merge!(filters)
     self
   end
 
@@ -79,13 +85,13 @@ class Riddle::Query::Select
   private
 
   def wheres?
-    !(@wheres.empty? && @matching.nil?)
+    !(@wheres.empty? && @where_nots.empty? && @matching.nil?)
   end
 
   def combined_wheres
     if @matching.nil?
       wheres_to_s
-    elsif @wheres.empty?
+    elsif @wheres.empty? && @where_nots.empty?
       "MATCH('#{@matching}')"
     else
       "MATCH('#{@matching}') AND #{wheres_to_s}"
@@ -93,19 +99,35 @@ class Riddle::Query::Select
   end
 
   def wheres_to_s
-    @wheres.keys.collect { |key|
-      "#{key} #{filter_comparison_and_value @wheres[key]}"
-    }.join(' AND ')
+    (
+      @wheres.keys.collect { |key|
+        filter_comparison_and_value key, @wheres[key]
+      } +
+      @where_nots.keys.collect { |key|
+        exclusive_filter_comparison_and_value key, @where_nots[key]
+      }
+    ).join(' AND ')
   end
 
-  def filter_comparison_and_value(value)
+  def filter_comparison_and_value(attribute, value)
     case value
     when Array
-      "IN (#{value.collect { |val| filter_value(val) }.join(', ')})"
+      "#{attribute} IN (#{value.collect { |val| filter_value(val) }.join(', ')})"
     when Range
-      "BETWEEN #{filter_value(value.first)} AND #{filter_value(value.last)}"
+      "#{attribute} BETWEEN #{filter_value(value.first)} AND #{filter_value(value.last)}"
     else
-      "= #{filter_value(value)}"
+      "#{attribute} = #{filter_value(value)}"
+    end
+  end
+
+  def exclusive_filter_comparison_and_value(attribute, value)
+    case value
+    when Array
+      "#{attribute} NOT IN (#{value.collect { |val| filter_value(val) }.join(', ')})"
+    when Range
+      "#{attribute} < #{filter_value(value.first)} OR #{attribute} > #{filter_value(value.last)}"
+    else
+      "#{attribute} <> #{filter_value(value)}"
     end
   end
 
