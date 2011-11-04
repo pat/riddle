@@ -1,4 +1,4 @@
-Edge:
+1.5.0 - November 4th 2011
 - Handle exclusive filters in SphinxQL SELECT commands.
 - Allow for native Ruby objects in SphinxQL UPDATE commands.
 - Handle options of hashes in SphinxQL SELECT commands.
