@@ -4,7 +4,7 @@ describe "Sphinx Excepts", :live => true do
   before :each do
     @client = Riddle::Client.new("localhost", 9313)
   end
-  
+
   it "should highlight a single word multiple times in a document" do
     @client.excerpts(
       :index  => "people",
@@ -14,7 +14,7 @@ describe "Sphinx Excepts", :live => true do
       '<span class="match">Mary</span>, <span class="match">Mary</span>, quite contrary.'
     ]
   end
-  
+
   it "should use specified word markers" do
     @client.excerpts(
       :index        => "people",
@@ -26,7 +26,7 @@ describe "Sphinx Excepts", :live => true do
       "<em>Mary</em>, <em>Mary</em>, quite contrary."
     ]
   end
-  
+
   it "should separate matches that are far apart by an ellipsis by default" do
     excerpts = @client.excerpts(
       :index        => "people",
@@ -34,7 +34,7 @@ describe "Sphinx Excepts", :live => true do
       :docs         => [
         <<-SENTENCE
 This is a really long sentence written by Pat. It has to be over 256
-characters long, between keywords. But what is the keyword? Well, I 
+characters long, between keywords. But what is the keyword? Well, I
 can't tell you just yet... wait patiently until we've hit the 256 mark.
 It'll take a bit longer than you think. We're probably just hitting the
 200 mark at this point. But I think we've now arrived - so I can tell
@@ -46,8 +46,8 @@ not. It's just my name: Pat.
       :before_match => "<em>",
       :after_match  => "</em>"
     )
-    
-    
+
+
     case Riddle.loaded_version
     when '0.9.9'
       excerpts.should == [
@@ -60,7 +60,7 @@ not. It's just my name: <em>Pat</em>.
       ]
     when '1.10'
       excerpts.should == [" &#8230;  really long sentence written by <em>Pat</em>. It has to be over &#8230; . This keyword, however, is\nnot. It's just my name: <em>Pat</em> &#8230; "]
-    when '2.0.1'
+    when '2.0.1', '2.1.0'
       excerpts.should == [" &#8230;  really long sentence written by <em>Pat</em>. It has to be over &#8230; . It's just my name: <em>Pat</em>.\n"]
     else
       excerpts.should == [
@@ -73,7 +73,7 @@ not. It's just my name: <em>Pat</em>.
       ]
     end
   end
-  
+
   it "should use the provided separator" do
     excerpts = @client.excerpts(
       :index           => "people",
@@ -81,7 +81,7 @@ not. It's just my name: <em>Pat</em>.
       :docs            => [
         <<-SENTENCE
 This is a really long sentence written by Pat. It has to be over 256
-characters long, between keywords. But what is the keyword? Well, I 
+characters long, between keywords. But what is the keyword? Well, I
 can't tell you just yet... wait patiently until we've hit the 256 mark.
 It'll take a bit longer than you think. We're probably just hitting the
 200 mark at this point. But I think we've now arrived - so I can tell
@@ -94,7 +94,7 @@ not. It's just my name: Pat.
       :after_match     => "</em>",
       :chunk_separator => " --- "
     )
-    
+
     case Riddle.loaded_version
     when '0.9.9'
       excerpts.should == [
@@ -107,7 +107,7 @@ not. It's just my name: <em>Pat</em>.
       ]
     when '1.10'
       excerpts.should == [" ---  really long sentence written by <em>Pat</em>. It has to be over --- . This keyword, however, is\nnot. It's just my name: <em>Pat</em> --- "]
-    when '2.0.1'
+    when '2.0.1', '2.1.0'
       excerpts.should == [" ---  really long sentence written by <em>Pat</em>. It has to be over --- . It's just my name: <em>Pat</em>.\n"]
     else
       excerpts.should == [
@@ -120,7 +120,7 @@ not. It's just my name: <em>Pat</em>.
       ]
     end
   end
-  
+
   it "should return multiple results for multiple documents" do
      @client.excerpts(
         :index        => "people",
