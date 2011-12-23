@@ -9,17 +9,21 @@ module Widdle::Query
       @match                 = Array.wrap(args.delete(:match))
       @wheres                = Array.wrap(args.delete(:where))
       @group_by              = args.delete(:group)
-      @order_by              = args.delete(:order)
+      @order_by              = Array.wrap(args.delete(:order))
       @order_within_group_by = args.delete(:group_order)
       @offset                = args.delete(:offset)
       @limit                 = Array.wrap(args.delete(:limit) || 20)
       @options               = args.delete(:options) || {}
-#      client.logger.debug "Widdle::Query#select.init: client=#{@client} idx=#{@indices} cols=#{@columns}  wheres=#{@wheres}"
+      client.logger.debug "Widdle::Query#select.init: client=#{@client} idx=#{@indices} cols=#{@columns}  wheres=#{@wheres}"
     end
   
     def columns(*cols)
-      @columns += cols
-      self
+      if !cols.empty?
+        @columns += cols
+        self
+      else
+        @columns
+      end
     end
     
     def from(*indices)
@@ -42,8 +46,8 @@ module Widdle::Query
       self
     end
   
-    def order(order)
-      @order_by = order
+    def order(*order)
+      @order_by << order
       self
     end
   
@@ -72,8 +76,8 @@ module Widdle::Query
       #FIXME validate everything to avoid injection
       sql = "SELECT #{columns_clause} FROM #{ @indices.join(', ') }"
       sql << " WHERE #{ combined_wheres }" if wheres?
-      sql << " GROUP BY #{@group_by}"      if !@group_by.nil?
-      sql << " ORDER BY #{@order_by}"      if !@order_by.nil?
+      sql << " GROUP BY #{@group_by}"  if !@group_by.nil?
+      sql << " ORDER BY #{@order_by.join(',')}" if @order_by && !@order_by.empty?
       unless @order_within_group_by.nil?
         sql << " WITHIN GROUP ORDER BY #{@order_within_group_by}"
       end
@@ -98,7 +102,9 @@ module Widdle::Query
     end
 
     def wheres?
-      @wheres.presence || @match.presence
+      @wheres.reject!(&:empty?)
+      @match.reject!(&:empty?)
+      ( @wheres && !@wheres.empty? ) || ( @match && !@match.empty? )
     end
   
     def combined_wheres

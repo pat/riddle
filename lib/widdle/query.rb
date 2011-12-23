@@ -3,7 +3,8 @@ require 'mysql2'
 require 'logger'
 
 module Widdle::Query
-
+  Error = Mysql2::Error
+  
     def self.client
       threaded[:client] ||= connection(options)
     end
