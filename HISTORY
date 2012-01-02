@@ -1,4 +1,5 @@
 Edge
+- If no known servers work, raise an appropriate error.
 - Sphinx 2.1.0-dev support.
 
 1.5.0 - November 4th 2011
