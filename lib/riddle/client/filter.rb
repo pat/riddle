@@ -6,6 +6,7 @@ module Riddle
       # Attribute name, values (which can be an array or a range), and whether
       # the filter should be exclusive.
       def initialize(attribute, values, exclude=false)
+        p "initialize #{attribute.inspect} | #{values.inspect} | #{exclude}"
         @attribute, @values, @exclude = attribute, values, exclude
       end
   
@@ -28,9 +29,14 @@ module Riddle
             append_integer_range message, self.values
           end
         when Array
-          message.append_int FilterTypes[:values]
-          message.append_int self.values.length
-          append_array message, self.values
+          if self.values.first.is_a? Float
+            message.append_int FilterTypes[:float_range]
+            message.append_floats self.values.first, self.values.first
+          else
+            message.append_int FilterTypes[:values]
+            message.append_int self.values.length
+            append_array message, self.values
+          end
         end
         message.append_int self.exclude? ? 1 : 0
     
