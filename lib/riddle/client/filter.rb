@@ -30,7 +30,7 @@ module Riddle
         when Array
           if self.values.first.is_a? Float
             message.append_int FilterTypes[:float_range]
-            message.append_floats self.values.first, self.values.first
+            message.append_floats self.values.min, self.values.max
           else
             message.append_int FilterTypes[:values]
             message.append_int self.values.length
