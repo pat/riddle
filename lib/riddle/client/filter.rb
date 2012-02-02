@@ -6,7 +6,6 @@ module Riddle
       # Attribute name, values (which can be an array or a range), and whether
       # the filter should be exclusive.
       def initialize(attribute, values, exclude=false)
-        p "initialize #{attribute.inspect} | #{values.inspect} | #{exclude}"
         @attribute, @values, @exclude = attribute, values, exclude
       end
   
