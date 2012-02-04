@@ -28,9 +28,14 @@ module Riddle
             append_integer_range message, self.values
           end
         when Array
-          message.append_int FilterTypes[:values]
-          message.append_int self.values.length
-          append_array message, self.values
+          if self.values.first.is_a? Float
+            message.append_int FilterTypes[:float_range]
+            message.append_floats self.values.min, self.values.max
+          else
+            message.append_int FilterTypes[:values]
+            message.append_int self.values.length
+            append_array message, self.values
+          end
         end
         message.append_int self.exclude? ? 1 : 0
     
