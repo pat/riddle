@@ -1,3 +1,6 @@
+Edge:
+- Handle single-value float filters (by translating them to a range) (Steven Bristol).
+
 1.5.1 - January 2nd 2011
 - If no known servers work, raise an appropriate error.
 - Sphinx 2.1.0-dev support.
