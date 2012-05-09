@@ -17,7 +17,7 @@ require 'riddle/0.9.9'</code></pre>
 
 To get started, just instantiate a Client object:
 
-<pre><code>client = Riddle::Client.new # defaults to localhost and port 3312
+<pre><code>client = Riddle::Client.new # defaults to localhost and port 9312
 client = Riddle::Client.new "sphinxserver.domain.tld", 3333 # custom settings</code></pre>
 
 And then set the parameters to what you want, before running a query:
