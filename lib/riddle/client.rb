@@ -136,7 +136,7 @@ module Riddle
     end
 
     # Can instantiate with a specific server and port - otherwise it assumes
-    # defaults of localhost and 3312 respectively. All other settings can be
+    # defaults of localhost and 9312 respectively. All other settings can be
     # accessed and changed via the attribute accessors.
     def initialize(servers = nil, port = nil, key = nil)
       Riddle.version_warning
