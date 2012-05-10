@@ -85,3 +85,4 @@ Thanks to the following people who have contributed to Riddle in some shape or f
 * Aaron Gilbralter
 * Steven Bristol
 * Ilia Lobsanov
+* Aleksey Morozov
