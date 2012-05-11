@@ -212,7 +212,7 @@ class SphinxClient
 		$this->_filters		= array ();
 		$this->_groupby		= "";
 		$this->_groupfunc	= SPH_GROUPBY_DAY;
-		$this->_groupsort	= "@group desc";
+		$this->_groupsort	= "@weight DESC";
 		$this->_groupdistinct= "";
 		$this->_maxmatches	= 1000;
 		$this->_cutoff		= 0;
@@ -603,7 +603,7 @@ class SphinxClient
 	{
 		$this->_groupby		= "";
 		$this->_groupfunc	= SPH_GROUPBY_DAY;
-		$this->_groupsort	= "@group desc";
+		$this->_groupsort	= "@weight DESC";
 		$this->_groupdistinct= "";
 	}
 
@@ -868,7 +868,7 @@ class SphinxClient
 					if ( $type==SPH_ATTR_FLOAT )
 					{
 						list(,$uval) = unpack ( "N*", substr ( $response, $p, 4 ) ); $p += 4;
-						list(,$fval) = unpack ( "f*", pack ( "L", $uval ) ); 
+						list(,$fval) = unpack ( "f*", pack ( "L", $uval ) );
 						$attrvals[$attr] = $fval;
 						continue;
 					}
@@ -1038,7 +1038,7 @@ class SphinxClient
 
     // Commented out for testing Riddle
     // $this->_MBPush ();
-    // 
+    //
     // if (!( $fp = $this->_Connect() ))
     // {
     //  $this->_MBPop();
@@ -1053,7 +1053,7 @@ class SphinxClient
 		$req  = pack ( "N", strlen($query) ) . $query; // req query
 		$req .= pack ( "N", strlen($index) ) . $index; // req index
 		$req .= pack ( "N", (int)$hits );
-		
+
 		// Line for testing Riddle:
 		return $req;
 
@@ -1161,7 +1161,7 @@ class SphinxClient
 
 		// Line for testing Riddle:
 		return $req;
-		
+
 		// mbstring workaround
 		$this->_MBPush ();
 
@@ -1187,7 +1187,7 @@ class SphinxClient
 		$this->_MBPop ();
 		return $updated;
 	}
-	
+
 	// Function for Riddle, copied from internal code.
 	function FilterOutput()
 	{
@@ -1216,7 +1216,7 @@ class SphinxClient
 			}
 			$req .= pack ( "N", $filter["exclude"] );
 		}
-		
+
 		return $req;
 	}
 }

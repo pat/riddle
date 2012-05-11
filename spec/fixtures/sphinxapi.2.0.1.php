@@ -124,7 +124,7 @@ define ( "SPH_GROUPBY_ATTRPAIR",	5 );
 function sphPackI64 ( $v )
 {
 	assert ( is_numeric($v) );
-	
+
 	// x64
 	if ( PHP_INT_SIZE>=8 )
 	{
@@ -136,7 +136,7 @@ function sphPackI64 ( $v )
 	if ( is_int($v) )
 		return pack ( "NN", $v < 0 ? -1 : 0, $v );
 
-	// x32, bcmath	
+	// x32, bcmath
 	if ( function_exists("bcmul") )
 	{
 		if ( bccomp ( $v, 0 ) == -1 )
@@ -173,16 +173,16 @@ function sphPackI64 ( $v )
 function sphPackU64 ( $v )
 {
 	assert ( is_numeric($v) );
-	
+
 	// x64
 	if ( PHP_INT_SIZE>=8 )
 	{
 		assert ( $v>=0 );
-		
+
 		// x64, int
 		if ( is_int($v) )
 			return pack ( "NN", $v>>32, $v&0xFFFFFFFF );
-						  
+
 		// x64, bcmath
 		if ( function_exists("bcmul") )
 		{
@@ -190,12 +190,12 @@ function sphPackU64 ( $v )
 			$l = bcmod ( $v, 4294967296 );
 			return pack ( "NN", $h, $l );
 		}
-		
+
 		// x64, no-bcmath
 		$p = max ( 0, strlen($v) - 13 );
 		$lo = (int)substr ( $v, $p );
 		$hi = (int)substr ( $v, 0, $p );
-	
+
 		$m = $lo + $hi*1316134912;
 		$l = $m % 4294967296;
 		$h = $hi*2328 + (int)($m/4294967296);
@@ -206,7 +206,7 @@ function sphPackU64 ( $v )
 	// x32, int
 	if ( is_int($v) )
 		return pack ( "NN", 0, $v );
-	
+
 	// x32, bcmath
 	if ( function_exists("bcmul") )
 	{
@@ -219,7 +219,7 @@ function sphPackU64 ( $v )
 	$p = max(0, strlen($v) - 13);
 	$lo = (float)substr($v, $p);
 	$hi = (float)substr($v, 0, $p);
-	
+
 	$m = $lo + $hi*1316134912.0;
 	$q = floor($m / 4294967296.0);
 	$l = $m - ($q * 4294967296.0);
@@ -275,11 +275,11 @@ function sphUnpackU64 ( $v )
 	// x32, bcmath
 	if ( function_exists("bcmul") )
 		return bcadd ( $lo, bcmul ( $hi, "4294967296" ) );
-	
+
 	// x32, no-bcmath
 	$hi = (float)$hi;
 	$lo = (float)$lo;
-	
+
 	$q = floor($hi/10000000.0);
 	$r = $hi - $q*10000000.0;
 	$m = $lo + $r*4967296.0;
@@ -322,7 +322,7 @@ function sphUnpackI64 ( $v )
 			return $lo;
 		return sprintf ( "%.0f", $lo - 4294967296.0 );
 	}
-	
+
 	$neg = "";
 	$c = 0;
 	if ( $hi<0 )
@@ -331,7 +331,7 @@ function sphUnpackI64 ( $v )
 		$lo = ~$lo;
 		$c = 1;
 		$neg = "-";
-	}	
+	}
 
 	$hi = sprintf ( "%u", $hi );
 	$lo = sprintf ( "%u", $lo );
@@ -343,7 +343,7 @@ function sphUnpackI64 ( $v )
 	// x32, no-bcmath
 	$hi = (float)$hi;
 	$lo = (float)$lo;
-	
+
 	$q = floor($hi/10000000.0);
 	$r = $hi - $q*10000000.0;
 	$m = $lo + $r*4967296.0;
@@ -444,7 +444,7 @@ class SphinxClient
 		$this->_filters		= array ();
 		$this->_groupby		= "";
 		$this->_groupfunc	= SPH_GROUPBY_DAY;
-		$this->_groupsort	= "@group desc";
+		$this->_groupsort	= "@weight DESC";
 		$this->_groupdistinct= "";
 		$this->_maxmatches	= 1000;
 		$this->_cutoff		= 0;
@@ -506,7 +506,7 @@ class SphinxClient
 			$this->_path = $host;
 			return;
 		}
-				
+
 		assert ( is_int($port) );
 		$this->_host = $host;
 		$this->_port = $port;
@@ -586,14 +586,14 @@ class SphinxClient
 			$fp = @fsockopen ( $host, $port, $errno, $errstr );
 		else
 			$fp = @fsockopen ( $host, $port, $errno, $errstr, $this->_timeout );
-		
+
 		if ( !$fp )
 		{
 			if ( $this->_path )
 				$location = $this->_path;
 			else
 				$location = "{$this->_host}:{$this->_port}";
-			
+
 			$errstr = trim ( $errstr );
 			$this->_error = "connection to $location failed (errno=$errno, msg=$errstr)";
 			$this->_connerror = true;
@@ -932,7 +932,7 @@ class SphinxClient
 	{
 		$this->_groupby		= "";
 		$this->_groupfunc	= SPH_GROUPBY_DAY;
-		$this->_groupsort	= "@group desc";
+		$this->_groupsort	= "@weight DESC";
 		$this->_groupdistinct= "";
 	}
 
@@ -1227,7 +1227,7 @@ class SphinxClient
 					if ( $type==SPH_ATTR_FLOAT )
 					{
 						list(,$uval) = unpack ( "N*", substr ( $response, $p, 4 ) ); $p += 4;
-						list(,$fval) = unpack ( "f*", pack ( "L", $uval ) ); 
+						list(,$fval) = unpack ( "f*", pack ( "L", $uval ) );
 						$attrvals[$attr] = $fval;
 						continue;
 					}
@@ -1246,7 +1246,7 @@ class SphinxClient
 					} else if ( $type==SPH_ATTR_STRING )
 					{
 						$attrvals[$attr] = substr ( $response, $p, $val );
-						$p += $val;						
+						$p += $val;
 					} else
 					{
 						$attrvals[$attr] = sphFixUint($val);
@@ -1418,7 +1418,7 @@ class SphinxClient
 
     // Commented out for testing Riddle
     // $this->_MBPush ();
-    // 
+    //
     // if (!( $fp = $this->_Connect() ))
     // {
     //  $this->_MBPop();
@@ -1433,7 +1433,7 @@ class SphinxClient
 		$req  = pack ( "N", strlen($query) ) . $query; // req query
 		$req .= pack ( "N", strlen($index) ) . $index; // req index
 		$req .= pack ( "N", (int)$hits );
-		
+
 		// Line for testing Riddle:
 		return $req;
 
@@ -1556,7 +1556,7 @@ class SphinxClient
 						$req .= pack ( "N", $vv );
 			}
 		}
-		
+
 		// Line for testing Riddle:
 		return $req;
 
@@ -1620,7 +1620,7 @@ class SphinxClient
 
 		fclose ( $this->_socket );
 		$this->_socket = false;
-		
+
 		return true;
 	}
 
@@ -1691,7 +1691,7 @@ class SphinxClient
 		$this->_MBPop ();
 		return $tag;
 	}
-	
+
 	// Added for Riddle - code is taken from AddQuery
 	function FilterOutput()
 	{
@@ -1721,7 +1721,7 @@ class SphinxClient
 			}
 			$req .= pack ( "N", $filter["exclude"] );
 		}
-		
+
 		return $req;
 	}
 }

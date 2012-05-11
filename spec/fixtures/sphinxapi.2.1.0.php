@@ -447,7 +447,7 @@ class SphinxClient
 		$this->_filters		= array ();
 		$this->_groupby		= "";
 		$this->_groupfunc	= SPH_GROUPBY_DAY;
-		$this->_groupsort	= "@group desc";
+		$this->_groupsort	= "@weight DESC";
 		$this->_groupdistinct= "";
 		$this->_maxmatches	= 1000;
 		$this->_cutoff		= 0;
@@ -938,7 +938,7 @@ class SphinxClient
 	{
 		$this->_groupby		= "";
 		$this->_groupfunc	= SPH_GROUPBY_DAY;
-		$this->_groupsort	= "@group desc";
+		$this->_groupsort	= "@weight DESC";
 		$this->_groupdistinct= "";
 	}
 
