@@ -265,4 +265,26 @@ describe Riddle::Client do
       }.should raise_error(Riddle::ConnectionError)
     end unless RUBY_PLATFORM == 'java' # JRuby doesn't like Timeout
   end
+
+  it "should fail if the server has the wrong version" do
+    client = Riddle::Client.new
+    client.port     = 9314
+    client.timeout  = 1
+
+    server = TCPServer.new "localhost", 9314
+
+    thread = Thread.new do
+      client = server.accept
+      client.send [0].pack("N"), 0
+      client.close
+    end
+
+    lambda {
+      client.send(:connect) { |socket| }
+    }.should raise_error(Riddle::VersionError)
+
+    thread.exit
+    server.close
+  end
+
 end
