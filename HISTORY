@@ -1,4 +1,5 @@
 Edge:
+- Fixing VersionError reference for Sphinx 0.9.9 or better (S. Christoffer Eliesen).
 - Consistent documentation for default port: 9312 (Aleksey Morozov).
 - Sphinx 2.0.4 support (Ilia Lobsanov).
 - Handle single-value float filters (by translating them to a range) (Steven Bristol).
