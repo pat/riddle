@@ -165,7 +165,7 @@ module Riddle
       @filters        = []
       @group_by       = ''
       @group_function = :day
-      @group_clause   = '@group desc'
+      @group_clause   = '@weight DESC'
       @group_distinct = ''
       @cut_off        = 0
       @retry_count    = 0
