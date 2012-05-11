@@ -1,6 +1,6 @@
 h1. Riddle
 
-"!https://secure.travis-ci.org/freelancing-god/riddle.png!":http://travis-ci.org/freelancing-god/riddle]
+"!https://secure.travis-ci.org/freelancing-god/riddle.png!":http://travis-ci.org/freelancing-god/riddle
 
 This client has been written to interface with "Sphinx":http://sphinxsearch.com/. It is written by "Pat Allan":http://freelancing-gods.com, and has been influenced by both Dmytro Shteflyuk's Ruby client and the original PHP client - credit where credit's due, after all.
 
