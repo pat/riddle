@@ -1,4 +1,5 @@
 Edge:
+- Fixing 64-bit MVA support.
 - Grouped searches now sort by weight instead of by group as a default. You can change this setting via Riddle::Client#group_clause.
 - Use a local array of servers - don't clear the main set (S. Christoffer Eliesen).
 - Fixing VersionError reference for Sphinx 0.9.9 or better (S. Christoffer Eliesen).
