@@ -1,3 +1,6 @@
+Edge
+- Adding rotate command to the controller.
+
 1.5.2 - May 14th 2012
 - Fixing 64-bit MVA support.
 - Grouped searches now sort by weight instead of by group as a default. You can change this setting via Riddle::Client#group_clause.
