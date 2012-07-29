@@ -89,6 +89,11 @@ describe Riddle::Query::Select do
       should == "SELECT * FROM foo_core WHERE bars = 1 AND bars = 2"
   end
 
+  it "handles exclusive filters expecting matches on none of the values" do
+    query.from('foo_core').where_not_all(:bars => [1, 2]).to_sql.
+      should == "SELECT * FROM foo_core WHERE (bars <> 1 OR bars <> 2)"
+  end
+
   it 'handles grouping' do
     query.from('foo_core').group_by('bar_id').to_sql.
       should == "SELECT * FROM foo_core GROUP BY bar_id"
