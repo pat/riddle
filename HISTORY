@@ -1,4 +1,8 @@
-Edge
+1.5.3 - August 10th 2012
+- Sphinx 2.0.5 support.
+- :with_all and :without_all support for SphinxQL.
+- Allow setting of prefix and infix fields directly.
+- Configuration parser
 - Adding rotate command to the controller.
 
 1.5.2 - May 14th 2012
