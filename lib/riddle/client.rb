@@ -498,10 +498,10 @@ module Riddle
       available_servers = servers.dup
 
       if @timeout == 0
-        @socket = initialise_connection
+        @socket = initialise_connection(available_servers.first)
       else
         begin
-          Timeout.timeout(@timeout) { @socket = initialise_connection }
+          Timeout.timeout(@timeout) { @socket = initialise_connection(available_servers.first) }
         rescue Timeout::Error, Riddle::ConnectionError => e
           failed_servers ||= []
           failed_servers << available_servers.shift
@@ -546,8 +546,8 @@ module Riddle
       end
     end
 
-    def initialise_connection
-      socket = initialise_socket
+    def initialise_connection(available_server)
+      socket = initialise_socket(available_server)
 
       # Checking version
       version = socket.recv(4).unpack('N*').first
@@ -562,24 +562,24 @@ module Riddle
       socket
     end
 
-    def initialise_socket
+    def initialise_socket(available_server)
       tries = 0
       begin
         socket = if self.connection
           self.connection.call(self)
         elsif self.class.connection
           self.class.connection.call(self)
-        elsif server && server.index('/') == 0
-          UNIXSocket.new server
-        elsif server
-          TCPSocket.new server, @port
+        elsif available_server && available_server.index('/') == 0
+          UNIXSocket.new available_server
+        elsif available_server
+          TCPSocket.new available_server, @port
         else
           raise "Server not set."
         end
       rescue Errno::ETIMEDOUT, Errno::ECONNRESET, Errno::ECONNREFUSED => e
         retry if (tries += 1) < 5
         raise Riddle::ConnectionError,
-          "Connection to #{server} on #{@port} failed. #{e.message}"
+          "Connection to #{available_server} on #{@port} failed. #{e.message}"
       end
 
       socket
