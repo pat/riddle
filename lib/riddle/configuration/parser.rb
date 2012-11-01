@@ -46,7 +46,7 @@ class Riddle::Configuration::Parser
 
   def each_with_prefix(prefix)
     inner.keys.select { |key| key[/^#{prefix}\s+/] }.each do |key|
-      yield key.gsub(/^#{prefix}\s+/, ''), inner[key]
+      yield key.gsub(/^#{prefix}\s+/, '').gsub(/\s*{$/, ''), inner[key]
     end
   end
 
@@ -60,10 +60,14 @@ class Riddle::Configuration::Parser
 
   def set_sources
     each_with_prefix 'source' do |name, settings|
-      names         = name.split(/\s*:\s*/)
-      type          = settings.delete('type').first
+      names   = name.split(/\s*:\s*/)
+      types   = settings.delete('type')
+      parent  = names.length > 1 ? names.last : nil
+      types ||= [sources[parent].type] if parent
+      type    = types.first
+
       source        = SOURCE_CLASSES[type].new names.first, type
-      source.parent = names.last if names.length > 1
+      source.parent = parent
 
       set_settings source, settings
 
