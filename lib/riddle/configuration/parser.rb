@@ -139,11 +139,14 @@ class Riddle::Configuration::Parser
 
       while line != '}' do
         begin
-          key, value = *SETTING_PATTERN.match(line).captures
-          settings[key] << value
-          while value[/\\$/] do
-            value = next_line
-            settings[key].last << "\n" << value
+          match = SETTING_PATTERN.match(line)
+          unless match.nil?
+            key, value = *match.captures
+            settings[key] << value
+            while value[/\\$/] do
+              value = next_line
+              settings[key].last << "\n" << value
+            end
           end
         rescue => error
           raise error, "Error handling line '#{line}': #{error.message}",
