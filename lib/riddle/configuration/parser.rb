@@ -27,10 +27,23 @@ class Riddle::Configuration::Parser
     set_sources
     set_indices
 
+    add_orphan_sources
+
     configuration
   end
 
   private
+
+  def add_orphan_sources
+    all_names      = sources.keys
+    attached_names = configuration.indices.collect { |index|
+      index.respond_to?(:sources) ? index.sources.collect(&:name) : []
+    }.flatten
+
+    (all_names - attached_names).each do |name|
+      configuration.sources << sources[name]
+    end
+  end
 
   def inner
     @inner ||= InnerParser.new(@input).parse!

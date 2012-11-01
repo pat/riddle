@@ -17,7 +17,7 @@ module Riddle
     class ConfigurationError < StandardError #:nodoc:
     end
 
-    attr_reader :indices, :searchd
+    attr_reader :indices, :searchd, :sources
     attr_accessor :indexer
 
     def self.parse!(input)
@@ -28,11 +28,13 @@ module Riddle
       @indexer = Riddle::Configuration::Indexer.new
       @searchd = Riddle::Configuration::Searchd.new
       @indices = []
+      @sources = []
     end
 
     def render
       (
         [@indexer.render, @searchd.render] +
+        @sources.collect { |source| source.render } +
         @indices.collect { |index| index.render }
       ).join("\n")
     end
