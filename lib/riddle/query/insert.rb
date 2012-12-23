@@ -38,9 +38,11 @@ class Riddle::Query::Insert
   def translated_value(value)
     case value
     when String
-      "'#{value}'"
+      "'#{value.gsub(/['\\]/, '').gsub(/\s+/, ' ')}'"
     when TrueClass, FalseClass
       value ? 1 : 0
+    when Time
+      value.to_i
     else
       value
     end
