@@ -26,7 +26,7 @@ class Riddle::Query::Select
   end
 
   def matching(match)
-    @matching = match
+    @matching = match.gsub("'") { |x| "\\'" }
     self
   end
 

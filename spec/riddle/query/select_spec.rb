@@ -26,6 +26,11 @@ describe Riddle::Query::Select do
     query.from('foo_core').matching('foo').to_sql.
       should == "SELECT * FROM foo_core WHERE MATCH('foo')"
   end
+  
+  it "escapes single quotes in the search terms" do
+    query.from('foo_core').matching("fo'o").to_sql.
+      should == "SELECT * FROM foo_core WHERE MATCH('fo\\'o')"
+  end
 
   it 'handles filters with integers' do
     query.from('foo_core').matching('foo').where(:bar_id => 10).to_sql.
