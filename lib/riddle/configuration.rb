@@ -1,4 +1,5 @@
 require 'riddle/configuration/section'
+require 'riddle/configuration/index_settings'
 
 require 'riddle/configuration/distributed_index'
 require 'riddle/configuration/index'

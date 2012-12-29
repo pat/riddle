@@ -4,44 +4,44 @@ describe Riddle::Configuration::DistributedIndex do
   it "should be invalid without a name, sources or path if there's no parent" do
     index = Riddle::Configuration::Index.new(nil)
     index.should_not be_valid
-    
+
     index.name = "test1"
     index.should_not be_valid
-    
+
     index.sources << Riddle::Configuration::SQLSource.new("source", "mysql")
     index.should_not be_valid
-    
+
     index.path = "a/path"
     index.should be_valid
-    
+
     index.name = nil
     index.should_not be_valid
-    
+
     index.name = "test1"
     index.sources.clear
     index.should_not be_valid
   end
-  
+
   it "should be invalid without a name but not sources or path if it has a parent" do
     index = Riddle::Configuration::Index.new(nil)
     index.should_not be_valid
-    
+
     index.name = "test1stemmed"
     index.should_not be_valid
-    
+
     index.parent = "test1"
     index.should be_valid
   end
-  
+
   it "should raise a ConfigurationError if rendering when not valid" do
     index = Riddle::Configuration::Index.new("test1")
     lambda { index.render }.should raise_error(Riddle::Configuration::ConfigurationError)
   end
-  
+
   it "should render correctly if supplied settings are valid" do
     source = Riddle::Configuration::XMLSource.new("src1", "xmlpipe")
     source.xmlpipe_command = "ls /dev/null"
-    
+
     index = Riddle::Configuration::Index.new("test1", source)
     index.path                      = "/var/data/test1"
     index.docinfo                   = "extern"
@@ -75,7 +75,7 @@ describe Riddle::Configuration::DistributedIndex do
     index.inplace_reloc_factor      = 0.1
     index.inplace_write_factor      = 0.1
     index.index_exact_words         = 1
-    
+
     index.render.should == <<-INDEX
 source src1
 {
@@ -85,7 +85,6 @@ source src1
 
 index test1
 {
-  source = src1
   path = /var/data/test1
   docinfo = extern
   mlock = 0
@@ -118,6 +117,7 @@ index test1
   inplace_reloc_factor = 0.1
   inplace_write_factor = 0.1
   index_exact_words = 1
+  source = src1
 }
     INDEX
   end
