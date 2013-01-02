@@ -1,3 +1,12 @@
+1.5.4 - January 2nd 2013
+- RT indices get most of the same settings as SQL indices.
+- Escape single quotes in SphinxQL match queries, given we're wrapping them in single quotes.
+- Remove unnecessary characters from string values for SphinxQL inserts.
+- Convert time objects to integers for SphinxQL inserts.
+- Include 'orphan' sources (which aren't used directly by indices, but could be parents of sources that are used) when generating configuration files.
+- Use parent source type if child source has no type supplied.
+- Ignore comments when parsing Sphinx configuration files.
+
 1.5.3 - August 10th 2012
 - Sphinx 2.0.5 support.
 - :with_all and :without_all support for SphinxQL.
