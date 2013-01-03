@@ -1,3 +1,6 @@
+Edge:
+- Regex fix for matching {'s (Rob Golkosky).
+
 1.5.4 - January 2nd 2013
 - RT indices get most of the same settings as SQL indices.
 - Escape single quotes in SphinxQL match queries, given we're wrapping them in single quotes.
