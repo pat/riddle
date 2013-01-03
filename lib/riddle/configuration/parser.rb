@@ -59,7 +59,7 @@ class Riddle::Configuration::Parser
 
   def each_with_prefix(prefix)
     inner.keys.select { |key| key[/^#{prefix}\s+/] }.each do |key|
-      yield key.gsub(/^#{prefix}\s+/, '').gsub(/\s*{$/, ''), inner[key]
+      yield key.gsub(/^#{prefix}\s+/, '').gsub(/\s*\{$/, ''), inner[key]
     end
   end
 
