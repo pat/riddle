@@ -46,6 +46,16 @@ describe Riddle::Query do
       Riddle::Query.snippets('foo bar baz', 'foo_core', 'foo',
         :before_match => '<strong>').should == "CALL SNIPPETS('foo bar baz', 'foo_core', 'foo', '<strong>' AS before_match)"
     end
+    
+    it "escapes quotes in the text data" do
+      Riddle::Query.snippets("foo bar 'baz", 'foo_core', 'foo').
+        should == "CALL SNIPPETS('foo bar \\'baz', 'foo_core', 'foo')"
+    end
+    
+    it "escapes quotes in the query data" do
+      Riddle::Query.snippets("foo bar baz", 'foo_core', "foo'").
+        should == "CALL SNIPPETS('foo bar baz', 'foo_core', 'foo\\'')"
+    end
   end
 
   describe '.create_function' do

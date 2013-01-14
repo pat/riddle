@@ -58,6 +58,9 @@ module Riddle::Query
   end
 
   def self.snippets(data, index, query, options = nil)
+    data.gsub!("'")  { |x| "\\'" }
+    query.gsub!("'") { |x| "\\'" }
+    
     options = ', ' + options.keys.collect { |key|
       value = options[key]
       value = "'#{value}'" if value.is_a?(String)
