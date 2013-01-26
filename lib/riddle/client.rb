@@ -481,9 +481,7 @@ module Riddle
 
       return if Versions[:search] < 0x116
 
-      @socket.send [
-        Commands[:persist], 0, 4, 1
-      ].pack("nnNN"), 0
+      @socket.send request_header(:persist) + [1].pack('N'), 0
     end
 
     def close
@@ -598,6 +596,8 @@ module Riddle
         end
       when :status
         [Commands[command], Versions[command], 4, 1].pack("nnNN")
+      when :persist
+        [Commands[command], 0, 4 + length].pack("nnN")
       else
         [Commands[command], Versions[command], length].pack("nnN")
       end
