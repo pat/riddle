@@ -12,7 +12,6 @@ rvm:
   - 1.9.3
   - ree
   - jruby-18mode
-  - ruby-head
 env:
   - SPHINX_BIN=/usr/local/sphinx-1.10/bin SPHINX_VERSION=1.10
   - SPHINX_BIN=/usr/local/sphinx-2.0.4/bin SPHINX_VERSION=2.0.4
