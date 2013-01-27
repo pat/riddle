@@ -1,4 +1,11 @@
 language: ruby
+before_install:
+  - curl -O http://fs-packages.s3.amazonaws.com/fs-sphinx-1.10_i386_12.04.deb
+  - sudo dpkg -i fs-sphinx-1.10_i386_12.04.deb
+  - curl -O http://fs-packages.s3.amazonaws.com/fs-sphinx-2.0.4_i386_12.04.deb
+  - sudo dpkg -i fs-sphinx-2.0.4_i386_12.04.deb
+  - curl -O http://fs-packages.s3.amazonaws.com/fs-sphinx-2.0.6_i386_12.04.deb
+  - sudo dpkg -i fs-sphinx-2.0.6_i386_12.04.deb
 rvm:
   - 1.8.7
   - 1.9.2
@@ -7,8 +14,8 @@ rvm:
   - jruby-18mode
   - ruby-head
 env:
-  - SPHINX_BIN=/usr/local/sphinx-0.9.9/bin SPHINX_VERSION=0.9.9
   - SPHINX_BIN=/usr/local/sphinx-1.10/bin SPHINX_VERSION=1.10
-  - SPHINX_BIN=/usr/local/sphinx-2.0.1/bin SPHINX_VERSION=2.0.1
+  - SPHINX_BIN=/usr/local/sphinx-2.0.4/bin SPHINX_VERSION=2.0.4
+  - SPHINX_BIN=/usr/local/sphinx-2.0.6/bin SPHINX_VERSION=2.0.6
 before_script: killall searchd; echo ''
 after_script:  killall searchd; echo ''
