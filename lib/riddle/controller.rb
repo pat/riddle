@@ -36,9 +36,9 @@ module Riddle
       if options[:nodetach]
         exec(cmd)
       elsif RUBY_PLATFORM =~ /mswin|mingw/
-        system("start /B #{cmd} 1> NUL 2>&1")
+        output = system("start /B #{cmd} 1> NUL 2>&1")
       else
-        `#{cmd}`
+        output = `#{cmd}`
       end
 
       sleep(1)
@@ -46,6 +46,8 @@ module Riddle
       unless running?
         puts "Failed to start searchd daemon. Check #{@configuration.searchd.log}."
       end
+      
+      output
     end
 
     def stop
