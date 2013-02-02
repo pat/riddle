@@ -12,7 +12,7 @@ module Riddle #:nodoc:
     #
   end
 
-  def self.encode(data, encoding = defined?(::Encoding) && ::Encoding.default_external)
+  def self.encode(data, encoding = @@use_encoding && ::Encoding.default_external)
     if @@use_encoding
       data.force_encoding(encoding)
     else
