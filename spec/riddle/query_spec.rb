@@ -46,12 +46,12 @@ describe Riddle::Query do
       Riddle::Query.snippets('foo bar baz', 'foo_core', 'foo',
         :before_match => '<strong>').should == "CALL SNIPPETS('foo bar baz', 'foo_core', 'foo', '<strong>' AS before_match)"
     end
-    
+
     it "escapes quotes in the text data" do
       Riddle::Query.snippets("foo bar 'baz", 'foo_core', 'foo').
         should == "CALL SNIPPETS('foo bar \\'baz', 'foo_core', 'foo')"
     end
-    
+
     it "escapes quotes in the query data" do
       Riddle::Query.snippets("foo bar baz", 'foo_core', "foo'").
         should == "CALL SNIPPETS('foo bar baz', 'foo_core', 'foo\\'')"
@@ -69,6 +69,18 @@ describe Riddle::Query do
     it 'handles a basic update request' do
       Riddle::Query.update('foo_core', 5, :deleted => 1).
         should == 'UPDATE foo_core SET deleted = 1 WHERE id = 5'
+    end
+  end
+
+  describe '.escape' do
+    %w(\( \) \| \- ! @ ~ " \/ \^ \$).each do |reserved|
+      it "escapes #{reserved}" do
+        Riddle::Query.escape(reserved).should == "\\\\#{reserved}"
+      end
+    end
+
+    it "escapes \\" do
+      Riddle::Query.escape("\\").should == "\\\\"
     end
   end
 end

@@ -60,7 +60,7 @@ module Riddle::Query
   def self.snippets(data, index, query, options = nil)
     data.gsub!("'")  { |x| "\\'" }
     query.gsub!("'") { |x| "\\'" }
-    
+
     options = ', ' + options.keys.collect { |key|
       value = options[key]
       value = "'#{value}'" if value.is_a?(String)
@@ -97,6 +97,12 @@ module Riddle::Query
     else
       value
     end
+  end
+
+  def self.escape(string)
+    string.gsub('\\', '\\\\').gsub(/[\(\)\|\-!@~"\/\^\$]/) { |match|
+      "\\\\#{match}"
+    }
   end
 end
 
