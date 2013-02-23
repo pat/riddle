@@ -1,4 +1,10 @@
-Edge:
+1.5.5 - February 23rd 2013
+- Added Riddle::Query.escape for SphinxQL queries.
+- Fixed failover handling (Ngan Pham).
+- Improved encoding default check (Darcy Brown).
+- Removing REE support (as it is no longer supported either).
+- Client key is used for binary protocol persistent connections (if set).
+- Escaping single quotes in SphinxQL snippets calls.
 - Regex fix for matching {'s (Rob Golkosky).
 
 1.5.4 - January 2nd 2013
