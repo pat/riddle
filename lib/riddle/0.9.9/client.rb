@@ -4,8 +4,8 @@ Riddle::Client::Versions[:update] = 0x102
 class Riddle::Client
   private
 
-  def initialise_connection
-    socket = initialise_socket
+  def initialise_connection(available_server)
+    socket = initialise_socket(available_server)
 
     # Send version
     socket.send [1].pack('N'), 0
