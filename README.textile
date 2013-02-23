@@ -90,3 +90,4 @@ Thanks to the following people who have contributed to Riddle in some shape or f
 * Aleksey Morozov
 * S. Christoffer Eliesen
 * Rob Golkosky
+* Darcy Brown
