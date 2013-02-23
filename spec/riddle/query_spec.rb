@@ -73,7 +73,7 @@ describe Riddle::Query do
   end
 
   describe '.escape' do
-    %w(\( \) \| \- ! @ ~ " \/ \^ \$).each do |reserved|
+    %w(( ) | - ! @ ~ " / ^ $).each do |reserved|
       it "escapes #{reserved}" do
         Riddle::Query.escape(reserved).should == "\\\\#{reserved}"
       end

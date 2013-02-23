@@ -100,7 +100,9 @@ module Riddle::Query
   end
 
   def self.escape(string)
-    string.gsub('\\', '\\\\').gsub(/[\(\)\|\-!@~"\/\^\$]/) { |match|
+    string.gsub("\\") { |match|
+      "\\\\"
+    }.gsub(/[\(\)\|\-!@~"\/\^\$]/) { |match|
       "\\\\#{match}"
     }
   end
