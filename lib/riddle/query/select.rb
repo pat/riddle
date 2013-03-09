@@ -84,10 +84,10 @@ class Riddle::Query::Select
     sql = "SELECT #{ @values.join(', ') } FROM #{ @indices.join(', ') }"
     sql << " WHERE #{ combined_wheres }" if wheres?
     sql << " GROUP BY #{@group_by}"      if !@group_by.nil?
-    sql << " ORDER BY #{@order_by}"      if !@order_by.nil?
     unless @order_within_group_by.nil?
       sql << " WITHIN GROUP ORDER BY #{@order_within_group_by}"
     end
+    sql << " ORDER BY #{@order_by}"      if !@order_by.nil?
     sql << " #{limit_clause}"   unless @limit.nil? && @offset.nil?
     sql << " #{options_clause}" unless @options.empty?
 
