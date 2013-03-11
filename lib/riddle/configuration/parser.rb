@@ -144,7 +144,7 @@ class Riddle::Configuration::Parser
       return line if line.nil?
 
       line = line.strip
-      line.empty? ? next_line : line
+      (line.empty? || line[/^#/]) ? next_line : line
     end
 
     def next_settings
