@@ -4,7 +4,9 @@ require 'riddle/client/response'
 
 module Riddle
   class VersionError < StandardError;  end
-  class ResponseError < StandardError; end
+  class ResponseError < StandardError
+    attr_accessor :original
+  end
   class OutOfBoundsError < StandardError; end
 
   # This class was heavily based on the existing Client API by Dmytro Shteflyuk
@@ -290,6 +292,10 @@ module Riddle
 
       @queue.clear
       results
+    rescue => original
+      error = ResponseError.new original.message
+      error.original = original
+      raise error
     end
 
     # Query the Sphinx daemon - defaulting to all indices, but you can specify
