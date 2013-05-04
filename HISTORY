@@ -1,3 +1,9 @@
+Edge:
+- Wrap underlying parse errors within Riddle::ResponseError instances when parsing responses.
+- Add lemmatization options (Kirill Lazarev).
+- Ignore configuration lines that are only comments when parsing configurations.
+- Construct GROUP ORDER and ORDER in SphinxQL in the correct order (Grzegorz Derebecki).
+
 1.5.5 - February 23rd 2013
 - Added Riddle::Query.escape for SphinxQL queries.
 - Fixed failover handling (Ngan Pham).
