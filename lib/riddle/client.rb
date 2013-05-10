@@ -340,6 +340,7 @@ module Riddle
     # will be described under <tt>:error</tt>.
     #
     def query(search, index = '*', comments = '')
+      @queue.clear
       @queue << query_message(search, index, comments)
       self.run.first
     end
