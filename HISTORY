@@ -1,3 +1,7 @@
+Edge:
+- Arrays in INSERT/REPLACE statements are wrapped in parentheses with values separated by commas. Required for MVA values in real-time indices.
+- Clear out the query queue before running a single query.
+
 1.5.6 - May 7th 2013
 - Wrap underlying parse errors within Riddle::ResponseError instances when parsing responses.
 - Add lemmatization options (Kirill Lazarev).
