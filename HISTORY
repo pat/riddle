@@ -1,4 +1,5 @@
 Edge:
+- rt_attr_multi and rt_attr_multi_64 settings for real-time indices.
 - Arrays in INSERT/REPLACE statements are wrapped in parentheses with values separated by commas. Required for MVA values in real-time indices.
 - Clear out the query queue before running a single query.
 
