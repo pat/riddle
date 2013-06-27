@@ -58,8 +58,8 @@ module Riddle::Query
   end
 
   def self.snippets(data, index, query, options = nil)
-    data.gsub!("'")  { |x| "\\'" }
-    query.gsub!("'") { |x| "\\'" }
+    data = data.gsub("'")  { |x| "\\'" }
+    query = query.gsub("'") { |x| "\\'" }
 
     options = ', ' + options.keys.collect { |key|
       value = options[key]
