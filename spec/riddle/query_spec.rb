@@ -47,6 +47,11 @@ describe Riddle::Query do
         :before_match => '<strong>').should == "CALL SNIPPETS('foo bar baz', 'foo_core', 'foo', '<strong>' AS before_match)"
     end
 
+    it "handles boolean options" do
+      Riddle::Query.snippets('foo bar baz', 'foo_core', 'foo',
+        :exact_phrase => true).should == "CALL SNIPPETS('foo bar baz', 'foo_core', 'foo', 1 AS exact_phrase)"
+    end
+
     it "escapes quotes in the text data" do
       Riddle::Query.snippets("foo bar 'baz", 'foo_core', 'foo').
         should == "CALL SNIPPETS('foo bar \\'baz', 'foo_core', 'foo')"

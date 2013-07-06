@@ -62,7 +62,7 @@ module Riddle::Query
     query = query.gsub("'") { |x| "\\'" }
 
     options = ', ' + options.keys.collect { |key|
-      value = options[key]
+      value = translate_value options[key]
       value = "'#{value}'" if value.is_a?(String)
 
       "#{value} AS #{key}"
