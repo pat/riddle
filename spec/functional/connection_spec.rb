@@ -42,6 +42,14 @@ describe 'Sphinx Client', :live => true do
         should raise_error(Riddle::ResponseError)
     end
 
+    it "should not override OutOfBoundsError instances" do
+      client.connection = lambda { |client|
+        raise Riddle::OutOfBoundsError
+      }
+      lambda { client.query('smith') }.
+        should raise_error(Riddle::OutOfBoundsError)
+    end
+
     it "should prioritise instance over class connection" do
       Riddle::Client.connection = lambda { |client|
         raise RiddleSpecConnectionProcError

@@ -292,6 +292,8 @@ module Riddle
 
       @queue.clear
       results
+    rescue Riddle::OutOfBoundsError => error
+      raise error
     rescue => original
       error = ResponseError.new original.message
       error.original = original
