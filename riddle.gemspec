@@ -3,7 +3,7 @@ $:.push File.expand_path('../lib', __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = 'riddle'
-  s.version     = '1.5.6'
+  s.version     = '1.5.7'
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Pat Allan']
   s.email       = ['pat@freelancing-gods.com']

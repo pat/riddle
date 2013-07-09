@@ -1,4 +1,4 @@
-Edge:
+1.5.7 - July 9th 2013
 - Respect Riddle::OutOfBoundsError instances, instead of wrapping them in ResponseError.
 - Handle boolean values for snippets options.
 - Don't modify snippets parameters (Demian Ferreiro).
