@@ -12,7 +12,7 @@ class Sphinx
   def initialize
     self.host     = 'localhost'
     self.username = 'root'
-    self.password = ''
+    self.password = 'idfor4me'
 
     if File.exist?('spec/fixtures/sql/conf.yml')
       config    = YAML.load(File.open('spec/fixtures/sql/conf.yml'))
