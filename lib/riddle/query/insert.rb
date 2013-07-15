@@ -14,7 +14,7 @@ class Riddle::Query::Insert
   end
 
   def to_sql
-    "#{command} INTO #{@index} (#{columns_to_s}) VALUES (#{values_to_s})"
+    "#{command} INTO #{@index} (`#{columns_to_s}`) VALUES (#{values_to_s})"
   end
 
   private
@@ -24,7 +24,7 @@ class Riddle::Query::Insert
   end
 
   def columns_to_s
-    columns.join(', ')
+    columns.join('`, `')
   end
 
   def values_to_s
