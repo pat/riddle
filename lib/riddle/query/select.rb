@@ -134,22 +134,22 @@ class Riddle::Query::Select
   def filter_comparison_and_value(attribute, value)
     case value
     when Array
-      "#{attribute} IN (#{value.collect { |val| filter_value(val) }.join(', ')})"
+      "#{escape_column(attribute)} IN (#{value.collect { |val| filter_value(val) }.join(', ')})"
     when Range
-      "#{attribute} BETWEEN #{filter_value(value.first)} AND #{filter_value(value.last)}"
+      "#{escape_column(attribute)} BETWEEN #{filter_value(value.first)} AND #{filter_value(value.last)}"
     else
-      "#{attribute} = #{filter_value(value)}"
+      "#{escape_column(attribute)} = #{filter_value(value)}"
     end
   end
 
   def exclusive_filter_comparison_and_value(attribute, value)
     case value
     when Array
-      "#{attribute} NOT IN (#{value.collect { |val| filter_value(val) }.join(', ')})"
+      "#{escape_column(attribute)} NOT IN (#{value.collect { |val| filter_value(val) }.join(', ')})"
     when Range
-      "#{attribute} < #{filter_value(value.first)} OR #{attribute} > #{filter_value(value.last)}"
+      "#{escape_column(attribute)} < #{filter_value(value.first)} OR #{attribute} > #{filter_value(value.last)}"
     else
-      "#{attribute} <> #{filter_value(value)}"
+      "#{escape_column(attribute)} <> #{filter_value(value)}"
     end
   end
 
@@ -187,5 +187,9 @@ class Riddle::Query::Select
     else
       value
     end
+  end
+
+  def escape_column(column)
+    "`#{column}`"
   end
 end
