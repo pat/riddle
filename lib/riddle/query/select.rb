@@ -83,11 +83,11 @@ class Riddle::Query::Select
   def to_sql
     sql = "SELECT #{ @values.join(', ') } FROM #{ @indices.join(', ') }"
     sql << " WHERE #{ combined_wheres }" if wheres?
-    sql << " GROUP BY #{@group_by}"      if !@group_by.nil?
+    sql << " GROUP BY #{escape_column(@group_by)}"      if !@group_by.nil?
     unless @order_within_group_by.nil?
-      sql << " WITHIN GROUP ORDER BY #{@order_within_group_by}"
+      sql << " WITHIN GROUP ORDER BY #{escape_column(@order_within_group_by)}"
     end
-    sql << " ORDER BY #{@order_by}"      if !@order_by.nil?
+    sql << " ORDER BY #{escape_column(@order_by)}"      if !@order_by.nil?
     sql << " #{limit_clause}"   unless @limit.nil? && @offset.nil?
     sql << " #{options_clause}" unless @options.empty?
 
@@ -190,6 +190,11 @@ class Riddle::Query::Select
   end
 
   def escape_column(column)
-    "`#{column}`"
+    if column.to_s =~ /\A[`@]/
+      column
+    else
+      column_name, *extra = column.to_s.split(' ')
+      extra.unshift("`#{column_name}`").compact.join(' ')
+    end
   end
 end
