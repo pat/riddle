@@ -101,17 +101,32 @@ describe Riddle::Query::Select do
 
   it 'handles grouping' do
     query.from('foo_core').group_by('bar_id').to_sql.
-      should == "SELECT * FROM foo_core GROUP BY bar_id"
+      should == "SELECT * FROM foo_core GROUP BY `bar_id`"
   end
 
   it 'handles ordering' do
     query.from('foo_core').order_by('bar_id ASC').to_sql.
-      should == 'SELECT * FROM foo_core ORDER BY bar_id ASC'
+      should == 'SELECT * FROM foo_core ORDER BY `bar_id` ASC'
+  end
+
+  it 'handles ordering when an already escaped column is passed in' do
+    query.from('foo_core').order_by('`bar_id` ASC').to_sql.
+      should == 'SELECT * FROM foo_core ORDER BY `bar_id` ASC'
+  end
+
+  it 'handles ordering when just a symbol is passed in' do
+    query.from('foo_core').order_by(:bar_id).to_sql.
+      should == 'SELECT * FROM foo_core ORDER BY `bar_id`'
+  end
+
+  it 'handles ordering when a computed sphinx variable is passed in' do
+    query.from('foo_core').order_by('@weight DESC').to_sql.
+      should == 'SELECT * FROM foo_core ORDER BY @weight DESC'
   end
 
   it 'handles group ordering' do
     query.from('foo_core').order_within_group_by('bar_id ASC').to_sql.
-      should == 'SELECT * FROM foo_core WITHIN GROUP ORDER BY bar_id ASC'
+      should == 'SELECT * FROM foo_core WITHIN GROUP ORDER BY `bar_id` ASC'
   end
 
   it 'handles a limit' do
