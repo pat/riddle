@@ -14,4 +14,4 @@ describe 'SphinxQL escaping', :live => true do
       }.should_not raise_error(Mysql2::Error)
     end
   end
-end
+end unless RUBY_PLATFORM == 'java' || Riddle.loaded_version.to_i < 2
