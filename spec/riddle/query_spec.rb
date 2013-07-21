@@ -61,7 +61,7 @@ describe Riddle::Query do
       Riddle::Query.snippets("foo bar baz", 'foo_core', "foo'").
         should == "CALL SNIPPETS('foo bar baz', 'foo_core', 'foo\\'')"
     end
-  end
+  end unless RUBY_PLATFORM == 'java' || Riddle.loaded_version.to_i < 2
 
   describe '.create_function' do
     it 'handles a basic create request' do
@@ -91,5 +91,5 @@ describe Riddle::Query do
     it "removes extra \\ characters" do
       Riddle::Query.escape("\\").should == ""
     end
-  end
+  end unless RUBY_PLATFORM == 'java' || Riddle.loaded_version.to_i < 2
 end
