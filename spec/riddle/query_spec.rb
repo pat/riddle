@@ -78,14 +78,18 @@ describe Riddle::Query do
   end
 
   describe '.escape' do
-    %w(( ) | - ! @ ~ " / ^ $).each do |reserved|
+    %w(( ) | - ! @ ~ / ^ $).each do |reserved|
       it "escapes #{reserved}" do
         Riddle::Query.escape(reserved).should == "\\\\#{reserved}"
       end
     end
 
-    it "escapes \\" do
-      Riddle::Query.escape("\\").should == "\\\\"
+    it "escapes \"" do
+      Riddle::Query.escape('"').should == '\\\\\\"'
+    end
+
+    it "removes extra \\ characters" do
+      Riddle::Query.escape("\\").should == ""
     end
   end
 end

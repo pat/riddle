@@ -58,8 +58,7 @@ module Riddle::Query
   end
 
   def self.snippets(data, index, query, options = nil)
-    data = data.gsub("'")  { |x| "\\'" }
-    query = query.gsub("'") { |x| "\\'" }
+    data, query = escape(data), escape(query)
 
     options = ', ' + options.keys.collect { |key|
       value = translate_value options[key]
@@ -100,11 +99,8 @@ module Riddle::Query
   end
 
   def self.escape(string)
-    string.gsub("\\") { |match|
-      "\\\\"
-    }.gsub(/[\(\)\|\-!@~"\/\^\$]/) { |match|
-      "\\\\#{match}"
-    }
+    string = Mysql2::Client.escape string.gsub(/\\+/, '')
+    string.gsub(/[\(\)\|\-!@~"\/\^\$]/) { |match| "\\\\#{match}" }
   end
 end
 
