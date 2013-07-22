@@ -62,7 +62,7 @@ module Riddle::Query
 
     options = ', ' + options.keys.collect { |key|
       value = translate_value options[key]
-      value = "'#{value}'" if value.is_a?(String)
+      value = "'#{sql_escape(value)}'" if value.is_a?(String)
 
       "#{value} AS #{key}"
     }.join(', ') unless options.nil?
