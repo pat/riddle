@@ -58,7 +58,7 @@ module Riddle::Query
   end
 
   def self.snippets(data, index, query, options = nil)
-    data, query = escape(data), escape(query)
+    data, query = sql_escape(data), sql_escape(query)
 
     options = ', ' + options.keys.collect { |key|
       value = translate_value options[key]
@@ -102,6 +102,11 @@ module Riddle::Query
     string = Mysql2::Client.escape string.gsub(/\\+/, '')
     string.gsub(/[\(\)\|\-!@~"\/\^\$]/) { |match| "\\\\#{match}" }
   end
+
+  def self.sql_escape(string)
+    Mysql2::Client.escape(string)
+  end
+  private_class_method :sql_escape
 end
 
 require 'riddle/query/delete'

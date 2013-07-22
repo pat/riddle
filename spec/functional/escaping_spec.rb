@@ -14,4 +14,21 @@ describe 'SphinxQL escaping', :live => true do
       }.should_not raise_error(Mysql2::Error)
     end
   end
+
+  context 'on snippets' do
+    def snippets_for(text)
+      res = connection.query Riddle::Query.snippets(text, 'people', '')
+      res.first['snippet']
+    end
+
+    it 'preserves original text with special SphinxQL escape characters' do
+      text = 'email: john@example.com (yay!)'
+      snippets_for(text).should == text
+    end
+
+    it 'preserves original text with special MySQL escape characters' do
+      text = "'Dear' Susie\nAlways use {\\LaTeX}"
+      snippets_for(text).should == text
+    end
+  end
 end unless RUBY_PLATFORM == 'java' || Riddle.loaded_version.to_i < 2
