@@ -26,7 +26,7 @@ class Riddle::Query::Select
   end
 
   def matching(match)
-    @matching = match.gsub("'") { |x| "\\'" }
+    @matching = match
     self
   end
 
@@ -104,9 +104,9 @@ class Riddle::Query::Select
     if @matching.nil?
       wheres_to_s
     elsif @wheres.empty? && @where_nots.empty? && @where_alls.empty? && @where_not_alls.empty?
-      "MATCH('#{@matching}')"
+      "MATCH(#{Riddle::Query.quote @matching})"
     else
-      "MATCH('#{@matching}') AND #{wheres_to_s}"
+      "MATCH(#{Riddle::Query.quote @matching}) AND #{wheres_to_s}"
     end
   end
 

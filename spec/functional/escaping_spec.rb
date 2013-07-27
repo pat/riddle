@@ -4,7 +4,10 @@ describe 'SphinxQL escaping', :live => true do
   let(:connection) { Mysql2::Client.new :host => '127.0.0.1', :port => 9306 }
 
   def sphinxql_matching(string)
-    "SELECT * FROM people WHERE MATCH('#{string}')"
+    select = Riddle::Query::Select.new
+    select.from 'people'
+    select.matching string
+    select.to_sql
   end
 
   ['@', "'", '"', '\\"', "\\'"].each do |string|

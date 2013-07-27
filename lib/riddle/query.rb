@@ -58,21 +58,21 @@ module Riddle::Query
   end
 
   def self.snippets(data, index, query, options = nil)
-    data, query = sql_escape(data), sql_escape(query)
+    data, index, query = quote(data), quote(index), quote(query)
 
     options = ', ' + options.keys.collect { |key|
       value = translate_value options[key]
-      value = "'#{sql_escape(value)}'" if value.is_a?(String)
+      value = quote value if value.is_a?(String)
 
       "#{value} AS #{key}"
     }.join(', ') unless options.nil?
 
-    "CALL SNIPPETS('#{data}', '#{index}', '#{query}'#{options})"
+    "CALL SNIPPETS(#{data}, #{index}, #{query}#{options})"
   end
 
   def self.create_function(name, type, file)
     type = type.to_s.upcase
-    "CREATE FUNCTION #{name} RETURNS #{type} SONAME '#{file}'"
+    "CREATE FUNCTION #{name} RETURNS #{type} SONAME #{quote file}"
   end
 
   def self.drop_function(name)
@@ -99,14 +99,18 @@ module Riddle::Query
   end
 
   def self.escape(string)
-    string = Mysql2::Client.escape string.gsub(/\\+/, '')
-    string.gsub(/[\(\)\|\-!@~"\/\^\$]/) { |match| "\\\\#{match}" }
+    string.gsub(/[\(\)\|\-!@~\/"\/\^\$\\]/) { |match| "\\#{match}" }
+  end
+
+  def self.quote(string)
+    "'#{sql_escape string}'"
   end
 
   def self.sql_escape(string)
-    Mysql2::Client.escape(string)
+    return Mysql2::Client.escape(string) if defined?(Mysql2)
+
+    string.gsub(/['"\\]/) { |x| "\\'" }
   end
-  private_class_method :sql_escape
 end
 
 require 'riddle/query/delete'
