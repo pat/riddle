@@ -109,7 +109,7 @@ module Riddle::Query
   def self.sql_escape(string)
     return Mysql2::Client.escape(string) if defined?(Mysql2)
 
-    string.gsub(/['"\\]/) { |x| "\\'" }
+    string.gsub(/['"\\]/) { |character| "\\#{character}" }
   end
 end
 
