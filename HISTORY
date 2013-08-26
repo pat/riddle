@@ -1,3 +1,7 @@
+Edge:
+- Reworked escaping to be consistent and always query-safe (Demian Ferreiro).
+- Escape column names in SphinxQL WHERE, INSERT, ORDER BY and GROUP BY clauses and statements (Jason Rust).
+
 1.5.7 - July 9th 2013
 - Respect Riddle::OutOfBoundsError instances, instead of wrapping them in ResponseError.
 - Handle boolean values for snippets options.
