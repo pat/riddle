@@ -1,4 +1,4 @@
-Edge:
+1.5.8 - August 26th 2013
 - Reworked escaping to be consistent and always query-safe (Demian Ferreiro).
 - Escape column names in SphinxQL WHERE, INSERT, ORDER BY and GROUP BY clauses and statements (Jason Rust).
 
