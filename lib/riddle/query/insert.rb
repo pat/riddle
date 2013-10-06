@@ -46,6 +46,8 @@ class Riddle::Query::Insert
       value ? 1 : 0
     when Time
       value.to_i
+    when Date
+      value.to_time.to_i
     when Array
       "(#{value.join(',')})"
     else
