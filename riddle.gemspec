@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Pat Allan']
   s.email       = ['pat@freelancing-gods.com']
-  s.homepage    = 'http://pat.github.com/riddle/'
+  s.homepage    = 'http://pat.github.io/riddle/'
   s.summary     = %q{An API for Sphinx, written in and for Ruby.}
   s.description = %q{A Ruby API and configuration helper for the Sphinx search service.}
   s.license     = 'MIT'
