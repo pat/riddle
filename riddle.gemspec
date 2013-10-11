@@ -10,6 +10,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'http://pat.github.com/riddle/'
   s.summary     = %q{An API for Sphinx, written in and for Ruby.}
   s.description = %q{A Ruby API and configuration helper for the Sphinx search service.}
+  s.license     = 'MIT'
 
   s.rubyforge_project = 'riddle'
 
