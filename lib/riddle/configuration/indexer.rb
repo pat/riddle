@@ -4,8 +4,9 @@ module Riddle
       def self.settings
         [
           :mem_limit, :max_iops, :max_iosize, :max_xmlpipe2_field,
-          :write_buffer, :max_file_field_buffer, :lemmatizer_base,
-          :lemmatizer_cache, :json_autoconv_numbers, :on_json_attr_error
+          :write_buffer, :max_file_field_buffer, :on_file_field_error,
+          :lemmatizer_base, :lemmatizer_cache, :json_autoconv_numbers,
+          :on_json_attr_error
         ]
       end
 
