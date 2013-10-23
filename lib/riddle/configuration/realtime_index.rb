@@ -7,13 +7,13 @@ module Riddle
         Riddle::Configuration::IndexSettings.settings + [
           :rt_mem_limit, :rt_field, :rt_attr_uint, :rt_attr_bigint,
           :rt_attr_float, :rt_attr_timestamp, :rt_attr_string, :rt_attr_multi,
-          :rt_attr_multi_64
+          :rt_attr_multi_64, :rt_attr_bool, :rt_attr_json
         ]
       end
 
       attr_accessor :rt_mem_limit, :rt_field, :rt_attr_uint, :rt_attr_bigint,
         :rt_attr_float, :rt_attr_timestamp, :rt_attr_string, :rt_attr_multi,
-        :rt_attr_multi_64
+        :rt_attr_multi_64, :rt_attr_bool, :rt_attr_json
 
       def initialize(name)
         @name               = name
@@ -25,6 +25,8 @@ module Riddle
         @rt_attr_string     = []
         @rt_attr_multi      = []
         @rt_attr_multi_64   = []
+        @rt_attr_bool       = []
+        @rt_attr_json       = []
 
         initialize_settings
       end

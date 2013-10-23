@@ -1,3 +1,8 @@
+1.5.9 - October 20th 2013
+- Adding all known Sphinx settings to configuration classes as of Sphinx 2.1.2, including JSON settings.
+- Convert date objects in INSERT/REPLACE queries to timestamps, just like time objects.
+- Don't escape references to id in SphinxQL INSERT/REPLACE queries.
+
 1.5.8 - August 26th 2013
 - Reworked escaping to be consistent and always query-safe (Demian Ferreiro).
 - Escape column names in SphinxQL WHERE, INSERT, ORDER BY and GROUP BY clauses and statements (Jason Rust).

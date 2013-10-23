@@ -13,7 +13,9 @@ module Riddle
           :html_index_attrs, :html_remove_elements, :preopen, :ondisk_dict,
           :inplace_enable, :inplace_hit_gap, :inplace_docinfo_gap,
           :inplace_reloc_factor, :inplace_write_factor, :index_exact_words,
-          :overshort_step, :stopwords_step, :hitless_words
+          :overshort_step, :stopwords_step, :hitless_words, :ha_strategy,
+          :bigram_freq_words, :bigram_index, :index_field_lengths,
+          :regexp_filter, :stopwords_unstemmed, :global_idf
         ]
       end
 
@@ -28,7 +30,9 @@ module Riddle
         :html_remove_element_tags, :preopen, :ondisk_dict, :inplace_enable,
         :inplace_hit_gap, :inplace_docinfo_gap, :inplace_reloc_factor,
         :inplace_write_factor, :index_exact_words, :overshort_step,
-        :stopwords_step, :hitless_words
+        :stopwords_step, :hitless_words, :ha_strategy, :bigram_freq_words,
+        :bigram_index, :index_field_lengths, :regexp_filter,
+        :stopwords_unstemmed, :global_idf
 
       def initialize_settings
         @morphologies             = []
@@ -41,6 +45,7 @@ module Riddle
         @ngram_characters         = []
         @phrase_boundaries        = []
         @html_remove_element_tags = []
+        @regexp_filter            = []
       end
 
       def morphology
