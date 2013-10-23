@@ -101,12 +101,14 @@ class Riddle::Query::Select
   end
 
   def combined_wheres
+    wheres = wheres_to_s
+
     if @matching.nil?
-      wheres_to_s
-    elsif @wheres.empty? && @where_nots.empty? && @where_alls.empty? && @where_not_alls.empty?
+      wheres
+    elsif wheres.empty?
       "MATCH(#{Riddle::Query.quote @matching})"
     else
-      "MATCH(#{Riddle::Query.quote @matching}) AND #{wheres_to_s}"
+      "MATCH(#{Riddle::Query.quote @matching}) AND #{wheres}"
     end
   end
 
@@ -128,13 +130,15 @@ class Riddle::Query::Select
           exclusive_filter_comparison_and_value key, value
         }.join(' OR ') + ')'
       }
-    ).flatten.join(' AND ')
+    ).flatten.compact.join(' AND ')
   end
 
   def filter_comparison_and_value(attribute, value)
     case value
     when Array
-      "#{escape_column(attribute)} IN (#{value.collect { |val| filter_value(val) }.join(', ')})"
+      if !value.flatten.empty?
+        "#{escape_column(attribute)} IN (#{value.collect { |val| filter_value(val) }.join(', ')})"
+      end
     when Range
       "#{escape_column(attribute)} BETWEEN #{filter_value(value.first)} AND #{filter_value(value.last)}"
     else
@@ -145,7 +149,9 @@ class Riddle::Query::Select
   def exclusive_filter_comparison_and_value(attribute, value)
     case value
     when Array
-      "#{escape_column(attribute)} NOT IN (#{value.collect { |val| filter_value(val) }.join(', ')})"
+      if !value.flatten.empty?
+        "#{escape_column(attribute)} NOT IN (#{value.collect { |val| filter_value(val) }.join(', ')})"
+      end
     when Range
       "#{escape_column(attribute)} < #{filter_value(value.first)} OR #{attribute} > #{filter_value(value.last)}"
     else
