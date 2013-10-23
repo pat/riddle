@@ -67,9 +67,19 @@ describe Riddle::Query::Select do
       should == "SELECT * FROM foo_core WHERE MATCH('foo') AND `bars` IN (1, 2)"
   end
 
+  it "ignores filters with empty arrays" do
+    query.from('foo_core').matching('foo').where(:bars => []).to_sql.
+      should == "SELECT * FROM foo_core WHERE MATCH('foo')"
+  end
+
   it "handles exclusive filters with arrays" do
     query.from('foo_core').matching('foo').where_not(:bars => [1, 2]).to_sql.
       should == "SELECT * FROM foo_core WHERE MATCH('foo') AND `bars` NOT IN (1, 2)"
+  end
+
+  it "ignores exclusive filters with empty arrays" do
+    query.from('foo_core').matching('foo').where_not(:bars => []).to_sql.
+      should == "SELECT * FROM foo_core WHERE MATCH('foo')"
   end
 
   it "handles filters with timestamps" do
