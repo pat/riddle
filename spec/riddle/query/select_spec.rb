@@ -26,7 +26,7 @@ describe Riddle::Query::Select do
     query.from('foo_core').matching('foo').to_sql.
       should == "SELECT * FROM foo_core WHERE MATCH('foo')"
   end
-  
+
   it "escapes single quotes in the search terms" do
     query.from('foo_core').matching("fo'o").to_sql.
       should == "SELECT * FROM foo_core WHERE MATCH('fo\\'o')"
@@ -122,6 +122,11 @@ describe Riddle::Query::Select do
   it 'handles ordering when a computed sphinx variable is passed in' do
     query.from('foo_core').order_by('@weight DESC').to_sql.
       should == 'SELECT * FROM foo_core ORDER BY @weight DESC'
+  end
+
+  it "handles ordering when a sphinx function is passed in" do
+    query.from('foo_core').order_by('weight() DESC').to_sql.
+      should == 'SELECT * FROM foo_core ORDER BY weight() DESC'
   end
 
   it 'handles group ordering' do

@@ -85,9 +85,9 @@ class Riddle::Query::Select
     sql << " WHERE #{ combined_wheres }" if wheres?
     sql << " GROUP BY #{escape_column(@group_by)}"      if !@group_by.nil?
     unless @order_within_group_by.nil?
-      sql << " WITHIN GROUP ORDER BY #{escape_column(@order_within_group_by)}"
+      sql << " WITHIN GROUP ORDER BY #{escape_columns(@order_within_group_by)}"
     end
-    sql << " ORDER BY #{escape_column(@order_by)}"      if !@order_by.nil?
+    sql << " ORDER BY #{escape_columns(@order_by)}"     if !@order_by.nil?
     sql << " #{limit_clause}"   unless @limit.nil? && @offset.nil?
     sql << " #{options_clause}" unless @options.empty?
 
@@ -190,11 +190,17 @@ class Riddle::Query::Select
   end
 
   def escape_column(column)
-    if column.to_s =~ /\A[`@]/
+    if column.to_s[/\A[`@]/] || column.to_s[/\A\w+\(/]
       column
     else
       column_name, *extra = column.to_s.split(' ')
       extra.unshift("`#{column_name}`").compact.join(' ')
     end
+  end
+
+  def escape_columns(columns)
+    columns.to_s.split(/,\s*/).collect { |column|
+      escape_column(column)
+    }.join(', ')
   end
 end
