@@ -26,7 +26,7 @@ describe Riddle::Query::Select do
     query.from('foo_core').matching('foo').to_sql.
       should == "SELECT * FROM foo_core WHERE MATCH('foo')"
   end
-  
+
   it "escapes single quotes in the search terms" do
     query.from('foo_core').matching("fo'o").to_sql.
       should == "SELECT * FROM foo_core WHERE MATCH('fo\\'o')"
@@ -92,6 +92,11 @@ describe Riddle::Query::Select do
   it "handles filters expecting matches on all values" do
     query.from('foo_core').where_all(:bars => [1, 2]).to_sql.
       should == "SELECT * FROM foo_core WHERE `bars` = 1 AND `bars` = 2"
+  end
+
+  it "handles filters expecting matches on all combinations of values" do
+    query.from('foo_core').where_all(:bars => [[1,2], 3]).to_sql.
+      should == "SELECT * FROM foo_core WHERE `bars` IN (1, 2) AND `bars` = 3"
   end
 
   it "handles exclusive filters expecting matches on none of the values" do
