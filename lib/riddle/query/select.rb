@@ -1,6 +1,6 @@
 class Riddle::Query::Select
   def initialize
-    @values                = ['*']
+    @values                = []
     @indices               = []
     @matching              = nil
     @wheres                = {}
@@ -81,7 +81,7 @@ class Riddle::Query::Select
   end
 
   def to_sql
-    sql = "SELECT #{ @values.join(', ') } FROM #{ @indices.join(', ') }"
+    sql = "SELECT #{ extended_values } FROM #{ @indices.join(', ') }"
     sql << " WHERE #{ combined_wheres }" if wheres?
     sql << " GROUP BY #{escape_column(@group_by)}"      if !@group_by.nil?
     unless @order_within_group_by.nil?
@@ -95,6 +95,10 @@ class Riddle::Query::Select
   end
 
   private
+
+  def extended_values
+    @values.empty? ? '*' : @values.join(', ')
+  end
 
   def wheres?
     !(@wheres.empty? && @where_alls.empty? && @where_nots.empty? && @where_not_alls.empty? && @matching.nil?)
