@@ -1,5 +1,6 @@
 language: ruby
 before_install:
+  - sudo apt-get install postgresql-server-dev-9.1 libmysql++-dev -y
   - curl -O http://fs-packages.s3.amazonaws.com/fs-sphinx-1.10_x86_64_12.04.deb
   - sudo dpkg -i fs-sphinx-1.10_x86_64_12.04.deb
   - curl -O http://fs-packages.s3.amazonaws.com/fs-sphinx-2.0.4_x86_64_12.04.deb
