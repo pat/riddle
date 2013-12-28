@@ -8,6 +8,7 @@ class Riddle::Query::Select
     @where_nots            = {}
     @where_not_alls        = {}
     @group_by              = nil
+    @group_best            = nil
     @having                = []
     @order_by              = nil
     @order_within_group_by = nil
@@ -56,6 +57,11 @@ class Riddle::Query::Select
     self
   end
 
+  def group_best(count)
+    @group_best = count
+    self
+  end
+
   def having(*conditions)
     @having += conditions
     self
@@ -89,12 +95,12 @@ class Riddle::Query::Select
   def to_sql
     sql = "SELECT #{ extended_values } FROM #{ @indices.join(', ') }"
     sql << " WHERE #{ combined_wheres }" if wheres?
-    sql << " GROUP BY #{escape_column(@group_by)}"      if !@group_by.nil?
+    sql << " #{group_prefix} #{escape_column(@group_by)}" if !@group_by.nil?
     unless @order_within_group_by.nil?
       sql << " WITHIN GROUP ORDER BY #{escape_columns(@order_within_group_by)}"
     end
     sql << " HAVING #{@having.join(' AND ')}" unless @having.empty?
-    sql << " ORDER BY #{escape_columns(@order_by)}"     if !@order_by.nil?
+    sql << " ORDER BY #{escape_columns(@order_by)}" if !@order_by.nil?
     sql << " #{limit_clause}"   unless @limit.nil? && @offset.nil?
     sql << " #{options_clause}" unless @options.empty?
 
@@ -105,6 +111,10 @@ class Riddle::Query::Select
 
   def extended_values
     @values.empty? ? '*' : @values.join(', ')
+  end
+
+  def group_prefix
+    ['GROUP', @group_best, 'BY'].compact.join(' ')
   end
 
   def wheres?
