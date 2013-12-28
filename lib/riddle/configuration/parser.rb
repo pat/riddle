@@ -15,7 +15,8 @@ class Riddle::Configuration::Parser
   INDEX_CLASSES = {
     'plain'       => Riddle::Configuration::Index,
     'distributed' => Riddle::Configuration::DistributedIndex,
-    'rt'          => Riddle::Configuration::RealtimeIndex
+    'rt'          => Riddle::Configuration::RealtimeIndex,
+    'template'    => Riddle::Configuration::TemplateIndex
   }
 
   def initialize(input)
