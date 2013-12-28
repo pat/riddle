@@ -127,6 +127,11 @@ describe Riddle::Query::Select do
       should == "SELECT * FROM foo_core GROUP BY `bar_id`"
   end
 
+  it 'handles having conditions' do
+    query.from('foo_core').group_by('bar_id').having('bar_id > 10').to_sql.
+      should == "SELECT * FROM foo_core GROUP BY `bar_id` HAVING bar_id > 10"
+  end
+
   it 'handles ordering' do
     query.from('foo_core').order_by('bar_id ASC').to_sql.
       should == 'SELECT * FROM foo_core ORDER BY `bar_id` ASC'

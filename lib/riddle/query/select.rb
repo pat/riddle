@@ -8,6 +8,7 @@ class Riddle::Query::Select
     @where_nots            = {}
     @where_not_alls        = {}
     @group_by              = nil
+    @having                = []
     @order_by              = nil
     @order_within_group_by = nil
     @offset                = nil
@@ -55,6 +56,11 @@ class Riddle::Query::Select
     self
   end
 
+  def having(*conditions)
+    @having += conditions
+    self
+  end
+
   def order_by(order)
     @order_by = order
     self
@@ -87,6 +93,7 @@ class Riddle::Query::Select
     unless @order_within_group_by.nil?
       sql << " WITHIN GROUP ORDER BY #{escape_columns(@order_within_group_by)}"
     end
+    sql << " HAVING #{@having.join(' AND ')}" unless @having.empty?
     sql << " ORDER BY #{escape_columns(@order_by)}"     if !@order_by.nil?
     sql << " #{limit_clause}"   unless @limit.nil? && @offset.nil?
     sql << " #{options_clause}" unless @options.empty?
