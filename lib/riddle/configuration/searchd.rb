@@ -17,7 +17,8 @@ module Riddle
           :compat_sphinxql_magics, :watchdog, :prefork_rotation_throttle,
           :sphinxql_state, :ha_ping_interval, :ha_period_karma,
           :persistent_connections_limit, :rt_merge_iops, :rt_merge_maxiosize,
-          :predicted_time_costs, :snippets_file_prefix, :client_key
+          :predicted_time_costs, :snippets_file_prefix, :shutdown_timeout,
+          :ondisk_attrs_default, :client_key
         ]
       end
 
