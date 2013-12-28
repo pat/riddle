@@ -171,6 +171,8 @@ class Riddle::Query::Select
       0
     when Time
       value.to_i
+    when Date
+      Time.utc(value.year, value.month, value.day).to_i
     else
       value
     end

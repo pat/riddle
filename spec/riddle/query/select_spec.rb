@@ -1,4 +1,6 @@
 require 'spec_helper'
+require 'date'
+require 'time'
 
 describe Riddle::Query::Select do
   let(:query) { Riddle::Query::Select.new }
@@ -86,6 +88,12 @@ describe Riddle::Query::Select do
     time = Time.now
     query.from('foo_core').matching('foo').where(:created_at => time).to_sql.
       should == "SELECT * FROM foo_core WHERE MATCH('foo') AND `created_at` = #{time.to_i}"
+  end
+
+  it "handles filters with dates" do
+    date = Date.new 2014, 1, 1
+    query.from('foo_core').matching('foo').where(:created_at => date).to_sql.
+      should == "SELECT * FROM foo_core WHERE MATCH('foo') AND `created_at` = #{Time.utc(2014, 1, 1).to_i}"
   end
 
   it "handles exclusive filters with timestamps" do
