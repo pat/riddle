@@ -22,6 +22,11 @@ class Riddle::Query::Select
     self
   end
 
+  def prepend_values(*values)
+    @values.insert 0, *values
+    self
+  end
+
   def from(*indices)
     @indices += indices
     self
