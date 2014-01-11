@@ -1,4 +1,4 @@
-Edge:
+1.5.10 - January 11th 2014
 - SELECT values can be prepended as well as the existing append support.
 - New settings for Sphinx 2.2.1.
 - Template index type for Sphinx 2.2.1.
