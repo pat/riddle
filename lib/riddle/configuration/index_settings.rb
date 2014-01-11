@@ -15,7 +15,8 @@ module Riddle
           :inplace_reloc_factor, :inplace_write_factor, :index_exact_words,
           :overshort_step, :stopwords_step, :hitless_words, :ha_strategy,
           :bigram_freq_words, :bigram_index, :index_field_lengths,
-          :regexp_filter, :stopwords_unstemmed, :global_idf
+          :regexp_filter, :stopwords_unstemmed, :global_idf, :rlp_context,
+          :ondisk_attrs
         ]
       end
 
@@ -32,7 +33,7 @@ module Riddle
         :inplace_write_factor, :index_exact_words, :overshort_step,
         :stopwords_step, :hitless_words, :ha_strategy, :bigram_freq_words,
         :bigram_index, :index_field_lengths, :regexp_filter,
-        :stopwords_unstemmed, :global_idf
+        :stopwords_unstemmed, :global_idf, :rlp_context, :ondisk_attrs
 
       def initialize_settings
         @morphologies             = []

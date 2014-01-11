@@ -8,13 +8,15 @@ class Riddle::Configuration::Parser
     'mssql'    => Riddle::Configuration::SQLSource,
     'xmlpipe'  => Riddle::Configuration::XMLSource,
     'xmlpipe2' => Riddle::Configuration::XMLSource,
-    'odbc'     => Riddle::Configuration::SQLSource
+    'odbc'     => Riddle::Configuration::SQLSource,
+    'tsvpipe'  => Riddle::Configuration::TSVSource
   }
 
   INDEX_CLASSES = {
     'plain'       => Riddle::Configuration::Index,
     'distributed' => Riddle::Configuration::DistributedIndex,
-    'rt'          => Riddle::Configuration::RealtimeIndex
+    'rt'          => Riddle::Configuration::RealtimeIndex,
+    'template'    => Riddle::Configuration::TemplateIndex
   }
 
   def initialize(input)

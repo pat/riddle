@@ -55,6 +55,12 @@ total number of matches (which may be greater than the maximum available), and t
 
 If you've installed the gem and wondering why there's no tests - check out the git version. I've kept the specs out of the gem as I have a decent amount of test data in there, which really isn't needed unless you want to submit patches.
 
+h2. Contributing
+
+Riddle uses the "git-flow":http://jeffkreeftmeijer.com/2010/why-arent-you-using-git-flow/ process for development. The "master" branch is the latest released code (in a gem). The "develop" branch is what's coming in the next release. (There may be occasional feature and hotfix branches, although these are generally not pushed to GitHub.)
+
+When submitting a patch to riddle, please submit your pull request against the "develop" branch.
+
 h2. Contributors
 
 Thanks to the following people who have contributed to Riddle in some shape or form:

@@ -1,3 +1,16 @@
+1.5.10 - January 11th 2014
+- SELECT values can be prepended as well as the existing append support.
+- New settings for Sphinx 2.2.1.
+- Template index type for Sphinx 2.2.1.
+- TSV source types for Sphinx 2.2.1.
+- Support for HAVING, GROUP-n-BEST in SELECT statements.
+- Dates in filters are converted to (UTC) timestamp integers.
+- Default to * in SELECT queries only if nothing else is supplied.
+- Fix licence, URL in gemspec (Ken Dreyer).
+- Handle empty arrays for filter elegantly (Bryan Ricker).
+- Add a contributing section to the README (Ken Dreyer).
+- Don't automatically escape function references in SphinxQL ORDER clauses.
+
 1.5.9 - October 20th 2013
 - Adding all known Sphinx settings to configuration classes as of Sphinx 2.1.2, including JSON settings.
 - Convert date objects in INSERT/REPLACE queries to timestamps, just like time objects.

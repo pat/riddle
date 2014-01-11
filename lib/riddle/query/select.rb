@@ -1,6 +1,6 @@
 class Riddle::Query::Select
   def initialize
-    @values                = ['*']
+    @values                = []
     @indices               = []
     @matching              = nil
     @wheres                = {}
@@ -8,6 +8,8 @@ class Riddle::Query::Select
     @where_nots            = {}
     @where_not_alls        = {}
     @group_by              = nil
+    @group_best            = nil
+    @having                = []
     @order_by              = nil
     @order_within_group_by = nil
     @offset                = nil
@@ -17,6 +19,11 @@ class Riddle::Query::Select
 
   def values(*values)
     @values += values
+    self
+  end
+
+  def prepend_values(*values)
+    @values.insert 0, *values
     self
   end
 
@@ -55,6 +62,16 @@ class Riddle::Query::Select
     self
   end
 
+  def group_best(count)
+    @group_best = count
+    self
+  end
+
+  def having(*conditions)
+    @having += conditions
+    self
+  end
+
   def order_by(order)
     @order_by = order
     self
@@ -81,13 +98,14 @@ class Riddle::Query::Select
   end
 
   def to_sql
-    sql = "SELECT #{ @values.join(', ') } FROM #{ @indices.join(', ') }"
+    sql = "SELECT #{ extended_values } FROM #{ @indices.join(', ') }"
     sql << " WHERE #{ combined_wheres }" if wheres?
-    sql << " GROUP BY #{escape_column(@group_by)}"      if !@group_by.nil?
+    sql << " #{group_prefix} #{escape_column(@group_by)}" if !@group_by.nil?
     unless @order_within_group_by.nil?
-      sql << " WITHIN GROUP ORDER BY #{escape_column(@order_within_group_by)}"
+      sql << " WITHIN GROUP ORDER BY #{escape_columns(@order_within_group_by)}"
     end
-    sql << " ORDER BY #{escape_column(@order_by)}"      if !@order_by.nil?
+    sql << " HAVING #{@having.join(' AND ')}" unless @having.empty?
+    sql << " ORDER BY #{escape_columns(@order_by)}" if !@order_by.nil?
     sql << " #{limit_clause}"   unless @limit.nil? && @offset.nil?
     sql << " #{options_clause}" unless @options.empty?
 
@@ -96,17 +114,27 @@ class Riddle::Query::Select
 
   private
 
+  def extended_values
+    @values.empty? ? '*' : @values.join(', ')
+  end
+
+  def group_prefix
+    ['GROUP', @group_best, 'BY'].compact.join(' ')
+  end
+
   def wheres?
     !(@wheres.empty? && @where_alls.empty? && @where_nots.empty? && @where_not_alls.empty? && @matching.nil?)
   end
 
   def combined_wheres
+    wheres = wheres_to_s
+
     if @matching.nil?
-      wheres_to_s
-    elsif @wheres.empty? && @where_nots.empty? && @where_alls.empty? && @where_not_alls.empty?
+      wheres
+    elsif wheres.empty?
       "MATCH(#{Riddle::Query.quote @matching})"
     else
-      "MATCH(#{Riddle::Query.quote @matching}) AND #{wheres_to_s}"
+      "MATCH(#{Riddle::Query.quote @matching}) AND #{wheres}"
     end
   end
 
@@ -128,13 +156,15 @@ class Riddle::Query::Select
           exclusive_filter_comparison_and_value key, value
         }.join(' OR ') + ')'
       }
-    ).flatten.join(' AND ')
+    ).flatten.compact.join(' AND ')
   end
 
   def filter_comparison_and_value(attribute, value)
     case value
     when Array
-      "#{escape_column(attribute)} IN (#{value.collect { |val| filter_value(val) }.join(', ')})"
+      if !value.flatten.empty?
+        "#{escape_column(attribute)} IN (#{value.collect { |val| filter_value(val) }.join(', ')})"
+      end
     when Range
       "#{escape_column(attribute)} BETWEEN #{filter_value(value.first)} AND #{filter_value(value.last)}"
     else
@@ -145,7 +175,9 @@ class Riddle::Query::Select
   def exclusive_filter_comparison_and_value(attribute, value)
     case value
     when Array
-      "#{escape_column(attribute)} NOT IN (#{value.collect { |val| filter_value(val) }.join(', ')})"
+      if !value.flatten.empty?
+        "#{escape_column(attribute)} NOT IN (#{value.collect { |val| filter_value(val) }.join(', ')})"
+      end
     when Range
       "#{escape_column(attribute)} < #{filter_value(value.first)} OR #{attribute} > #{filter_value(value.last)}"
     else
@@ -161,6 +193,8 @@ class Riddle::Query::Select
       0
     when Time
       value.to_i
+    when Date
+      Time.utc(value.year, value.month, value.day).to_i
     else
       value
     end
@@ -190,11 +224,17 @@ class Riddle::Query::Select
   end
 
   def escape_column(column)
-    if column.to_s =~ /\A[`@]/
+    if column.to_s[/\A[`@]/] || column.to_s[/\A\w+\(/]
       column
     else
       column_name, *extra = column.to_s.split(' ')
       extra.unshift("`#{column_name}`").compact.join(' ')
     end
+  end
+
+  def escape_columns(columns)
+    columns.to_s.split(/,\s*/).collect { |column|
+      escape_column(column)
+    }.join(', ')
   end
 end

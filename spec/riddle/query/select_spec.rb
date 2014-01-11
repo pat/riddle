@@ -1,4 +1,6 @@
 require 'spec_helper'
+require 'date'
+require 'time'
 
 describe Riddle::Query::Select do
   let(:query) { Riddle::Query::Select.new }
@@ -19,7 +21,12 @@ describe Riddle::Query::Select do
 
   it "handles custom select values" do
     query.values('@weight').from('foo_core').to_sql.
-      should == 'SELECT *, @weight FROM foo_core'
+      should == 'SELECT @weight FROM foo_core'
+  end
+
+  it "can prepend select values" do
+    query.values('@weight').prepend_values('foo').from('foo_core').to_sql.
+      should == 'SELECT foo, @weight FROM foo_core'
   end
 
   it 'handles basic queries with a search term' do
@@ -67,15 +74,31 @@ describe Riddle::Query::Select do
       should == "SELECT * FROM foo_core WHERE MATCH('foo') AND `bars` IN (1, 2)"
   end
 
+  it "ignores filters with empty arrays" do
+    query.from('foo_core').matching('foo').where(:bars => []).to_sql.
+      should == "SELECT * FROM foo_core WHERE MATCH('foo')"
+  end
+
   it "handles exclusive filters with arrays" do
     query.from('foo_core').matching('foo').where_not(:bars => [1, 2]).to_sql.
       should == "SELECT * FROM foo_core WHERE MATCH('foo') AND `bars` NOT IN (1, 2)"
+  end
+
+  it "ignores exclusive filters with empty arrays" do
+    query.from('foo_core').matching('foo').where_not(:bars => []).to_sql.
+      should == "SELECT * FROM foo_core WHERE MATCH('foo')"
   end
 
   it "handles filters with timestamps" do
     time = Time.now
     query.from('foo_core').matching('foo').where(:created_at => time).to_sql.
       should == "SELECT * FROM foo_core WHERE MATCH('foo') AND `created_at` = #{time.to_i}"
+  end
+
+  it "handles filters with dates" do
+    date = Date.new 2014, 1, 1
+    query.from('foo_core').matching('foo').where(:created_at => date).to_sql.
+      should == "SELECT * FROM foo_core WHERE MATCH('foo') AND `created_at` = #{Time.utc(2014, 1, 1).to_i}"
   end
 
   it "handles exclusive filters with timestamps" do
@@ -109,6 +132,16 @@ describe Riddle::Query::Select do
       should == "SELECT * FROM foo_core GROUP BY `bar_id`"
   end
 
+  it "handles grouping n-best results" do
+    query.from('foo_core').group_by('bar_id').group_best(3).to_sql.
+      should == "SELECT * FROM foo_core GROUP 3 BY `bar_id`"
+  end
+
+  it 'handles having conditions' do
+    query.from('foo_core').group_by('bar_id').having('bar_id > 10').to_sql.
+      should == "SELECT * FROM foo_core GROUP BY `bar_id` HAVING bar_id > 10"
+  end
+
   it 'handles ordering' do
     query.from('foo_core').order_by('bar_id ASC').to_sql.
       should == 'SELECT * FROM foo_core ORDER BY `bar_id` ASC'
@@ -127,6 +160,11 @@ describe Riddle::Query::Select do
   it 'handles ordering when a computed sphinx variable is passed in' do
     query.from('foo_core').order_by('@weight DESC').to_sql.
       should == 'SELECT * FROM foo_core ORDER BY @weight DESC'
+  end
+
+  it "handles ordering when a sphinx function is passed in" do
+    query.from('foo_core').order_by('weight() DESC').to_sql.
+      should == 'SELECT * FROM foo_core ORDER BY weight() DESC'
   end
 
   it 'handles group ordering' do

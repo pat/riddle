@@ -9,6 +9,8 @@ require 'riddle/configuration/remote_index'
 require 'riddle/configuration/searchd'
 require 'riddle/configuration/source'
 require 'riddle/configuration/sql_source'
+require 'riddle/configuration/template_index'
+require 'riddle/configuration/tsv_source'
 require 'riddle/configuration/xml_source'
 
 require 'riddle/configuration/parser'
