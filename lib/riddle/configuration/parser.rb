@@ -66,11 +66,11 @@ class Riddle::Configuration::Parser
   end
 
   def set_indexer
-    set_settings configuration.indexer, inner['indexer']
+    set_settings configuration.indexer, inner['indexer'] || {}
   end
 
   def set_searchd
-    set_settings configuration.searchd, inner['searchd']
+    set_settings configuration.searchd, inner['searchd'] || {}
   end
 
   def set_sources
