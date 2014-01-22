@@ -99,7 +99,7 @@ module Riddle::Query
   end
 
   def self.escape(string)
-    string.gsub(/[\(\)\|\-!@~\/"\/\^\$\\]/) { |match| "\\#{match}" }
+    string.gsub(/[\(\)\|\-!@~\/"\/\^\$\\><]/) { |match| "\\#{match}" }
   end
 
   def self.quote(string)
