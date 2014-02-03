@@ -1,11 +1,11 @@
 module Riddle
   class Configuration
-    class Indexer < Riddle::Configuration::Section
+    class Common < Riddle::Configuration::Section
       def self.settings
         [
-          :mem_limit, :max_iops, :max_iosize, :max_xmlpipe2_field,
-          :write_buffer, :max_file_field_buffer, :on_file_field_error,
-          :lemmatizer_cache
+          :lemmatizer_base, :json_autoconv_numbers, :json_autoconv_keynames,
+          :on_json_attr_error, :rlp_root, :rlp_environment,
+          :rlp_max_batch_size, :rlp_max_batch_docs
         ]
       end
 
@@ -15,7 +15,7 @@ module Riddle
         raise ConfigurationError unless valid?
 
         (
-          ["indexer", "{"] +
+          ["common", "{"] +
           settings_body +
           ["}", ""]
         ).join("\n")

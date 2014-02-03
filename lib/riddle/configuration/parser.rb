@@ -24,6 +24,7 @@ class Riddle::Configuration::Parser
   end
 
   def parse!
+    set_common
     set_indexer
     set_searchd
     set_sources
@@ -63,6 +64,10 @@ class Riddle::Configuration::Parser
     inner.keys.select { |key| key[/^#{prefix}\s+/] }.each do |key|
       yield key.gsub(/^#{prefix}\s+/, '').gsub(/\s*\{$/, ''), inner[key]
     end
+  end
+
+  def set_common
+    set_settings configuration.common, inner['common'] || {}
   end
 
   def set_indexer
