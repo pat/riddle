@@ -12,7 +12,7 @@ module Riddle
       private
       
       def settings_body
-        self.class.settings.select { |setting|
+        settings.select { |setting|
           !send(setting).nil?
         }.collect { |setting|
           if send(setting) == ""
@@ -49,6 +49,10 @@ module Riddle
         end
         
         output
+      end
+
+      def settings
+        self.class.settings
       end
     end
   end

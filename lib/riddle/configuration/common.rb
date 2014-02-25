@@ -9,9 +9,10 @@ module Riddle
         ]
       end
 
-      attr_accessor *self.settings
+      attr_accessor :common_sphinx_configuration, *settings
 
       def render
+        return unless common_sphinx_configuration
         raise ConfigurationError unless valid?
 
         (
