@@ -100,7 +100,7 @@ class Riddle::Query::Select
   def to_sql
     sql = "SELECT #{ extended_values } FROM #{ @indices.join(', ') }"
     sql << " WHERE #{ combined_wheres }" if wheres?
-    sql << " #{group_prefix} #{escape_column(@group_by)}" if !@group_by.nil?
+    sql << " #{group_prefix} #{escape_columns(@group_by)}" if !@group_by.nil?
     unless @order_within_group_by.nil?
       sql << " WITHIN GROUP ORDER BY #{escape_columns(@order_within_group_by)}"
     end
