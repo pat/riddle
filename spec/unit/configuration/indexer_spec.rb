@@ -33,4 +33,41 @@ indexer
 }
     INDEXER
   end
+
+  it "should render shared settings when common_sphinx_configuration is not set" do
+    indexer = Riddle::Configuration::Indexer.new
+    indexer.rlp_root = '/tmp'
+    
+    indexer.render.should == <<-INDEXER
+indexer
+{
+  rlp_root = /tmp
+}
+    INDEXER
+  end
+
+  it "should render shared settings when common_sphinx_configuration is false" do
+    indexer = Riddle::Configuration::Indexer.new
+    indexer.common_sphinx_configuration = false
+    indexer.rlp_root = '/tmp'
+
+    indexer.render.should == <<-INDEXER
+indexer
+{
+  rlp_root = /tmp
+}
+    INDEXER
+  end
+
+  it "should not render shared settings when common_sphinx_configuration is true" do
+    indexer = Riddle::Configuration::Indexer.new
+    indexer.common_sphinx_configuration = true
+    indexer.rlp_root = '/tmp'
+
+    indexer.render.should == <<-INDEXER
+indexer
+{
+}
+      INDEXER
+  end
 end
