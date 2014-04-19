@@ -1,3 +1,11 @@
+Edge:
+- Riddle::Query.escape covers = and & characters.
+- Hold onto address and port settings when crafting the equivalent listen setting, but don't render them.
+- Allow for Sphinx's common settings section (Trevor Smith). Optional and initially disabled.
+- Allow for multiple attributes in GROUP BY clauses (J. Garcia).
+- Riddle::Query.escape covers < and > characters.
+- The parser should not presume indexer and searchd sections exist.
+
 1.5.10 - January 11th 2014
 - SELECT values can be prepended as well as the existing append support.
 - New settings for Sphinx 2.2.1.
