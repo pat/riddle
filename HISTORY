@@ -1,4 +1,4 @@
-Edge:
+1.5.11 - April 19th 2014
 - Riddle::Query.escape covers = and & characters.
 - Hold onto address and port settings when crafting the equivalent listen setting, but don't render them.
 - Allow for Sphinx's common settings section (Trevor Smith). Optional and initially disabled.
