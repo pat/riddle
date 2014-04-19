@@ -16,6 +16,7 @@ searchd
   read_timeout  = 5
   max_children  = 30
   pid_file      = <%= fixtures_path %>/sphinx/searchd.pid
+  binlog_path   = <%= fixtures_path %>/sphinx/binlog/
 }
 
 source peoples

@@ -79,6 +79,8 @@ class Sphinx
     File.open('spec/fixtures/sphinx/spec.conf', 'w') { |f|
       f.puts ERB.new(template).result(binding)
     }
+
+    FileUtils.mkdir_p "spec/fixtures/sphinx/binlog"
   end
 
   def index

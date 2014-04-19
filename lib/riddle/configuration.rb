@@ -1,6 +1,7 @@
 require 'riddle/configuration/section'
 require 'riddle/configuration/index_settings'
 
+require 'riddle/configuration/common'
 require 'riddle/configuration/distributed_index'
 require 'riddle/configuration/index'
 require 'riddle/configuration/indexer'
@@ -20,7 +21,7 @@ module Riddle
     class ConfigurationError < StandardError #:nodoc:
     end
 
-    attr_reader :indices, :searchd, :sources
+    attr_reader :common, :indices, :searchd, :sources
     attr_accessor :indexer
 
     def self.parse!(input)
@@ -28,6 +29,7 @@ module Riddle
     end
 
     def initialize
+      @common  = Riddle::Configuration::Common.new
       @indexer = Riddle::Configuration::Indexer.new
       @searchd = Riddle::Configuration::Searchd.new
       @indices = []
@@ -36,7 +38,7 @@ module Riddle
 
     def render
       (
-        [@indexer.render, @searchd.render] +
+        [@common.render, @indexer.render, @searchd.render] +
         @sources.collect { |source| source.render } +
         @indices.collect { |index| index.render }
       ).join("\n")

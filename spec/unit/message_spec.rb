@@ -1,24 +1,25 @@
+# encoding: BINARY
 require 'spec_helper'
 
 describe Riddle::Client::Message do
   it "should start with an empty string" do
     Riddle::Client::Message.new.to_s.should == ""
   end
-  
+
   it "should append raw data correctly" do
     data = [1, 2, 3].pack('NNN')
     message = Riddle::Client::Message.new
     message.append data
     message.to_s.should == data
   end
-  
+
   it "should append strings correctly - with length first" do
     str = "something to test with"
     message = Riddle::Client::Message.new
     message.append_string str
     message.to_s.should == [str.length].pack('N') + str
   end
-  
+
   it "should append integers correctly - packed with N" do
     message = Riddle::Client::Message.new
     message.append_int 234
@@ -54,25 +55,25 @@ describe Riddle::Client::Message do
     message.append_64bit_int "234"
     message.to_s.should == "\x00\x00\x00\x00\x00\x00\x00\xEA"
   end
-  
+
   it "should append floats correctly - packed with f" do
     message = Riddle::Client::Message.new
     message.append_float 1.4
     message.to_s.should == [1.4].pack('f').unpack('L*').pack('N')
   end
-  
+
   it "should append a collection of integers correctly" do
     message = Riddle::Client::Message.new
     message.append_ints 1, 2, 3, 4
     message.to_s.should == [1, 2, 3, 4].pack('NNNN')
   end
-  
+
   it "should append a collection of floats correctly" do
     message = Riddle::Client::Message.new
     message.append_floats 1.0, 1.1, 1.2, 1.3
     message.to_s.should == [1.0, 1.1, 1.2, 1.3].pack('ffff').unpack('L*L*L*L*').pack('NNNN')
   end
-  
+
   it "should append an array of strings correctly" do
     arr = ["a", "bb", "ccc"]
     message = Riddle::Client::Message.new
@@ -80,7 +81,7 @@ describe Riddle::Client::Message do
     message.to_s.should == [3, 1].pack('NN') + "a" + [2].pack('N') + "bb" +
       [3].pack('N') + "ccc"
   end
-  
+
   it "should append a variety of objects correctly" do
     message = Riddle::Client::Message.new
     message.append_int 4

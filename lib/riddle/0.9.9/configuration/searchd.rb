@@ -3,7 +3,6 @@ module Riddle
     class Searchd
       def valid?
         set_listen
-        clear_deprecated
 
         !( @listen.nil? || @listen.empty? || @pid_file.nil? )
       end
@@ -23,11 +22,8 @@ module Riddle
         @listen.each { |l| l.insert(0, "#{@address}:") } if @address
       end
 
-      def clear_deprecated
-        return if @listen.nil?
-
-        @address  = nil
-        @port     = nil
+      def settings
+        @listen.nil? ? super : super - [:address, :port]
       end
     end
   end
