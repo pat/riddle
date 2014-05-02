@@ -4,3 +4,4 @@
 *.tmproj
 coverage
 Gemfile.lock
+spec/fixtures/sphinx/spec.conf

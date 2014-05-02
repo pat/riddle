@@ -23,7 +23,13 @@ module Riddle
 
       cmd = "#{indexer} --config \"#{@path}\" #{indices.join(' ')}"
       cmd << " --rotate" if running?
-      options[:verbose] ? system(cmd) : `#{cmd}`
+      cmd << " 2>&1"
+      output = `#{cmd}`
+      logger output if options[:verbose]
+      errors = /^ERROR: (.*)$/.match(output).to_a
+      error = errors[0] unless errors.empty?
+      raise Riddle::IndexerError.new(error) unless error.nil?
+
     end
 
     def start(options={})
@@ -86,6 +92,12 @@ module Riddle
     end
 
     private
+
+    def logger(*args)
+      # Should we try to ever use Rails.logger if rails is available, 
+      # logger doesn't seem to output to console in Rake task.
+      puts(*args)
+    end
 
     def indexer
       "#{bin_path}#{indexer_binary_name}"

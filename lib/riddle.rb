@@ -68,6 +68,7 @@ end
 require 'riddle/auto_version'
 require 'riddle/client'
 require 'riddle/configuration'
+require 'riddle/indexer_error'
 require 'riddle/controller'
 require 'riddle/query'
 
