@@ -36,4 +36,16 @@ describe Riddle::Controller do
       @controller.sphinx_version.should == '0.9.8'
     end
   end
+
+  describe '#index' do
+    before :each do
+      @controller = Riddle::Controller.new stub('controller'), 'sphinx.conf'
+    end
+    it "should raise an exception on error" do
+      @controller.stub(:` => 'ERROR: Test sphinx index error')
+      @controller.stub(:pid => Proc.new{ "0" })
+      expect{ @controller.index }.to raise_error(Riddle::IndexerError)
+    end
+  end
+
 end
