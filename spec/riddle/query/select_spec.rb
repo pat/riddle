@@ -24,6 +24,16 @@ describe Riddle::Query::Select do
       should == 'SELECT @weight FROM foo_core'
   end
 
+  it 'handles JSON as a select value using dot notation' do
+    query.values('key1.key2.key3').from('foo_core').to_sql.
+      should == 'SELECT key1.key2.key3 FROM foo_core'
+  end
+
+  it 'handles JSON as a select value using bracket notation 2' do
+    query.values("key1['key2']['key3']").from('foo_core').to_sql.
+        should == "SELECT key1['key2']['key3'] FROM foo_core"
+  end
+
   it "can prepend select values" do
     query.values('@weight').prepend_values('foo').from('foo_core').to_sql.
       should == 'SELECT foo, @weight FROM foo_core'
@@ -125,6 +135,16 @@ describe Riddle::Query::Select do
   it "handles exclusive filters expecting matches on none of the values" do
     query.from('foo_core').where_not_all(:bars => [1, 2]).to_sql.
       should == "SELECT * FROM foo_core WHERE (`bars` <> 1 OR `bars` <> 2)"
+  end
+
+  it 'handles filters on JSON with dot syntax' do
+    query.from('foo_core').where('key1.key2.key3' => 10).to_sql.
+      should == "SELECT * FROM foo_core WHERE key1.key2.key3 = 10"
+  end
+
+  it 'handles filters on JSON with bracket syntax' do
+    query.from('foo_core').where("key1['key2']['key3']" => 10).to_sql.
+        should == "SELECT * FROM foo_core WHERE key1['key2']['key3'] = 10"
   end
 
   it 'handles grouping' do

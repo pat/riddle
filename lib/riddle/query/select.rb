@@ -224,7 +224,7 @@ class Riddle::Query::Select
   end
 
   def escape_column(column)
-    if column.to_s[/\A[`@]/] || column.to_s[/\A\w+\(/]
+    if column.to_s[/\A[`@]/] || column.to_s[/\A\w+\(/] || column.to_s[/\A\w+[.\[]/]
       column
     else
       column_name, *extra = column.to_s.split(' ')
