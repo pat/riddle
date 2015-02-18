@@ -14,7 +14,7 @@ describe 'SphinxQL escaping', :live => true do
     it "escapes #{string}" do
       lambda {
         connection.query sphinxql_matching(Riddle::Query.escape(string))
-      }.should_not raise_error(Mysql2::Error)
+      }.should_not raise_error
     end
   end
 
