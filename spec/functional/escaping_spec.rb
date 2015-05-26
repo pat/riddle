@@ -10,7 +10,7 @@ describe 'SphinxQL escaping', :live => true do
     select.to_sql
   end
 
-  ['@', "'", '"', '\\"', "\\'"].each do |string|
+  ['@', "'", '"', '\\"', "\\'", "?"].each do |string|
     it "escapes #{string}" do
       lambda {
         connection.query sphinxql_matching(Riddle::Query.escape(string))

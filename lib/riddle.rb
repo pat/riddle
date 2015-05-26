@@ -4,7 +4,7 @@ require 'timeout'
 
 module Riddle #:nodoc:
   @@mutex          = Mutex.new
-  @@escape_pattern = /[\(\)\|\-!@~"&\/]/
+  @@escape_pattern = /[\(\)\|\-!@~"&\/\?]/
   @@use_encoding   = defined?(::Encoding) &&
                      ::Encoding.respond_to?(:default_external)
 
