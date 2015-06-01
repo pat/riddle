@@ -1,3 +1,9 @@
+1.5.12 - June 1st 2015
+- Adding ? as an escaped character (Alexey Nikitin).
+- Adding contributor code of conduct.
+- Spec fixes, and updating escape_column to not escape JSON expressions that make use of dot or bracket notation (Daniel Vandersluis).
+- Fix stop action to allow exception propagation (Dejan Simic).
+
 1.5.11 - April 19th 2014
 - Riddle::Query.escape covers = and & characters.
 - Hold onto address and port settings when crafting the equivalent listen setting, but don't render them.
