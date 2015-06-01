@@ -63,8 +63,8 @@ module Riddle
       else
         `#{cmd}`
       end
-    ensure
-      return !running?
+
+      !running?
     end
 
     def pid
