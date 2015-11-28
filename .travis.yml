@@ -10,3 +10,4 @@ env:
   - SPHINX_BIN=/usr/local/sphinx-2.2.6/bin SPHINX_VERSION=2.2.6
 before_script: killall searchd; echo ''
 after_script:  killall searchd; echo ''
+sudo: false
