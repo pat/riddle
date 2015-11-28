@@ -10,7 +10,7 @@ class Riddle::AutoVersion
       require 'riddle/1.10'
     when /2.0.[12]/
       require 'riddle/2.0.1'
-    when /2.0.[^12]/, /2.1.\d/, /2.2.\d/
+    else
       require 'riddle/2.1.0'
     end
   end
