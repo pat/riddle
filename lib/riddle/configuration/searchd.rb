@@ -12,7 +12,7 @@ module Riddle
           :max_batch_queries, :subtree_docs_cache, :subtree_hits_cache,
           :workers, :dist_threads, :binlog_path, :binlog_flush,
           :binlog_max_log_size, :snippets_file_prefix, :collation_server,
-          :collation_libc_locale, :plugin_dir, :mysql_version_string,
+          :collation_libc_locale, :mysql_version_string,
           :rt_flush_period, :thread_stack, :expansion_limit,
           :compat_sphinxql_magics, :watchdog, :prefork_rotation_throttle,
           :sphinxql_state, :ha_ping_interval, :ha_period_karma,
