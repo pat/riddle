@@ -18,7 +18,9 @@ module Riddle
           :sphinxql_state, :ha_ping_interval, :ha_period_karma,
           :persistent_connections_limit, :rt_merge_iops, :rt_merge_maxiosize,
           :predicted_time_costs, :snippets_file_prefix, :shutdown_timeout,
-          :ondisk_attrs_default, :client_key
+          :ondisk_attrs_default, :query_log_min_msec, :agent_connect_timeout,
+          :agent_query_timeout, :agent_retry_count, :agenty_retry_delay,
+          :client_key
         ]
       end
 
