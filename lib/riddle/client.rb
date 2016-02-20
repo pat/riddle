@@ -92,14 +92,15 @@ module Riddle
     }
 
     AttributeTypes = {
-      :integer    => 1, # SPH_ATTR_INTEGER
-      :timestamp  => 2, # SPH_ATTR_TIMESTAMP
-      :ordinal    => 3, # SPH_ATTR_ORDINAL
-      :bool       => 4, # SPH_ATTR_BOOL
-      :float      => 5, # SPH_ATTR_FLOAT
-      :bigint     => 6, # SPH_ATTR_BIGINT
-      :string     => 7, # SPH_ATTR_STRING
-      :multi      => 0x40000000 # SPH_ATTR_MULTI
+      :integer      => 1, # SPH_ATTR_INTEGER
+      :timestamp    => 2, # SPH_ATTR_TIMESTAMP
+      :ordinal      => 3, # SPH_ATTR_ORDINAL
+      :bool         => 4, # SPH_ATTR_BOOL
+      :float        => 5, # SPH_ATTR_FLOAT
+      :bigint       => 6, # SPH_ATTR_BIGINT
+      :string       => 7, # SPH_ATTR_STRING
+      :group_concat => 10,
+      :multi        => 0x40000000 # SPH_ATTR_MULTI
     }
 
     GroupFunctions = {
@@ -830,13 +831,14 @@ module Riddle
     end
 
     AttributeHandlers = {
-      AttributeTypes[:integer]   => :next_int,
-      AttributeTypes[:timestamp] => :next_int,
-      AttributeTypes[:ordinal]   => :next_int,
-      AttributeTypes[:bool]      => :next_int,
-      AttributeTypes[:float]     => :next_float,
-      AttributeTypes[:bigint]    => :next_64bit_int,
-      AttributeTypes[:string]    => :next,
+      AttributeTypes[:integer]      => :next_int,
+      AttributeTypes[:timestamp]    => :next_int,
+      AttributeTypes[:ordinal]      => :next_int,
+      AttributeTypes[:bool]         => :next_int,
+      AttributeTypes[:float]        => :next_float,
+      AttributeTypes[:bigint]       => :next_64bit_int,
+      AttributeTypes[:string]       => :next,
+      AttributeTypes[:group_concat] => :next
       AttributeTypes[:multi] + AttributeTypes[:integer] => :next_int_array
     }
 
