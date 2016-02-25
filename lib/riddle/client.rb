@@ -838,7 +838,7 @@ module Riddle
       AttributeTypes[:float]        => :next_float,
       AttributeTypes[:bigint]       => :next_64bit_int,
       AttributeTypes[:string]       => :next,
-      AttributeTypes[:group_concat] => :next
+      AttributeTypes[:group_concat] => :next,
       AttributeTypes[:multi] + AttributeTypes[:integer] => :next_int_array
     }
 
