@@ -1,9 +1,7 @@
 language: ruby
 rvm:
-  - 2.0.0
   - 2.1
   - 2.2
-  - jruby-19mode
 env:
   - SPHINX_BIN=/usr/local/sphinx-2.0.10/bin SPHINX_VERSION=2.0.10
   - SPHINX_BIN=/usr/local/sphinx-2.1.9/bin SPHINX_VERSION=2.1.9
