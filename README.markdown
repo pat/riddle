@@ -2,20 +2,110 @@
 
 [![Build Status](https://travis-ci.org/pat/riddle.svg?branch=develop)](https://travis-ci.org/pat/riddle)
 
-This client has been written to interface with [Sphinx](http://sphinxsearch.com/). It is written by [Pat Allan](http://freelancing-gods.com), and has been influenced by both Dmytro Shteflyuk's Ruby client and the original PHP client - credit where credit's due, after all.
+Riddle is a Ruby library interfacing with the [Sphinx](http://sphinxsearch.com/) full-text search tool. It is written by [Pat Allan](http://freelancing-gods.com), and has been influenced by both Dmytro Shteflyuk's Ruby client and the original PHP client. It can be used for interactions with Sphinx's command-line tools `searchd` and `indexer`, sending search queries via the binary protocol, and programmatically generating Sphinx configuration files.
 
-It does not follow the same syntax as those two, though (not much point writing this otherwise) - opting for a more Ruby-like structure.
+The syntax here, while closer to a usual Ruby approach than the PHP client, is quite old (Riddle was first published in 2007). While it would be nice to re-work things, it's really not a priority, given the bulk of Riddle's code is for Sphinx's deprecated binary protocol.
 
 ## Installation
 
+Riddle is available as a gem, so you can install it directly:
+
     gem install riddle
+
+Or include it in a Gemfile:
+
+    gem 'riddle', '~> 1.5.12'
 
 ## Usage
 
-As of version 1.0.0, Riddle now supports multiple versions of Sphinx in the one gem - you'll need to require your specific version after a normal require, though.
+As of version 1.0.0, Riddle supports multiple versions of Sphinx in the one gem - you'll need to require your specific version after a normal require, though. The latest distinct version is `2.1.0`:
 
 	require 'riddle'
-	require 'riddle/0.9.9'
+	require 'riddle/2.1.0'
+
+The full list of versions available are `0.9.8` (the initial base), `0.9.9`, `1.10`, `2.0.1`, and `2.1.0`. If you're using something more modern than 2.1.0, then just require that, and the rest should be fine (changes to the binary protocol since then are minimal).
+
+### Configuration
+
+Riddle's structure for generating Sphinx configuration is very direct mapping to Sphinx's configuration options. First, create an instance of `Riddle::Configuration`:
+
+    config = Riddle::Configuration.new
+    
+This configuration instance has methods `indexer`, `searchd` and `common`, which return separate inner-configuration objects with methods mapping to the equivalent [Sphinx settings](http://sphinxsearch.com/docs/current.html#conf-reference). So, you may want to do the following:
+
+    config.indexer.mem_limit = '128M'
+    config.searchd.log       = '/my/log/file.log'
+
+Similarly, there are two further methods `indices` and `sources`, which are arrays meant to hold instances of index and source inner-configuration objects respectively (all of which have methods matching their Sphinx settings). The available index classes are:
+
+* `Riddle::Configuration::DistributedIndex`
+* `Riddle::Configuration::Index`
+* `Riddle::Configuration::RealtimeIndex`
+* `Riddle::Configuration::RemoteIndex`
+* `Riddle::Configuration::TemplateIndex`
+
+All of these index classes should be initialised with their name, and in the case of plain indices, their source objects. Remote indices take an address, port and name as their initialiser parameters.
+
+    index = Riddle::Configuration::Index.new 'articles', article_source_a, article_source_b
+    index.path    = '/path/to/index/files"
+    index.docinfo = 'external'
+
+The available source classes are:
+
+* `Riddle::Configuration::SQLSource`
+* `Riddle::Configuration::TSVSource`
+* `Riddle::Configuration::XMLSource`
+
+The initialising parameters are the name of the source, and the type of source:
+
+    source = Riddle::Configuration::SQLSource.new 'article_source', 'mysql'
+    source.sql_query = "SELECT id, title, body FROM articles"
+    source.sql_host  = "127.0.0.1"
+
+Once you have created your configuration object tree, you can then generate the string representation and perhaps save it to a file:
+
+    File.write "sphinx.conf", configuration.render
+    
+It's also possible to parse an existing Sphinx configuration file into a configuration option tree:
+
+    configuration = Riddle::Configuration.parse! File.read('sphinx.conf')
+
+### Indexing and Starting/Stopping the Daemon
+
+using Sphinx's command-line tools `indexer` and `searchd` via Riddle is all done via an instance of `Riddle::Controller`:
+
+    configuration_file = "/path/to/sphinx.conf"
+    configuration      = Riddle::Configuration.parse! File.read(configuration_file)
+    controller         = Riddle::Controller.new configuration, configuration_file
+    
+    # set the path where the indexer and searchd binaries are located:
+    controller.bin_path = '/usr/local/bin'
+    
+    # set different binary names if you're running a custom Sphinx installation:
+    controller.searchd_binary_name = 'sphinxsearchd'
+    controller.indexer_binary_name = 'sphinxindexer'
+    
+    # process all indices:
+    controller.index
+    # process specific indices:
+    controller.index 'articles', 'books'
+    # rotate old index files out for the new ones:
+    controller.rotate
+    
+    # start the daemon:
+    controller.start
+    # start the daemon and do not detach the process:
+    controller.start :nodetach => true
+    # stop the daemon:
+    controller.stop
+
+### SphinxQL Queries
+
+Riddle does not have any code to send SphinxQL queries and commands to Sphinx. Because Sphinx uses the mysql41 protocol (thus, mimicing a MySQL database server), I recommend using the [mysql2](https://github.com/brianmario/mysql2) gem instead. The [connection code](https://github.com/pat/thinking-sphinx/blob/develop/lib/thinking_sphinx/connection.rb) in Thinking Sphinx may provide some inspiration on this.
+
+### Binary Protocol Searching
+
+Sphinx's legacy binary protocol does not have many of the more recent Sphinx features - such as real-time indices - as these are only available in the SphinxQL/mysql41 protocol. However, Riddle can still be used for the binary protocol if you wish.
 
 To get started, just instantiate a Client object:
 
@@ -52,15 +142,13 @@ The `:fields` and `:attribute_names` keys return list of fields and attributes f
 
 `:status` is the error code for the query - and if there was a related warning, it will be under the `:warning` key. Fatal errors will be described under `:error`.
 
-If you've installed the gem and wondering why there's no tests - check out the git version. I've kept the specs out of the gem as I have a decent amount of test data in there, which really isn't needed unless you want to submit patches.
-
 ## Contributing
 
-Please note that this project now has a [Contributor Code of Conduct](http://contributor-covenant.org/version/1/0/0/). By participating in this project you agree to abide by its terms.
+Please note that this project has a [Contributor Code of Conduct](http://contributor-covenant.org/version/1/0/0/). By participating in this project you agree to abide by its terms.
 
 Riddle uses the [git-flow](http://jeffkreeftmeijer.com/2010/why-arent-you-using-git-flow/) process for development. The `master` branch is the latest released code (in a gem). The `develop` branch is what's coming in the next release. (There may be occasional feature and hotfix branches, although these are generally not pushed to GitHub.)
 
-When submitting a patch to riddle, please submit your pull request against the `develop` branch.
+When submitting a patch to Riddle, please submit your pull request against the `develop` branch.
 
 ## Contributors
 
