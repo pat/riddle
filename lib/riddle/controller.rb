@@ -29,7 +29,7 @@ module Riddle
       Riddle::ExecuteCommand.call command, options[:verbose]
     end
 
-    def start(options={})
+    def start(options = {})
       return if running?
       check_for_configuration_file
 
@@ -39,10 +39,10 @@ module Riddle
       exec(command) if options[:nodetach]
 
       # Code does not get here if nodetach is true.
-      Riddle::ExecuteCommand.call command
+      Riddle::ExecuteCommand.call command, options[:verbose]
     end
 
-    def stop
+    def stop(options = {})
       return true unless running?
       check_for_configuration_file
 
@@ -50,7 +50,7 @@ module Riddle
       stop_flag = 'stop' if Riddle.loaded_version.split('.').first == '0'
       command = %(#{searchd} --pidfile --config "#{@path}" --#{stop_flag})
 
-      result = Riddle::ExecuteCommand.call command
+      result = Riddle::ExecuteCommand.call command, options[:verbose]
       result.successful = !running?
       result
     end
