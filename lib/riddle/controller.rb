@@ -21,24 +21,23 @@ module Riddle
       options = indices.last.is_a?(Hash) ? indices.pop : {}
       indices << '--all' if indices.empty?
 
-      cmd = "#{indexer} --config \"#{@path}\" #{indices.join(' ')}"
-      cmd << " --rotate" if running?
-      options[:verbose] ? system(cmd) : `#{cmd}`
+      command = "#{indexer} --config \"#{@path}\" #{indices.join(' ')}"
+      command << " --rotate" if running?
+
+      Riddle::ExecuteCommand.call command, options[:verbose]
     end
 
     def start(options={})
       return if running?
       check_for_configuration_file
 
-      cmd = "#{searchd} --pidfile --config \"#{@path}\""
-      cmd << " --nodetach" if options[:nodetach]
+      command = "#{searchd} --pidfile --config \"#{@path}\""
+      command << " --nodetach" if options[:nodetach]
 
       if options[:nodetach]
-        exec(cmd)
-      elsif RUBY_PLATFORM =~ /mswin|mingw/
-        output = system("start /B #{cmd} 1> NUL 2>&1")
+        exec(command)
       else
-        output = `#{cmd}`
+        result = Riddle::ExecuteCommand.call command
       end
 
       sleep(1)
@@ -46,8 +45,8 @@ module Riddle
       unless running?
         puts "Failed to start searchd daemon. Check #{@configuration.searchd.log}."
       end
-      
-      output
+
+      result
     end
 
     def stop
@@ -56,15 +55,11 @@ module Riddle
 
       stop_flag = 'stopwait'
       stop_flag = 'stop' if Riddle.loaded_version.split('.').first == '0'
-      cmd = %(#{searchd} --pidfile --config "#{@path}" --#{stop_flag})
+      command = %(#{searchd} --pidfile --config "#{@path}" --#{stop_flag})
 
-      if RUBY_PLATFORM =~ /mswin|mingw/
-        system("start /B #{cmd} 1> NUL 2>&1")
-      else
-        `#{cmd}`
-      end
-
-      !running?
+      result = Riddle::ExecuteCommand.call command
+      result.successful = !running?
+      result
     end
 
     def pid
