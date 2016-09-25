@@ -30,7 +30,7 @@ The full list of versions available are `0.9.8` (the initial base), `0.9.9`, `1.
 Riddle's structure for generating Sphinx configuration is very direct mapping to Sphinx's configuration options. First, create an instance of `Riddle::Configuration`:
 
     config = Riddle::Configuration.new
-    
+
 This configuration instance has methods `indexer`, `searchd` and `common`, which return separate inner-configuration objects with methods mapping to the equivalent [Sphinx settings](http://sphinxsearch.com/docs/current.html#conf-reference). So, you may want to do the following:
 
     config.indexer.mem_limit = '128M'
@@ -65,7 +65,7 @@ The initialising parameters are the name of the source, and the type of source:
 Once you have created your configuration object tree, you can then generate the string representation and perhaps save it to a file:
 
     File.write "sphinx.conf", configuration.render
-    
+
 It's also possible to parse an existing Sphinx configuration file into a configuration option tree:
 
     configuration = Riddle::Configuration.parse! File.read('sphinx.conf')
@@ -77,27 +77,31 @@ using Sphinx's command-line tools `indexer` and `searchd` via Riddle is all done
     configuration_file = "/path/to/sphinx.conf"
     configuration      = Riddle::Configuration.parse! File.read(configuration_file)
     controller         = Riddle::Controller.new configuration, configuration_file
-    
+
     # set the path where the indexer and searchd binaries are located:
     controller.bin_path = '/usr/local/bin'
-    
+
     # set different binary names if you're running a custom Sphinx installation:
     controller.searchd_binary_name = 'sphinxsearchd'
     controller.indexer_binary_name = 'sphinxindexer'
-    
+
     # process all indices:
     controller.index
     # process specific indices:
     controller.index 'articles', 'books'
     # rotate old index files out for the new ones:
     controller.rotate
-    
+
     # start the daemon:
     controller.start
     # start the daemon and do not detach the process:
     controller.start :nodetach => true
     # stop the daemon:
     controller.stop
+
+The index, start and stop methods all accept a hash of options, and the :verbose option is respected in each case.
+
+Each of these methods will return an instance of `Riddle::CommandResult` - or, if the command fails (as judged by the process status code), a `Riddle::CommandFailedError` exception is raised. These exceptions respond to the `command_result` method with the corresponding details.
 
 ### SphinxQL Queries
 
