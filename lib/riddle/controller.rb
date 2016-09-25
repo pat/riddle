@@ -1,4 +1,6 @@
 module Riddle
+  NoConfigurationFileError = Class.new StandardError
+
   class Controller
     attr_accessor :path, :bin_path, :searchd_binary_name, :indexer_binary_name
 
@@ -21,55 +23,41 @@ module Riddle
       options = indices.last.is_a?(Hash) ? indices.pop : {}
       indices << '--all' if indices.empty?
 
-      cmd = "#{indexer} --config \"#{@path}\" #{indices.join(' ')}"
-      cmd << " --rotate" if running?
-      options[:verbose] ? system(cmd) : `#{cmd}`
+      command = "#{indexer} --config \"#{@path}\" #{indices.join(' ')}"
+      command << " --rotate" if running?
+
+      Riddle::ExecuteCommand.call command, options[:verbose]
     end
 
-    def start(options={})
+    def start(options = {})
       return if running?
       check_for_configuration_file
 
-      cmd = "#{searchd} --pidfile --config \"#{@path}\""
-      cmd << " --nodetach" if options[:nodetach]
+      command = "#{searchd} --pidfile --config \"#{@path}\""
+      command << " --nodetach" if options[:nodetach]
 
-      if options[:nodetach]
-        exec(cmd)
-      elsif RUBY_PLATFORM =~ /mswin|mingw/
-        output = system("start /B #{cmd} 1> NUL 2>&1")
-      else
-        output = `#{cmd}`
-      end
+      exec(command) if options[:nodetach]
 
-      sleep(1)
-
-      unless running?
-        puts "Failed to start searchd daemon. Check #{@configuration.searchd.log}."
-      end
-      
-      output
+      # Code does not get here if nodetach is true.
+      Riddle::ExecuteCommand.call command, options[:verbose]
     end
 
-    def stop
+    def stop(options = {})
       return true unless running?
       check_for_configuration_file
 
       stop_flag = 'stopwait'
       stop_flag = 'stop' if Riddle.loaded_version.split('.').first == '0'
-      cmd = %(#{searchd} --pidfile --config "#{@path}" --#{stop_flag})
+      command = %(#{searchd} --pidfile --config "#{@path}" --#{stop_flag})
 
-      if RUBY_PLATFORM =~ /mswin|mingw/
-        system("start /B #{cmd} 1> NUL 2>&1")
-      else
-        `#{cmd}`
-      end
-
-      !running?
+      result = Riddle::ExecuteCommand.call command, options[:verbose]
+      result.successful = !running?
+      result
     end
 
     def pid
-      if File.exists?(@configuration.searchd.pid_file)
-        File.read(@configuration.searchd.pid_file)[/\d+/]
+      if File.exists?(configuration.searchd.pid_file)
+        File.read(configuration.searchd.pid_file)[/\d+/]
       else
         nil
       end
@@ -87,6 +75,8 @@ module Riddle
 
     private
 
+    attr_reader :configuration
+
     def indexer
       "#{bin_path}#{indexer_binary_name}"
     end
@@ -97,7 +87,8 @@ module Riddle
 
     def check_for_configuration_file
       return if File.exist?(@path)
-      raise "Configuration file '#{@path}' does not exist"
+
+      raise Riddle::NoConfigurationFileError, "'#{@path}' does not exist"
     end
   end
 end

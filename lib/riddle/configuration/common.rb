@@ -5,7 +5,7 @@ module Riddle
         [
           :lemmatizer_base, :json_autoconv_numbers, :json_autoconv_keynames,
           :on_json_attr_error, :rlp_root, :rlp_environment, :rlp_max_batch_size,
-          :rlp_max_batch_docs
+          :rlp_max_batch_docs, :plugin_dir
         ]
       end
 

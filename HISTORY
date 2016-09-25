@@ -1,3 +1,13 @@
+2.0.0 - September 25th 2016
+- Start and stop commands now accept a verbose option.
+- Failed commands (as determined by a non-zero status code) raise a Riddle::CommandFailedError exception.
+- A missing configuration file when running the start and stop commands now raises a Riddle::NoConfigurationFileError instance instead of a generic RuntimeError instance.
+- Riddle::Controller now returns Riddle::CommandResult instances for indexing, start and stop commands, which includes status code and (non-verbose) output.
+- Handle group_concat attribute types (@crazyshot, @bibendi).
+- Additional searchd settings: query_log_min_msec, agent_conect_timeout, agent_query_timeout, agent_retry_count, agent_retry_delay.
+- Default to 2.1.0 or newer support.
+- Move plugin_dir option from searchd to common.
+
 1.5.12 - June 1st 2015
 - Adding ? as an escaped character (Alexey Nikitin).
 - Adding contributor code of conduct.

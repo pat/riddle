@@ -67,8 +67,11 @@ end
 
 require 'riddle/auto_version'
 require 'riddle/client'
+require 'riddle/command_failed_error'
+require 'riddle/command_result'
 require 'riddle/configuration'
 require 'riddle/controller'
+require 'riddle/execute_command'
 require 'riddle/query'
 
 Riddle.loaded_version = nil
