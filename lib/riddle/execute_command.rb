@@ -15,7 +15,12 @@ class Riddle::ExecuteCommand
   end
 
   def call
-    verbose? ? result_from_system : result_from_backticks
+    result = verbose? ? result_from_system : result_from_backticks
+    return result if result.status == 0
+
+    error = Riddle::CommandFailedError.new "Sphinx command failed to execute"
+    error.command_result = result
+    raise error
   end
 
   private

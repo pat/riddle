@@ -1,5 +1,5 @@
 module Riddle
-  NoConfigurationFileError = Class.new(StandardError)
+  NoConfigurationFileError = Class.new StandardError
 
   class Controller
     attr_accessor :path, :bin_path, :searchd_binary_name, :indexer_binary_name
@@ -36,19 +36,10 @@ module Riddle
       command = "#{searchd} --pidfile --config \"#{@path}\""
       command << " --nodetach" if options[:nodetach]
 
-      if options[:nodetach]
-        exec(command)
-      else
-        result = Riddle::ExecuteCommand.call command
-      end
+      exec(command) if options[:nodetach]
 
-      sleep(1)
-
-      unless running?
-        puts "Failed to start searchd daemon. Check #{@configuration.searchd.log}."
-      end
-
-      result
+      # Code does not get here if nodetach is true.
+      Riddle::ExecuteCommand.call command
     end
 
     def stop
@@ -65,8 +56,8 @@ module Riddle
     end
 
     def pid
-      if File.exists?(@configuration.searchd.pid_file)
-        File.read(@configuration.searchd.pid_file)[/\d+/]
+      if File.exists?(configuration.searchd.pid_file)
+        File.read(configuration.searchd.pid_file)[/\d+/]
       else
         nil
       end
@@ -83,6 +74,8 @@ module Riddle
     end
 
     private
+
+    attr_reader :configuration
 
     def indexer
       "#{bin_path}#{indexer_binary_name}"

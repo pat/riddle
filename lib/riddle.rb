@@ -67,6 +67,7 @@ end
 
 require 'riddle/auto_version'
 require 'riddle/client'
+require 'riddle/command_failed_error'
 require 'riddle/command_result'
 require 'riddle/configuration'
 require 'riddle/controller'
