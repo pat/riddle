@@ -1,4 +1,4 @@
-Edge:
+2.0.0 - September 25th 2016
 - Start and stop commands now accept a verbose option.
 - Failed commands (as determined by a non-zero status code) raise a Riddle::CommandFailedError exception.
 - A missing configuration file when running the start and stop commands now raises a Riddle::NoConfigurationFileError instance instead of a generic RuntimeError instance.
