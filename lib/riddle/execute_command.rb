@@ -25,13 +25,13 @@ class Riddle::ExecuteCommand
   def result_from_backticks
     output = `#{command}`
 
-    Riddle::CommandResult.new $?.exitstatus, output
+    Riddle::CommandResult.new command, $?.exitstatus, output
   end
 
   def result_from_system
     system command
 
-    Riddle::CommandResult.new $?.exitstatus
+    Riddle::CommandResult.new command, $?.exitstatus
   end
 
   def verbose?
