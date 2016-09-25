@@ -1,4 +1,6 @@
 module Riddle
+  NoConfigurationFileError = Class.new(StandardError)
+
   class Controller
     attr_accessor :path, :bin_path, :searchd_binary_name, :indexer_binary_name
 
@@ -92,7 +94,8 @@ module Riddle
 
     def check_for_configuration_file
       return if File.exist?(@path)
-      raise "Configuration file '#{@path}' does not exist"
+
+      raise Riddle::NoConfigurationFileError, "'#{@path}' does not exist"
     end
   end
 end
