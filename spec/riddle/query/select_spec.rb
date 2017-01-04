@@ -122,6 +122,11 @@ describe Riddle::Query::Select do
       should == "SELECT * FROM foo_core WHERE MATCH('foo') AND `bar` BETWEEN 1 AND 5"
   end
 
+  it "handles filters with strings" do
+    query.from('foo_core').where(:bar => 'baz').to_sql.
+      should == "SELECT * FROM foo_core WHERE `bar` = 'baz'"
+  end
+
   it "handles filters expecting matches on all values" do
     query.from('foo_core').where_all(:bars => [1, 2]).to_sql.
       should == "SELECT * FROM foo_core WHERE `bars` = 1 AND `bars` = 2"
