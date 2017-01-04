@@ -1,3 +1,9 @@
+2.1.0 - January 5th 2017
+- Wrap string attribute filter values in single quotes.
+- Remove direct references to FixNum to avoid MRI 2.4 warnings.
+- Remove escaped line-endings while parsing.
+- Escape word-operators like MAYBE, NEAR etc (Jonathan del Strother)
+
 2.0.0 - September 25th 2016
 - Start and stop commands now accept a verbose option.
 - Failed commands (as determined by a non-zero status code) raise a Riddle::CommandFailedError exception.

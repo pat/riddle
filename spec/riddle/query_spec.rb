@@ -83,5 +83,15 @@ describe Riddle::Query do
         Riddle::Query.escape(reserved).should == "\\#{reserved}"
       end
     end
+
+    it "escapes word-operators correctly" do
+      operators = ['MAYBE', 'NEAR', 'PARAGRAPH', 'SENTENCE', 'ZONE', 'ZONESPAN']
+      operators.each do |operator|
+        base = "string with #{operator} operator"
+        Riddle::Query.escape(base).should == base.gsub(operator, "\\#{operator}")
+      end
+
+      Riddle::Query.escape("FIND THE ZONES").should == "FIND THE ZONES"
+    end
   end
 end

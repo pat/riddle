@@ -195,6 +195,8 @@ class Riddle::Query::Select
       value.to_i
     when Date
       Time.utc(value.year, value.month, value.day).to_i
+    when String
+      "'#{value.gsub("'", "\\'")}'"
     else
       value
     end

@@ -132,7 +132,7 @@ class Riddle::Configuration::Parser
     SETTING_PATTERN = /^(\w+)\s*=\s*(.*)$/
 
     def initialize(input)
-      @stream   = StringIO.new(input)
+      @stream   = StringIO.new(input.gsub("\\\n", ''))
       @sections = {}
     end
 

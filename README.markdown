@@ -14,7 +14,7 @@ Riddle is available as a gem, so you can install it directly:
 
 Or include it in a Gemfile:
 
-    gem 'riddle', '~> 1.5.12'
+    gem 'riddle', '~> 2.1.0'
 
 ## Usage
 
