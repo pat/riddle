@@ -1,5 +1,6 @@
 require 'thread'
 require 'socket'
+require 'stringio'
 require 'timeout'
 
 module Riddle #:nodoc:

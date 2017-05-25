@@ -21,7 +21,7 @@ module Riddle
         @listen << "9306:mysql41" if @mysql41.is_a?(TrueClass)
         @listen << "#{@mysql41}:mysql41" if @mysql41.is_a?(NUMBER)
 
-        @listen.each { |l| l.insert(0, "#{@address}:") } if @address
+        @listen = @listen.collect { |line| "#{@address}:#{line}" } if @address
       end
 
       def settings
