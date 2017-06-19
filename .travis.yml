@@ -1,9 +1,9 @@
 language: ruby
 rvm:
-  - 2.1
   - 2.2
   - 2.3.4
   - 2.4.1
+  - jruby-9.1.10.0
 env:
   - SPHINX_BIN=/usr/local/sphinx-2.0.10/bin SPHINX_VERSION=2.0.10
   - SPHINX_BIN=/usr/local/sphinx-2.1.9/bin SPHINX_VERSION=2.1.9
