@@ -4,6 +4,7 @@ require 'yaml'
 if RUBY_PLATFORM == 'java'
   require 'java'
   require 'jdbc/mysql'
+  Jdbc::MySQL.load_driver
 end
 
 if ENV["TRAVIS"] == "true"
@@ -57,8 +58,12 @@ class Sphinx
   end
 
   def setup_mysql_on_jruby
-    address = "jdbc:mysql://#{host}"
-    client = java.sql.DriverManager.getConnection(address, username, password)
+    address    = "jdbc:mysql://#{host}"
+    properties = Java::JavaUtil::Properties.new
+    properties.setProperty "user", username     if username
+    properties.setProperty "password", password if password
+
+    client = Java::ComMysqlJdbc::Driver.new.connect address, properties
 
     set       = client.createStatement.executeQuery('SHOW DATABASES')
     databases = []
