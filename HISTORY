@@ -1,4 +1,4 @@
-Edge
+2.2.0 - June 20th 2017
 - Add compatibility for MRI's frozen string literals setting.
 - Stop packaging test files with gem releases (@dimko).
 
