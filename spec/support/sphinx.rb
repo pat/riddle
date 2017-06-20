@@ -4,6 +4,13 @@ require 'yaml'
 if RUBY_PLATFORM == 'java'
   require 'java'
   require 'jdbc/mysql'
+  Jdbc::MySQL.load_driver
+end
+
+if ENV["TRAVIS"] == "true"
+  FIXTURE_COMMAND = "LOAD DATA INFILE"
+else
+  FIXTURE_COMMAND = "LOAD DATA LOCAL INFILE"
 end
 
 class Sphinx
@@ -41,7 +48,7 @@ class Sphinx
     structure = File.open('spec/fixtures/sql/structure.sql') { |f| f.read }
     structure.split(/;/).each { |sql| client.query sql }
     client.query <<-SQL
-      LOAD DATA INFILE '#{fixtures_path}/sql/data.tsv' INTO TABLE
+      #{FIXTURE_COMMAND} '#{fixtures_path}/sql/data.tsv' INTO TABLE
       `riddle`.`people` FIELDS TERMINATED BY ',' ENCLOSED BY "'" (gender,
       first_name, middle_initial, last_name, street_address, city, state,
       postcode, email, birthday)
@@ -51,8 +58,12 @@ class Sphinx
   end
 
   def setup_mysql_on_jruby
-    address = "jdbc:mysql://#{host}"
-    client = java.sql.DriverManager.getConnection(address, username, password)
+    address    = "jdbc:mysql://#{host}"
+    properties = Java::JavaUtil::Properties.new
+    properties.setProperty "user", username     if username
+    properties.setProperty "password", password if password
+
+    client = Java::ComMysqlJdbc::Driver.new.connect address, properties
 
     set       = client.createStatement.executeQuery('SHOW DATABASES')
     databases = []
@@ -67,7 +78,7 @@ class Sphinx
     structure = File.open('spec/fixtures/sql/structure.sql') { |f| f.read }
     structure.split(/;/).each { |sql| client.createStatement.execute sql }
     client.createStatement.execute <<-SQL
-      LOAD DATA INFILE '#{fixtures_path}/sql/data.tsv' INTO TABLE
+      #{FIXTURE_COMMAND} '#{fixtures_path}/sql/data.tsv' INTO TABLE
       `riddle`.`people` FIELDS TERMINATED BY ',' ENCLOSED BY "'" (gender,
       first_name, middle_initial, last_name, street_address, city, state,
       postcode, email, birthday)

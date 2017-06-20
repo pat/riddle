@@ -4,13 +4,13 @@ module Riddle
       def self.settings
         []
       end
-      
+
       def valid?
         true
       end
-      
+
       private
-      
+
       def settings_body
         settings.select { |setting|
           !send(setting).nil?
@@ -25,7 +25,7 @@ module Riddle
           conf.length == 0 ? nil : conf
         }.flatten.compact
       end
-      
+
       def setting_to_array(setting)
         value = send(setting)
         case value
@@ -36,18 +36,18 @@ module Riddle
           [value]
         end
       end
-      
+
       def rendered_setting(setting)
         return setting unless setting.is_a?(String)
-        
+
         index  = 8100
-        output = setting.clone
-        
+        output = String.new(setting)
+
         while index < output.length
           output.insert(index, "\\\n")
           index += 8100
         end
-        
+
         output
       end
 

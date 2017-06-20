@@ -626,7 +626,8 @@ module Riddle
     # Send a collection of messages, for a command type (eg, search, excerpts,
     # update), to the Sphinx daemon.
     def request(command, messages)
-      response = ""
+      response = StringIO.new String.new(""), "w"
+      response.set_encoding "ASCII-8BIT"
       status   = -1
       version  = 0
       length   = 0
@@ -660,6 +661,8 @@ module Riddle
           response << part if part
         end
       end
+
+      response = response.string
 
       if response.empty? || response.length != length
         raise ResponseError, "No response from searchd (status: #{status}, version: #{version})"

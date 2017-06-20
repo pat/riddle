@@ -98,7 +98,8 @@ class Riddle::Query::Select
   end
 
   def to_sql
-    sql = "SELECT #{ extended_values } FROM #{ @indices.join(', ') }"
+    sql = StringIO.new String.new(""), "w"
+    sql << "SELECT #{ extended_values } FROM #{ @indices.join(', ') }"
     sql << " WHERE #{ combined_wheres }" if wheres?
     sql << " #{group_prefix} #{escape_columns(@group_by)}" if !@group_by.nil?
     unless @order_within_group_by.nil?
@@ -109,7 +110,7 @@ class Riddle::Query::Select
     sql << " #{limit_clause}"   unless @limit.nil? && @offset.nil?
     sql << " #{options_clause}" unless @options.empty?
 
-    sql
+    sql.string
   end
 
   private
