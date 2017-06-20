@@ -1,3 +1,7 @@
+Edge
+- Add compatibility for MRI's frozen string literals setting.
+- Stop packaging test files with gem releases (@dimko).
+
 2.1.0 - January 5th 2017
 - Wrap string attribute filter values in single quotes.
 - Remove direct references to FixNum to avoid MRI 2.4 warnings.
