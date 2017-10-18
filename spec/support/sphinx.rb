@@ -7,12 +7,6 @@ if RUBY_PLATFORM == 'java'
   Jdbc::MySQL.load_driver
 end
 
-if ENV["TRAVIS"] == "true"
-  FIXTURE_COMMAND = "LOAD DATA INFILE"
-else
-  FIXTURE_COMMAND = "LOAD DATA LOCAL INFILE"
-end
-
 class Sphinx
   attr_accessor :host, :username, :password
 
@@ -48,7 +42,7 @@ class Sphinx
     structure = File.open('spec/fixtures/sql/structure.sql') { |f| f.read }
     structure.split(/;/).each { |sql| client.query sql }
     client.query <<-SQL
-      #{FIXTURE_COMMAND} '#{fixtures_path}/sql/data.tsv' INTO TABLE
+      LOAD DATA LOCAL INFILE '#{fixtures_path}/sql/data.tsv' INTO TABLE
       `riddle`.`people` FIELDS TERMINATED BY ',' ENCLOSED BY "'" (gender,
       first_name, middle_initial, last_name, street_address, city, state,
       postcode, email, birthday)
@@ -78,7 +72,7 @@ class Sphinx
     structure = File.open('spec/fixtures/sql/structure.sql') { |f| f.read }
     structure.split(/;/).each { |sql| client.createStatement.execute sql }
     client.createStatement.execute <<-SQL
-      #{FIXTURE_COMMAND} '#{fixtures_path}/sql/data.tsv' INTO TABLE
+      LOAD DATA LOCAL INFILE '#{fixtures_path}/sql/data.tsv' INTO TABLE
       `riddle`.`people` FIELDS TERMINATED BY ',' ENCLOSED BY "'" (gender,
       first_name, middle_initial, last_name, street_address, city, state,
       postcode, email, birthday)
