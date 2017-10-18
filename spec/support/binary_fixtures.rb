@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BinaryFixtures
   def self.build_fixtures(version = nil)
     return if ENV['TRAVIS']

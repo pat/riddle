@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Riddle::Client::Versions[:search]  = 0x117
 Riddle::Client::Versions[:excerpt] = 0x102
 

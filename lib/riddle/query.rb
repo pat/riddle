@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Riddle::Query
   ESCAPE_CHARACTERS = /[\(\)\|\-!@~\/"\/\^\$\\><&=\?]/
   # http://sphinxsearch.com/docs/current/extended-syntax.html

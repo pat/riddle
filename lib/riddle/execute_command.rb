@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Riddle::ExecuteCommand
   WINDOWS = (RUBY_PLATFORM =~ /mswin|mingw/)
 
