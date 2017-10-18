@@ -1,16 +1,22 @@
 language: ruby
 rvm:
-  - 2.2
-  - 2.3.4
-  - 2.4.1
-  - jruby-9.1.10.0
+- 2.2
+- 2.3.4
+- 2.4.1
+- jruby-9.1.10.0
 env:
-  - SPHINX_BIN=/usr/local/sphinx-2.0.10/bin SPHINX_VERSION=2.0.10
-  - SPHINX_BIN=/usr/local/sphinx-2.1.9/bin SPHINX_VERSION=2.1.9
-  - SPHINX_BIN=/usr/local/sphinx-2.2.6/bin SPHINX_VERSION=2.2.6
+  global:
+  - SPHINX_BIN=ext/sphinx/bin/
+  - secure: aP3wCZnnqim/yBWbO8+N2DAJIDVuqewUayK3nBphR/Jt1POIMbqCIuHwk/SG/JfMc6pJIlH0QOX8wI3fF3y5GO6aIrN8xKAX0DoDm+Gkvk/YEk3cK/2fJUwvocR89M99EoV8ctLPaR03B3dm3h2Dh2oe8NQRBfcrL3WtiHHq3d0=
+  matrix:
+  - SPHINX_VERSION=2.0.10
+  - SPHINX_VERSION=2.1.9
+  - SPHINX_VERSION=2.2.6
 before_script:
 - killall searchd; echo ''
-- if (ruby -e "exit RUBY_VERSION.to_f >= 2.4"); then export RUBYOPT="--enable-frozen-string-literal"; fi; echo $RUBYOPT
+- if (ruby -e "exit RUBY_VERSION.to_f >= 2.4"); then export RUBYOPT="--enable-frozen-string-literal";
+  fi; echo $RUBYOPT
+- "./bin/loadsphinx $SPHINX_VERSION"
 after_script:
 - killall searchd; echo ''
 sudo: false
