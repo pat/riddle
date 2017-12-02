@@ -1,4 +1,6 @@
 # encoding: BINARY
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Riddle::Client::Message do

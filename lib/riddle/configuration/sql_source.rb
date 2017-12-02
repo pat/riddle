@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Riddle
   class Configuration
     class SQLSource < Riddle::Configuration::Source

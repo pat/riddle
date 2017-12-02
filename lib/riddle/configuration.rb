@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'riddle/configuration/section'
 require 'riddle/configuration/index_settings'
 

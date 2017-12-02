@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 if Riddle.loaded_version == '0.9.9' || Riddle.loaded_version == '1.10'

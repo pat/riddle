@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path('../lib', __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = 'riddle'
-  s.version     = '2.2.0'
+  s.version     = '2.2.1'
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Pat Allan']
   s.email       = ['pat@freelancing-gods.com']

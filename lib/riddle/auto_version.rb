@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Riddle::AutoVersion
   def self.configure
     controller = Riddle::Controller.new nil, ''

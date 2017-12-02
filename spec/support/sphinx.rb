@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 require 'erb'
 require 'yaml'
+require 'tempfile'
 
 if RUBY_PLATFORM == 'java'
   require 'java'
@@ -47,12 +50,14 @@ class Sphinx
 
     structure = File.open('spec/fixtures/sql/structure.sql') { |f| f.read }
     structure.split(/;/).each { |sql| client.query sql }
-    client.query <<-SQL
-      #{FIXTURE_COMMAND} '#{fixtures_path}/sql/data.tsv' INTO TABLE
-      `riddle`.`people` FIELDS TERMINATED BY ',' ENCLOSED BY "'" (gender,
-      first_name, middle_initial, last_name, street_address, city, state,
-      postcode, email, birthday)
-    SQL
+    sql_file 'data.tsv' do |path|
+      client.query <<-SQL
+        #{FIXTURE_COMMAND} '#{path}' INTO TABLE
+        `riddle`.`people` FIELDS TERMINATED BY ',' ENCLOSED BY "'" (gender,
+        first_name, middle_initial, last_name, street_address, city, state,
+        postcode, email, birthday)
+      SQL
+    end
 
     client.close
   end
@@ -77,12 +82,14 @@ class Sphinx
 
     structure = File.open('spec/fixtures/sql/structure.sql') { |f| f.read }
     structure.split(/;/).each { |sql| client.createStatement.execute sql }
-    client.createStatement.execute <<-SQL
-      #{FIXTURE_COMMAND} '#{fixtures_path}/sql/data.tsv' INTO TABLE
-      `riddle`.`people` FIELDS TERMINATED BY ',' ENCLOSED BY "'" (gender,
-      first_name, middle_initial, last_name, street_address, city, state,
-      postcode, email, birthday)
-    SQL
+    sql_file 'data.tsv' do |path|
+      client.createStatement.execute <<-SQL
+        #{FIXTURE_COMMAND} '#{path}' INTO TABLE
+        `riddle`.`people` FIELDS TERMINATED BY ',' ENCLOSED BY "'" (gender,
+        first_name, middle_initial, last_name, street_address, city, state,
+        postcode, email, birthday)
+      SQL
+    end
   end
 
   def generate_configuration
@@ -122,6 +129,18 @@ class Sphinx
 
   private
 
+  def bin_path
+    @bin_path ||= begin
+      path = (ENV['SPHINX_BIN'] || '').dup
+      path.insert -1, '/' if path.length > 0 && path[/\/$/].nil?
+      path
+    end
+  end
+
+  def fixtures_path
+    File.expand_path File.join(File.dirname(__FILE__), '..', 'fixtures')
+  end
+
   def pid
     if File.exists?("#{fixtures_path}/sphinx/searchd.pid")
       `cat #{fixtures_path}/sphinx/searchd.pid`[/\d+/]
@@ -134,15 +153,15 @@ class Sphinx
     pid && `ps #{pid} | wc -l`.to_i > 1
   end
 
-  def fixtures_path
-    File.expand_path File.join(File.dirname(__FILE__), '..', 'fixtures')
-  end
+  def sql_file(name, &block)
+    file = Tempfile.new(name)
+    file.write File.read("#{fixtures_path}/sql/#{name}")
+    `chmod +r #{file.path}`
+    file.flush
 
-  def bin_path
-    @bin_path ||= begin
-      path = (ENV['SPHINX_BIN'] || '').dup
-      path.insert -1, '/' if path.length > 0 && path[/\/$/].nil?
-      path
-    end
+    block.call file.path
+
+    file.close
+    file.unlink
   end
 end

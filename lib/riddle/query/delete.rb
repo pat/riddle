@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Riddle::Query::Delete
   def initialize(index, *ids)
     @index = index

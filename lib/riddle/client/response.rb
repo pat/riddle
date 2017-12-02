@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Riddle
   class Client
     # Used to interrogate responses from the Sphinx daemon. Keep in mind none

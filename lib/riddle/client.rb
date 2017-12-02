@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'riddle/client/filter'
 require 'riddle/client/message'
 require 'riddle/client/response'

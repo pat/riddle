@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'riddle/0.9.9'
 require 'riddle/1.10'
 require 'riddle/2.0.1'

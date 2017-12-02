@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Riddle::CommandResult
   attr_reader   :command, :status, :output
   attr_accessor :successful

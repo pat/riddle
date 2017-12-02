@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Riddle.loaded_version = '0.9.9'
 
 require 'riddle/0.9.9/client'

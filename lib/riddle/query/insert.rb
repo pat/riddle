@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Riddle::Query::Insert
   attr_reader :columns, :values
 
