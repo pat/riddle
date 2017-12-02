@@ -26,7 +26,7 @@ module Riddle
       indices << '--all' if indices.empty?
 
       command = "#{indexer} --config \"#{@path}\" #{indices.join(' ')}"
-      command << " --rotate" if running?
+      command = "#{command} --rotate" if running?
 
       Riddle::ExecuteCommand.call command, options[:verbose]
     end
@@ -36,7 +36,7 @@ module Riddle
       check_for_configuration_file
 
       command = "#{searchd} --pidfile --config \"#{@path}\""
-      command << " --nodetach" if options[:nodetach]
+      command = "#{command} --nodetach" if options[:nodetach]
 
       exec(command) if options[:nodetach]
 
