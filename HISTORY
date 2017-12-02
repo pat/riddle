@@ -1,3 +1,6 @@
+2.2.1 - December 2nd 2017
+- Check if Mysql2::Client is defined before using it (not just Mysql2).
+
 2.2.0 - June 20th 2017
 - Add compatibility for MRI's frozen string literals setting.
 - Stop packaging test files with gem releases (@dimko).
