@@ -15,6 +15,7 @@ searchd
   query_log     = <%= fixtures_path %>/sphinx/searchd.query.log
   read_timeout  = 5
   max_children  = 30
+  workers       = threads
   pid_file      = <%= fixtures_path %>/sphinx/searchd.pid
   binlog_path   = <%= fixtures_path %>/sphinx/binlog/
 }
