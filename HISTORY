@@ -1,4 +1,5 @@
 Unreleased:
+- Add controller method for merging indices.
 - Add support for sockets in searchd configuration.
 - Fix handling of command errors when executed via backticks (verbose).
 
