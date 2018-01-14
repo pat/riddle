@@ -32,6 +32,14 @@ class Sphinx
     end
   end
 
+  def bin_path
+    @bin_path ||= begin
+      path = (ENV['SPHINX_BIN'] || '').dup
+      path.insert -1, '/' if path.length > 0 && path[/\/$/].nil?
+      path
+    end
+  end
+
   def setup_mysql
     databases = mysql_client.query "SHOW DATABASES"
     unless databases.include?("riddle")
@@ -97,14 +105,6 @@ class Sphinx
   end
 
   private
-
-  def bin_path
-    @bin_path ||= begin
-      path = (ENV['SPHINX_BIN'] || '').dup
-      path.insert -1, '/' if path.length > 0 && path[/\/$/].nil?
-      path
-    end
-  end
 
   def fixtures_path
     File.expand_path File.join(File.dirname(__FILE__), '..', 'fixtures')

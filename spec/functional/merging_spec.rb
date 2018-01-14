@@ -21,6 +21,8 @@ describe "Merging indices", :live => true do
   end
 
   before :each do
+    controller.bin_path = sphinx.bin_path
+
     sphinx.mysql_client.execute "USE riddle"
     sphinx.mysql_client.execute "DELETE FROM articles"
   end
