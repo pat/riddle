@@ -1,8 +1,9 @@
 language: ruby
 rvm:
-- 2.2.8
-- 2.3.5
-- 2.4.2
+- 2.2.9
+- 2.3.6
+- 2.4.3
+- 2.5.0
 - jruby-9.1.14.0
 env:
   global:
@@ -14,9 +15,9 @@ env:
   - SPHINX_VERSION=2.2.6
 before_script:
 - killall searchd; echo ''
-- if (ruby -e "exit RUBY_VERSION.to_f >= 2.4"); then export RUBYOPT="--enable-frozen-string-literal";
-  fi; echo $RUBYOPT
 - "./bin/loadsphinx $SPHINX_VERSION"
+before_install:
+- gem update --system
 after_script:
 - killall searchd; echo ''
 sudo: false

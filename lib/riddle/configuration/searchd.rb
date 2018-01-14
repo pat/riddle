@@ -27,7 +27,7 @@ module Riddle
       end
 
       attr_accessor *self.settings
-      attr_accessor :mysql41
+      attr_accessor :mysql41, :socket
 
       def render
         raise ConfigurationError unless valid?

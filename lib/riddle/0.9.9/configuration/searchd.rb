@@ -23,7 +23,13 @@ module Riddle
         @listen << "9306:mysql41" if @mysql41.is_a?(TrueClass)
         @listen << "#{@mysql41}:mysql41" if @mysql41.is_a?(NUMBER)
 
-        @listen = @listen.collect { |line| "#{@address}:#{line}" } if @address
+        if @listen.empty? && @address
+          @listen << @address
+        else
+          @listen = @listen.collect { |line| "#{@address}:#{line}" } if @address
+        end
+
+        @listen += Array(@socket) if @socket
       end
 
       def settings

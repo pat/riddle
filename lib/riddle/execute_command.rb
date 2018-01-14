@@ -30,7 +30,11 @@ class Riddle::ExecuteCommand
   attr_reader :command, :verbose
 
   def result_from_backticks
-    output = `#{command}`
+    begin
+      output = `#{command}`
+    rescue SystemCallError => error
+      output = error.message
+    end
 
     Riddle::CommandResult.new command, $?.exitstatus, output
   end

@@ -32,63 +32,40 @@ class Sphinx
     end
   end
 
-  def setup_mysql
-    return setup_mysql_on_jruby if RUBY_PLATFORM == 'java'
-
-    client = Mysql2::Client.new(
-      :host     => host,
-      :username => username,
-      :password => password
-    )
-
-    databases = client.query('SHOW DATABASES', :as => :array).to_a.flatten
-    unless databases.include?('riddle')
-      client.query 'CREATE DATABASE riddle'
+  def bin_path
+    @bin_path ||= begin
+      path = (ENV['SPHINX_BIN'] || '').dup
+      path.insert -1, '/' if path.length > 0 && path[/\/$/].nil?
+      path
     end
-
-    client.query 'USE riddle'
-
-    structure = File.open('spec/fixtures/sql/structure.sql') { |f| f.read }
-    structure.split(/;/).each { |sql| client.query sql }
-    sql_file 'data.tsv' do |path|
-      client.query <<-SQL
-        #{FIXTURE_COMMAND} '#{path}' INTO TABLE
-        `riddle`.`people` FIELDS TERMINATED BY ',' ENCLOSED BY "'" (gender,
-        first_name, middle_initial, last_name, street_address, city, state,
-        postcode, email, birthday)
-      SQL
-    end
-
-    client.close
   end
 
-  def setup_mysql_on_jruby
-    address    = "jdbc:mysql://#{host}"
-    properties = Java::JavaUtil::Properties.new
-    properties.setProperty "user", username     if username
-    properties.setProperty "password", password if password
-
-    client = Java::ComMysqlJdbc::Driver.new.connect address, properties
-
-    set       = client.createStatement.executeQuery('SHOW DATABASES')
-    databases = []
-    databases << set.getString(1) while set.next
-
-    unless databases.include?('riddle')
-      client.createStatement.execute 'CREATE DATABASE riddle'
+  def setup_mysql
+    databases = mysql_client.query "SHOW DATABASES"
+    unless databases.include?("riddle")
+      mysql_client.execute "CREATE DATABASE riddle"
     end
-
-    client.createStatement.execute 'USE riddle'
+    mysql_client.execute 'USE riddle'
 
     structure = File.open('spec/fixtures/sql/structure.sql') { |f| f.read }
-    structure.split(/;/).each { |sql| client.createStatement.execute sql }
+    structure.split(/;/).each { |sql| mysql_client.execute sql }
     sql_file 'data.tsv' do |path|
-      client.createStatement.execute <<-SQL
+      mysql_client.execute <<-SQL
         #{FIXTURE_COMMAND} '#{path}' INTO TABLE
         `riddle`.`people` FIELDS TERMINATED BY ',' ENCLOSED BY "'" (gender,
         first_name, middle_initial, last_name, street_address, city, state,
         postcode, email, birthday)
       SQL
+    end
+
+    mysql_client.close
+  end
+
+  def mysql_client
+    @mysql_client ||= if RUBY_PLATFORM == 'java'
+      JRubyClient.new host, username, password
+    else
+      MRIClient.new host, username, password
     end
   end
 
@@ -128,14 +105,6 @@ class Sphinx
   end
 
   private
-
-  def bin_path
-    @bin_path ||= begin
-      path = (ENV['SPHINX_BIN'] || '').dup
-      path.insert -1, '/' if path.length > 0 && path[/\/$/].nil?
-      path
-    end
-  end
 
   def fixtures_path
     File.expand_path File.join(File.dirname(__FILE__), '..', 'fixtures')

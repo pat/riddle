@@ -11,9 +11,11 @@ describe Riddle::Query, :live => true do
     end
 
     it "should handle search requests" do
-      connection.query(Riddle::Query.tables).to_a[0].should == {
-        'Index' => 'people', 'Type' => 'local'
-      }
+      connection.query(Riddle::Query.tables).to_a.should match_array([
+        {'Index' => 'people', 'Type' => 'local'},
+        {'Index' => 'article_core', 'Type' => 'local'},
+        {'Index' => 'article_delta', 'Type' => 'local'}
+      ])
     end
   end
 end unless RUBY_PLATFORM == 'java' || Riddle.loaded_version.to_i < 2

@@ -13,4 +13,13 @@ CREATE TABLE `people` (
   `email` varchar(100) NOT NULL,
   `birthday` datetime NOT NULL,
   PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `articles`;
+
+CREATE TABLE `articles` (
+  `id` int(11) NOT NULL auto_increment,
+  `title` varchar(255) NOT NULL,
+  `delta` int(11) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
