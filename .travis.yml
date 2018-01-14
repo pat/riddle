@@ -15,8 +15,6 @@ env:
   - SPHINX_VERSION=2.2.6
 before_script:
 - killall searchd; echo ''
-- if (ruby -e "exit RUBY_VERSION.to_f >= 2.4"); then export RUBYOPT="--enable-frozen-string-literal";
-  fi; echo $RUBYOPT
 - "./bin/loadsphinx $SPHINX_VERSION"
 after_script:
 - killall searchd; echo ''
