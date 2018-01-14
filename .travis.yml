@@ -16,6 +16,8 @@ env:
 before_script:
 - killall searchd; echo ''
 - "./bin/loadsphinx $SPHINX_VERSION"
+before_install:
+- gem update --system
 after_script:
 - killall searchd; echo ''
 sudo: false
