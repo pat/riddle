@@ -226,5 +226,181 @@ searchd
       searchd.address.should == 'sphinx.server.local'
       searchd.port.should == 9312
     end
+
+    it "respects the socket setting" do
+      searchd          = Riddle::Configuration::Searchd.new
+      searchd.socket   = "/my/socket"
+      searchd.pid_file = "file.pid"
+
+      searchd.render.should == <<-SEARCHD
+searchd
+{
+  listen = /my/socket
+  pid_file = file.pid
+}
+      SEARCHD
+    end
+
+    it "respects multiple socket values" do
+      searchd          = Riddle::Configuration::Searchd.new
+      searchd.socket   = ["/my/socket.binary", "/my/socket.sphinxql:mysql41"]
+      searchd.pid_file = "file.pid"
+
+      searchd.render.should == <<-SEARCHD
+searchd
+{
+  listen = /my/socket.binary
+  listen = /my/socket.sphinxql:mysql41
+  pid_file = file.pid
+}
+      SEARCHD
+    end
+
+    it "does not prefix addresses to sockets" do
+      searchd          = Riddle::Configuration::Searchd.new
+      searchd.socket   = "/my/socket"
+      searchd.address  = "1.1.1.1"
+      searchd.pid_file = "file.pid"
+
+      searchd.render.should == <<-SEARCHD
+searchd
+{
+  listen = 1.1.1.1
+  listen = /my/socket
+  pid_file = file.pid
+}
+      SEARCHD
+    end
+
+    it "handles socket and port settings" do
+      searchd          = Riddle::Configuration::Searchd.new
+      searchd.socket   = "/my/socket"
+      searchd.port     = 9312
+      searchd.pid_file = "file.pid"
+
+      searchd.render.should == <<-SEARCHD
+searchd
+{
+  listen = 9312
+  listen = /my/socket
+  pid_file = file.pid
+}
+      SEARCHD
+    end
+
+    it "handles socket and mysql41 settings" do
+      searchd          = Riddle::Configuration::Searchd.new
+      searchd.socket   = "/my/socket"
+      searchd.mysql41  = 9307
+      searchd.pid_file = "file.pid"
+
+      searchd.render.should == <<-SEARCHD
+searchd
+{
+  listen = 9307:mysql41
+  listen = /my/socket
+  pid_file = file.pid
+}
+      SEARCHD
+
+      searchd          = Riddle::Configuration::Searchd.new
+      searchd.socket   = "/my/socket"
+      searchd.mysql41  = true
+      searchd.pid_file = "file.pid"
+
+      searchd.render.should == <<-SEARCHD
+searchd
+{
+  listen = 9306:mysql41
+  listen = /my/socket
+  pid_file = file.pid
+}
+      SEARCHD
+    end
+
+    it "handles socket, address and port settings" do
+      searchd          = Riddle::Configuration::Searchd.new
+      searchd.socket   = "/my/socket"
+      searchd.address  = "1.1.1.1"
+      searchd.port     = 9312
+      searchd.pid_file = "file.pid"
+
+      searchd.render.should == <<-SEARCHD
+searchd
+{
+  listen = 1.1.1.1:9312
+  listen = /my/socket
+  pid_file = file.pid
+}
+      SEARCHD
+    end
+
+    it "handles socket, address and mysql41 settings" do
+      searchd          = Riddle::Configuration::Searchd.new
+      searchd.socket   = "/my/socket"
+      searchd.address  = "1.1.1.1"
+      searchd.mysql41  = 9312
+      searchd.pid_file = "file.pid"
+
+      searchd.render.should == <<-SEARCHD
+searchd
+{
+  listen = 1.1.1.1:9312:mysql41
+  listen = /my/socket
+  pid_file = file.pid
+}
+      SEARCHD
+
+      searchd          = Riddle::Configuration::Searchd.new
+      searchd.socket   = "/my/socket"
+      searchd.address  = "1.1.1.1"
+      searchd.mysql41  = true
+      searchd.pid_file = "file.pid"
+
+      searchd.render.should == <<-SEARCHD
+searchd
+{
+  listen = 1.1.1.1:9306:mysql41
+  listen = /my/socket
+  pid_file = file.pid
+}
+      SEARCHD
+    end
+
+    it "handles socket, address, port and mysql41 settings" do
+      searchd          = Riddle::Configuration::Searchd.new
+      searchd.socket   = "/my/socket"
+      searchd.address  = "1.1.1.1"
+      searchd.port     = 9312
+      searchd.mysql41  = true
+      searchd.pid_file = "file.pid"
+
+      searchd.render.should == <<-SEARCHD
+searchd
+{
+  listen = 1.1.1.1:9312
+  listen = 1.1.1.1:9306:mysql41
+  listen = /my/socket
+  pid_file = file.pid
+}
+      SEARCHD
+
+      searchd          = Riddle::Configuration::Searchd.new
+      searchd.socket   = "/my/socket"
+      searchd.address  = "1.1.1.1"
+      searchd.port     = 9312
+      searchd.mysql41  = 9307
+      searchd.pid_file = "file.pid"
+
+      searchd.render.should == <<-SEARCHD
+searchd
+{
+  listen = 1.1.1.1:9312
+  listen = 1.1.1.1:9307:mysql41
+  listen = /my/socket
+  pid_file = file.pid
+}
+      SEARCHD
+    end
   end
 end
