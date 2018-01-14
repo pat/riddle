@@ -84,4 +84,4 @@ describe "Merging indices", :live => true do
       connection.query("SELECT id FROM article_core WHERE deleted = 1").to_a
     ).to be_empty
   end
-end
+end unless RUBY_PLATFORM == 'java'
