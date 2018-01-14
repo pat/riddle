@@ -4,6 +4,8 @@ module Riddle
   NoConfigurationFileError = Class.new StandardError
 
   class Controller
+    DEFAULT_MERGE_OPTIONS = {:filters => {}}.freeze
+
     attr_accessor :path, :bin_path, :searchd_binary_name, :indexer_binary_name
 
     def initialize(configuration, path)
@@ -27,6 +29,20 @@ module Riddle
 
       command = "#{indexer} --config \"#{@path}\" #{indices.join(' ')}"
       command = "#{command} --rotate" if running?
+
+      Riddle::ExecuteCommand.call command, options[:verbose]
+    end
+
+    def merge(destination, source, options = {})
+      options = DEFAULT_MERGE_OPTIONS.merge options
+
+      command = "#{indexer} --config \"#{@path}\"".dup
+      command << " --merge #{destination} #{source}"
+      options[:filters].each do |attribute, value|
+        value = value..value unless value.is_a?(Range)
+        command << " --merge-dst-range #{attribute} #{value.min} #{value.max}"
+      end
+      command << " --rotate" if running?
 
       Riddle::ExecuteCommand.call command, options[:verbose]
     end

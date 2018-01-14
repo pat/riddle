@@ -43,3 +43,43 @@ index people
   enable_star     = 1
   min_prefix_len  = 1
 }
+
+source article_core_source
+{
+  type      = mysql
+  sql_host  = <%= host %>
+  sql_user  = <%= username %>
+  sql_pass  = <%= password %>
+  sql_db    = riddle
+
+  sql_query           = SELECT id, title, 0 AS deleted FROM articles WHERE id >= $start AND id <= $end AND delta = 0
+  sql_query_range     = SELECT MIN(id), MAX(id) FROM articles
+  sql_attr_timestamp  = deleted
+}
+
+index article_core
+{
+  source       = article_core_source
+  path         = <%= fixtures_path %>/sphinx/article_core
+  charset_type = utf-8
+}
+
+source article_delta_source
+{
+  type      = mysql
+  sql_host  = <%= host %>
+  sql_user  = <%= username %>
+  sql_pass  = <%= password %>
+  sql_db    = riddle
+
+  sql_query           = SELECT id, title, 0 AS deleted FROM articles WHERE id >= $start AND id <= $end AND delta = 1
+  sql_query_range     = SELECT MIN(id), MAX(id) FROM articles
+  sql_attr_timestamp  = deleted
+}
+
+index article_delta
+{
+  source       = article_delta_source
+  path         = <%= fixtures_path %>/sphinx/article_delta
+  charset_type = utf-8
+}
