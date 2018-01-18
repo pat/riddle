@@ -35,7 +35,7 @@ class Riddle::Query::Insert
   def values_to_s
     values.collect { |value_set|
       value_set.collect { |value|
-        translated_value(value)
+        value.is_a?(String) ? translated_value(value).dup.force_encoding("UTF-8") : translated_value(value)
       }.join(', ')
     }.join('), (')
   end
