@@ -133,6 +133,8 @@ class Riddle::Configuration::Parser
   class InnerParser
     SETTING_PATTERN = /^(\w+)\s*=\s*(.*)$/
 
+    EndOfFileError = Class.new StandardError
+
     def initialize(input)
       @stream   = StringIO.new(input.gsub("\\\n", ''))
       @sections = {}
@@ -144,13 +146,15 @@ class Riddle::Configuration::Parser
       end
 
       @sections
+    rescue EndOfFileError
+      @sections
     end
 
     private
 
     def next_line
       line = @stream.gets
-      return line if line.nil?
+      raise EndOfFileError if line.nil?
 
       line = line.strip
       (line.empty? || line[/^#/]) ? next_line : line
