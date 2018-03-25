@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MRIClient
   def initialize(host, username, password)
     @client = Mysql2::Client.new(

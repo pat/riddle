@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class JRubyClient
   def initialize(host, username, password)
     address    = "jdbc:mysql://#{host}"
