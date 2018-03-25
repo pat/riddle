@@ -4,7 +4,11 @@ require 'spec_helper'
 
 describe "Sphinx Excepts", :live => true do
   let(:client)     { Riddle::Client.new "localhost", 9313 }
-  let(:controller) { Riddle::Controller.new nil, '' }
+  let(:controller) do
+    controller          = Riddle::Controller.new nil, ''
+    controller.bin_path = Sphinx.new.bin_path
+    controller
+  end
 
   it "should highlight a single word multiple times in a document" do
     excerpts = client.excerpts(
