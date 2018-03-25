@@ -1,3 +1,8 @@
+2.3.1 - March 25th 2018
+- Handle parsing of invalid configuration files without endlessly looping.
+- Test against mysql2 0.5.
+- Test against Sphinx 3.0.
+
 2.3.0 - January 14th 2018
 - Add controller method for merging indices.
 - Add support for sockets in searchd configuration.
