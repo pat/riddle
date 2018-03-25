@@ -3,34 +3,53 @@
 require 'spec_helper'
 
 describe "Sphinx Excepts", :live => true do
-  before :each do
-    @client = Riddle::Client.new("localhost", 9313)
+  let(:client)     { Riddle::Client.new "localhost", 9313 }
+  let(:controller) do
+    controller          = Riddle::Controller.new nil, ''
+    controller.bin_path = Sphinx.new.bin_path
+    controller
   end
 
   it "should highlight a single word multiple times in a document" do
-    @client.excerpts(
+    excerpts = client.excerpts(
       :index  => "people",
       :words  => "Mary",
       :docs   => ["Mary, Mary, quite contrary."]
-    ).should == [
-      '<span class="match">Mary</span>, <span class="match">Mary</span>, quite contrary.'
-    ]
+    )
+
+    if controller.sphinx_version.to_i >= 3
+      excerpts.should == [
+        '<span class="match">Mary, Mary</span>, quite contrary.'
+      ]
+    else
+      excerpts.should == [
+        '<span class="match">Mary</span>, <span class="match">Mary</span>, quite contrary.'
+      ]
+    end
   end
 
   it "should use specified word markers" do
-    @client.excerpts(
+    excerpts = client.excerpts(
       :index        => "people",
       :words        => "Mary",
       :docs         => ["Mary, Mary, quite contrary."],
       :before_match => "<em>",
       :after_match  => "</em>"
-    ).should == [
-      "<em>Mary</em>, <em>Mary</em>, quite contrary."
-    ]
+    )
+
+    if controller.sphinx_version.to_i >= 3
+      excerpts.should == [
+        "<em>Mary, Mary</em>, quite contrary."
+      ]
+    else
+      excerpts.should == [
+        "<em>Mary</em>, <em>Mary</em>, quite contrary."
+      ]
+    end
   end
 
   it "should separate matches that are far apart by an ellipsis by default" do
-    excerpts = @client.excerpts(
+    excerpts = client.excerpts(
       :index        => "people",
       :words        => "Pat",
       :docs         => [
@@ -48,7 +67,6 @@ not. It's just my name: Pat.
       :before_match => "<em>",
       :after_match  => "</em>"
     )
-
 
     case Riddle.loaded_version
     when '0.9.9'
@@ -77,7 +95,7 @@ not. It's just my name: <em>Pat</em>.
   end
 
   it "should use the provided separator" do
-    excerpts = @client.excerpts(
+    excerpts = client.excerpts(
       :index           => "people",
       :words           => "Pat",
       :docs            => [
@@ -124,18 +142,27 @@ not. It's just my name: <em>Pat</em>.
   end
 
   it "should return multiple results for multiple documents" do
-     @client.excerpts(
-        :index        => "people",
-        :words        => "Mary",
-        :docs         => [
-          "Mary, Mary, quite contrary.",
-          "The epithet \"Bloody Mary\" is associated with a number of historical and fictional women, most notably Queen Mary I of England"
-        ],
-        :before_match => "<em>",
-        :after_match  => "</em>"
-      ).should == [
+    excerpts = client.excerpts(
+      :index        => "people",
+      :words        => "Mary",
+      :docs         => [
+        "Mary, Mary, quite contrary.",
+        "The epithet \"Bloody Mary\" is associated with a number of historical and fictional women, most notably Queen Mary I of England"
+      ],
+      :before_match => "<em>",
+      :after_match  => "</em>"
+    )
+
+    if controller.sphinx_version.to_f >= 3
+      excerpts.should == [
+        "<em>Mary, Mary</em>, quite contrary.",
+        "The epithet \"Bloody <em>Mary</em>\" is associated with a number of historical and fictional women, most notably Queen <em>Mary</em> I of England"
+      ]
+    else
+      excerpts.should == [
         "<em>Mary</em>, <em>Mary</em>, quite contrary.",
         "The epithet \"Bloody <em>Mary</em>\" is associated with a number of historical and fictional women, most notably Queen <em>Mary</em> I of England"
       ]
+    end
   end
 end
