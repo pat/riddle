@@ -12,7 +12,8 @@ env:
   matrix:
   - SPHINX_VERSION=2.0.10
   - SPHINX_VERSION=2.1.9
-  - SPHINX_VERSION=2.2.6
+  - SPHINX_VERSION=2.2.11
+  - SPHINX_VERSION=3.0.2
 before_script:
 - killall searchd; echo ''
 - "./bin/loadsphinx $SPHINX_VERSION"
