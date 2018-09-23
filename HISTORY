@@ -1,3 +1,7 @@
+2.3.2 - September 23rd 2018
+- Fix attempt to modify a frozen string when generating configuration.
+- Test against Manticore 2.6.3.
+
 2.3.1 - March 25th 2018
 - Handle parsing of invalid configuration files without endlessly looping.
 - Test against mysql2 0.5.
