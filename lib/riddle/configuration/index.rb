@@ -25,8 +25,7 @@ module Riddle
       def render
         raise ConfigurationError, "#{@name} #{@sources.inspect} #{@path} #{@parent}" unless valid?
 
-        inherited_name = "#{name}"
-        inherited_name << " : #{parent}" if parent
+        inherited_name = parent ? "#{name} : #{parent}" : "#{name}"
         (
           @sources.collect { |s| s.render } +
           ["index #{inherited_name}", "{"] +
