@@ -3,9 +3,10 @@
 class MRIClient
   def initialize(host, username, password)
     @client = Mysql2::Client.new(
-      :host     => host,
-      :username => username,
-      :password => password
+      :host         => host,
+      :username     => username,
+      :password     => password,
+      :local_infile => true
     )
   end
 
