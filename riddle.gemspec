@@ -14,8 +14,6 @@ Gem::Specification.new do |s|
   s.description = %q{A Ruby API and configuration helper for the Sphinx search service.}
   s.license     = 'MIT'
 
-  s.rubyforge_project = 'riddle'
-
   s.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   s.require_paths = ['lib']
 
