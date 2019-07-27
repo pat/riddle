@@ -10,15 +10,7 @@ if RUBY_PLATFORM == 'java'
   Jdbc::MySQL.load_driver
 end
 
-# if ENV["TRAVIS"] == "true"
-#   FIXTURE_COMMAND = "LOAD DATA INFILE"
-# else
-  FIXTURE_COMMAND = "LOAD DATA LOCAL INFILE"
-# end
-
 class Sphinx
-  TEMP_PATH = "#{Dir.pwd}/tmp"
-
   attr_accessor :host, :username, :password
 
   def initialize
@@ -49,7 +41,7 @@ class Sphinx
     structure.split(/;/).each { |sql| mysql_client.execute sql }
     sql_file 'data.tsv' do |path|
       mysql_client.execute <<-SQL
-        #{FIXTURE_COMMAND} '#{path}' INTO TABLE
+        LOAD DATA LOCAL INFILE '#{path}' INTO TABLE
         `riddle`.`people` FIELDS TERMINATED BY ',' ENCLOSED BY "'" (gender,
         first_name, middle_initial, last_name, street_address, city, state,
         postcode, email, birthday)
@@ -121,16 +113,15 @@ class Sphinx
   end
 
   def sql_file(name, &block)
-    FileUtils.mkdir_p TEMP_PATH
+    # file = Tempfile.new(name)
+    # file.write File.read("#{fixtures_path}/sql/#{name}")
+    # `chmod +r #{file.path}`
+    # file.flush
 
-    file = Tempfile.new(name, TEMP_PATH)
-    file.write File.read("#{fixtures_path}/sql/#{name}")
-    `chmod +r #{file.path}`
-    file.flush
+    # block.call file.path
+    block.call "#{fixtures_path}/sql/#{name}"
 
-    block.call file.path
-
-    file.close
-    file.unlink
+    # file.close
+    # file.unlink
   end
 end
