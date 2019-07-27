@@ -1,11 +1,11 @@
 language: ruby
 dist: xenial
 rvm:
-# - 2.3.8
-# - 2.4.6
-# - 2.5.5
+- 2.3.8
+- 2.4.6
+- 2.5.5
 - 2.6.3
-# - jruby-9.2.7.0
+- jruby-9.2.7.0
 env:
   global:
   - secure: aP3wCZnnqim/yBWbO8+N2DAJIDVuqewUayK3nBphR/Jt1POIMbqCIuHwk/SG/JfMc6pJIlH0QOX8wI3fF3y5GO6aIrN8xKAX0DoDm+Gkvk/YEk3cK/2fJUwvocR89M99EoV8ctLPaR03B3dm3h2Dh2oe8NQRBfcrL3WtiHHq3d0=
@@ -27,7 +27,6 @@ addons:
 services:
   - mysql
 before_install:
-- "./bin/configure_mysql"
 - pip install --upgrade --user awscli
 - gem update --system
 after_script:
