@@ -10,11 +10,12 @@ MYSQL
 sudo cat /etc/mysql/mysql.conf.d/load_file.cnf
 mkdir -p `pwd`/tmp
 
-sudo systemctl restart mysql
+sudo systemctl stop mysql
+sudo systemctl start mysql
 echo "STATUS"
-systemctl status mysql.service
+sudo systemctl status mysql.service
 echo "JOURNAL"
-journalctl -xe
+sudo journalctl -xe
 echo "LOG"
 sudo tail -n 100 /var/log/mysql/error.log
 
