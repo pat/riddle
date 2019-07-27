@@ -10,11 +10,11 @@ if RUBY_PLATFORM == 'java'
   Jdbc::MySQL.load_driver
 end
 
-if ENV["TRAVIS"] == "true"
-  FIXTURE_COMMAND = "LOAD DATA INFILE"
-else
+# if ENV["TRAVIS"] == "true"
+#   FIXTURE_COMMAND = "LOAD DATA INFILE"
+# else
   FIXTURE_COMMAND = "LOAD DATA LOCAL INFILE"
-end
+# end
 
 class Sphinx
   TEMP_PATH = "#{Dir.pwd}/tmp"
