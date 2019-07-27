@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+# set -e
 
 sudo tee -a /etc/mysql/mysql.conf.d/load_file.cnf >/dev/null <<MYSQL
 [mysqld]
@@ -11,5 +11,6 @@ sudo cat /etc/mysql/mysql.conf.d/load_file.cnf
 mkdir -p `pwd`/tmp
 
 sudo systemctl restart mysql
+tail -n 100 /var/log/mysql/error.log
 
 mysql -e 'SHOW VARIABLES LIKE "secure_file_priv";'
