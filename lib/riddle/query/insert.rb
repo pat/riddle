@@ -29,7 +29,6 @@ class Riddle::Query::Insert
     columns.collect { |column|
       column.to_s == 'id' ? 'id' : "`#{column}`"
     }.join(', ')
-
   end
 
   def values_to_s
@@ -43,7 +42,7 @@ class Riddle::Query::Insert
   def translated_value(value)
     case value
     when String
-      "'#{value.gsub(/['\\]/, '').gsub(/\s+/, ' ')}'"
+      "'#{Riddle::Query.sql_escape(value).gsub(/\s+/, ' ')}'"
     when TrueClass, FalseClass
       value ? 1 : 0
     when Time

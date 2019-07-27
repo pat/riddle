@@ -24,4 +24,10 @@ describe Riddle::Query::Insert do
     query.to_sql.
       should == "INSERT INTO foo_core (id, `name`) VALUES (4, 'bar'), (5, 'baz')"
   end
+
+  it 'handles values with single quotes' do
+    query = Riddle::Query::Insert.new('foo_core', [:id, :name], [4, "bar's"])
+    query.to_sql.
+      should == "INSERT INTO foo_core (id, `name`) VALUES (4, 'bar\\'s')"
+  end
 end
