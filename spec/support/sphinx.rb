@@ -70,7 +70,7 @@ class Sphinx
   def index
     cmd = "#{bin_path}indexer --config #{fixtures_path}/sphinx/spec.conf --all"
     cmd << ' --rotate' if running?
-    `#{cmd}`
+    puts `#{cmd}`
   end
 
   def start

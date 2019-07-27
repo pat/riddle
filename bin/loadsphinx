@@ -28,6 +28,8 @@ load_sphinx () {
   if [ "$trusty" == "true" ]; then
     curl --location http://launchpadlibrarian.net/247512886/libmysqlclient18_5.6.28-1ubuntu3_amd64.deb -o libmysql.deb
     sudo apt-get install ./libmysql.deb
+  else
+    sudo apt-get install libodbc1
   fi
 
   if [ "$format" == "deb" ]; then
