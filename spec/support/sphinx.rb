@@ -46,6 +46,7 @@ class Sphinx
     structure = File.open('spec/fixtures/sql/structure.sql') { |f| f.read }
     structure.split(/;/).each { |sql| mysql_client.execute sql }
     sql_file 'data.tsv' do |path|
+      puts mysql_client.query("SHOW VARIABLES LIKE \"secure_file_priv\"").inspect
       mysql_client.execute <<-SQL
         #{FIXTURE_COMMAND} '#{path}' INTO TABLE
         `riddle`.`people` FIELDS TERMINATED BY ',' ENCLOSED BY "'" (gender,
