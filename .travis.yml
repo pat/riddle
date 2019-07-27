@@ -1,23 +1,24 @@
 language: ruby
 rvm:
-- 2.3.8
-- 2.4.6
-- 2.5.5
+# - 2.3.8
+# - 2.4.6
+# - 2.5.5
 - 2.6.3
-- jruby-9.2.7.0
+# - jruby-9.2.7.0
 env:
   global:
   - SPHINX_BIN=ext/sphinx/bin/
   - MYSQL_FILE_PATH=/var/lib/mysql-files
   - secure: aP3wCZnnqim/yBWbO8+N2DAJIDVuqewUayK3nBphR/Jt1POIMbqCIuHwk/SG/JfMc6pJIlH0QOX8wI3fF3y5GO6aIrN8xKAX0DoDm+Gkvk/YEk3cK/2fJUwvocR89M99EoV8ctLPaR03B3dm3h2Dh2oe8NQRBfcrL3WtiHHq3d0=
   matrix:
-  - SPHINX_VERSION=2.0.10 SPHINX_ENGINE=sphinx
-  - SPHINX_VERSION=2.1.9 SPHINX_ENGINE=sphinx
+  # - SPHINX_VERSION=2.0.10 SPHINX_ENGINE=sphinx
+  # - SPHINX_VERSION=2.1.9 SPHINX_ENGINE=sphinx
   - SPHINX_VERSION=2.2.11 SPHINX_ENGINE=sphinx
-  - SPHINX_VERSION=3.0.2 SPHINX_ENGINE=sphinx
-  - SPHINX_VERSION=2.6.3 SPHINX_ENGINE=manticore
-  - SPHINX_VERSION=2.7.5 SPHINX_ENGINE=manticore
+  # - SPHINX_VERSION=3.0.2 SPHINX_ENGINE=sphinx
+  # - SPHINX_VERSION=2.6.3 SPHINX_ENGINE=manticore
+  # - SPHINX_VERSION=2.7.5 SPHINX_ENGINE=manticore
 before_script:
+- ls -al /var/lib/mysql-files
 - killall searchd; echo ''
 - "./bin/loadsphinx $SPHINX_VERSION $SPHINX_ENGINE"
 addons:
