@@ -39,14 +39,13 @@ class Sphinx
 
     structure = File.open('spec/fixtures/sql/structure.sql') { |f| f.read }
     structure.split(/;/).each { |sql| mysql_client.execute sql }
-    sql_file 'data.tsv' do |path|
-      mysql_client.execute <<-SQL
-        LOAD DATA LOCAL INFILE '#{path}' INTO TABLE
-        `riddle`.`people` FIELDS TERMINATED BY ',' ENCLOSED BY "'" (gender,
-        first_name, middle_initial, last_name, street_address, city, state,
-        postcode, email, birthday)
-      SQL
-    end
+
+    mysql_client.execute <<-SQL
+      LOAD DATA LOCAL INFILE '#{fixtures_path}/sql/data.tsv' INTO TABLE
+      `riddle`.`people` FIELDS TERMINATED BY ',' ENCLOSED BY "'" (gender,
+      first_name, middle_initial, last_name, street_address, city, state,
+      postcode, email, birthday)
+    SQL
 
     mysql_client.close
   end
@@ -113,15 +112,6 @@ class Sphinx
   end
 
   def sql_file(name, &block)
-    # file = Tempfile.new(name)
-    # file.write File.read("#{fixtures_path}/sql/#{name}")
-    # `chmod +r #{file.path}`
-    # file.flush
-
-    # block.call file.path
     block.call "#{fixtures_path}/sql/#{name}"
-
-    # file.close
-    # file.unlink
   end
 end
