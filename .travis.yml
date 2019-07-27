@@ -23,9 +23,10 @@ before_script:
 - sudo ls -al /var/lib/mysql-files
 - pwd
 - whoami
-- sudo mysql_config
-- sudo ls -al /etc/my.cnf
-- sudo cat /etc/my.cnf
+- sudo ps aux | grep mysqld
+- sudo cat /lib/systemd/system/mysql.service
+- sudo ls -al /etc/mysql/my.cnf
+- sudo cat /etc/mysql/my.cnf
 - killall searchd; echo ''
 - "./bin/loadsphinx $SPHINX_VERSION $SPHINX_ENGINE"
 addons:
