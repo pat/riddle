@@ -9,7 +9,7 @@ load_sphinx () {
       url="http://sphinxsearch.com/files/sphinxsearch_2.1.9-release-0ubuntu11~trusty_amd64.deb"
       format="deb";;
     2.2.11)
-      url="http://sphinxsearch.com/files/sphinxsearch_2.2.11-release-1~trusty_amd64.deb"
+      url="http://sphinxsearch.com/files/sphinxsearch_2.2.11-release-1~xenial_amd64.deb"
       format="deb";;
     3.0.3)
       url="http://sphinxsearch.com/files/sphinx-3.0.3-facc3fb-linux-amd64.tar.gz"
