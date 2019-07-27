@@ -21,6 +21,9 @@ before_script:
 - sudo ls -al /var/lib/mysql-files
 - sudo chmod 666 /var/lib/mysql-files
 - sudo ls -al /var/lib/mysql-files
+- pwd
+- whoami
+- sudo mysql_config
 - sudo ls -al /etc/my.cnf
 - sudo cat /etc/my.cnf
 - killall searchd; echo ''
