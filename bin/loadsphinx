@@ -4,6 +4,8 @@ version=$1
 engine=$2
 
 load_sphinx () {
+  trusty="false"
+
   case $version in
     2.1.9)
       url="http://sphinxsearch.com/files/sphinxsearch_2.1.9-release-0ubuntu11~trusty_amd64.deb"

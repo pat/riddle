@@ -76,7 +76,7 @@ class Sphinx
   def start
     return if running?
 
-    `#{bin_path}searchd --config #{fixtures_path}/sphinx/spec.conf`
+    puts `#{bin_path}searchd --config #{fixtures_path}/sphinx/spec.conf`
 
     sleep(1)
 
