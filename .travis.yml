@@ -25,6 +25,8 @@ addons:
     - cmake
     - bison
     - flex
+services:
+  - mysql
 before_install:
 - pip install --upgrade --user awscli
 - gem update --system
