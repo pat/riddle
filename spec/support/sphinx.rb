@@ -17,6 +17,8 @@ else
 end
 
 class Sphinx
+  TEMP_PATH = "#{Dir.pwd}/tmp"
+
   attr_accessor :host, :username, :password
 
   def initialize
@@ -119,7 +121,9 @@ class Sphinx
   end
 
   def sql_file(name, &block)
-    file = Tempfile.new(name, ENV["MYSQL_FILE_PATH"])
+    FileUtils.mkdir_p TEMP_PATH
+
+    file = Tempfile.new(name, TEMP_PATH)
     file.write File.read("#{fixtures_path}/sql/#{name}")
     `chmod +r #{file.path}`
     file.flush

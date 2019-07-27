@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+sudo tee -a /etc/mysql/mysql.conf.d/load_file >/dev/null <<MYSQL
+[mysqld]
+secure_file_priv = `pwd`/tmp
+MYSQL
+
+sudo systemctl restart mysql

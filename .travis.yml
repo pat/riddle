@@ -8,7 +8,6 @@ rvm:
 env:
   global:
   - SPHINX_BIN=ext/sphinx/bin/
-  - MYSQL_FILE_PATH=/var/lib/mysql-files
   - secure: aP3wCZnnqim/yBWbO8+N2DAJIDVuqewUayK3nBphR/Jt1POIMbqCIuHwk/SG/JfMc6pJIlH0QOX8wI3fF3y5GO6aIrN8xKAX0DoDm+Gkvk/YEk3cK/2fJUwvocR89M99EoV8ctLPaR03B3dm3h2Dh2oe8NQRBfcrL3WtiHHq3d0=
   matrix:
   # - SPHINX_VERSION=2.0.10 SPHINX_ENGINE=sphinx
@@ -18,15 +17,6 @@ env:
   # - SPHINX_VERSION=2.6.3 SPHINX_ENGINE=manticore
   # - SPHINX_VERSION=2.7.5 SPHINX_ENGINE=manticore
 before_script:
-- sudo ls -al /var/lib/mysql-files
-- sudo chmod 666 /var/lib/mysql-files
-- sudo ls -al /var/lib/mysql-files
-- pwd
-- whoami
-- sudo ps aux | grep mysqld
-- sudo cat /lib/systemd/system/mysql.service
-- sudo ls -al /etc/mysql/my.cnf
-- sudo cat /etc/mysql/my.cnf
 - killall searchd; echo ''
 - "./bin/loadsphinx $SPHINX_VERSION $SPHINX_ENGINE"
 addons:
@@ -38,10 +28,7 @@ addons:
 services:
   - mysql
 before_install:
-- sudo ls -al /etc/mysql/mysql.conf.d
-- sudo ls -al /etc/mysql/conf.d
-- sudo cat /etc/mysql/mysql.conf.d/*
-- sudo cat /etc/mysql/conf.d/*
+- "./bin/configure_mysql"
 - pip install --upgrade --user awscli
 - gem update --system
 after_script:
