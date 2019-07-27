@@ -9,6 +9,7 @@ MYSQL
 
 sudo cat /etc/mysql/mysql.conf.d/load_file.cnf
 mkdir -p `pwd`/tmp
+chmod 666 `pwd`/tmp
 
 echo "STOPPING"
 sudo systemctl stop mysql
