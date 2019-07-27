@@ -14,7 +14,7 @@ echo "STOPPING"
 sudo systemctl stop mysql
 echo "STARTING"
 # sudo systemctl start mysql
-/usr/sbin/mysqld
+sudo -H -u mysql /usr/sbin/mysqld
 echo "STATUS"
 sudo systemctl status mysql.service
 # echo "JOURNAL"
