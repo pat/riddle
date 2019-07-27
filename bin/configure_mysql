@@ -7,6 +7,8 @@ sudo tee -a /etc/mysql/mysql.conf.d/load_file.cnf >/dev/null <<MYSQL
 secure_file_priv = `pwd`/tmp
 MYSQL
 
+sudo cat /etc/mysql/mysql.conf.d/load_file.cnf
+
 sudo systemctl restart mysql
 
 mysql -e 'SHOW VARIABLES LIKE "secure_file_priv";'
