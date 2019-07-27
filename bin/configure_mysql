@@ -11,6 +11,11 @@ sudo cat /etc/mysql/mysql.conf.d/load_file.cnf
 mkdir -p `pwd`/tmp
 
 sudo systemctl restart mysql
+echo "STATUS"
+systemctl status mysql.service
+echo "JOURNAL"
+journalctl -xe
+echo "LOG"
 sudo tail -n 100 /var/log/mysql/error.log
 
 mysql -e 'SHOW VARIABLES LIKE "secure_file_priv";'
