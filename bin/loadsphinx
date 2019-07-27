@@ -6,13 +6,13 @@ engine=$2
 set -e
 
 load_sphinx () {
-  # distro="xenial"
+  distro="xenial"
 
   case $version in
     2.1.9)
       url="http://sphinxsearch.com/files/sphinxsearch_2.1.9-release-0ubuntu11~trusty_amd64.deb"
-      format="deb";;
-      # distro="trusty";;
+      format="deb"
+      distro="trusty";;
     2.2.11)
       url="http://sphinxsearch.com/files/sphinxsearch_2.2.11-release-1~xenial_amd64.deb"
       format="deb";;
@@ -27,10 +27,10 @@ load_sphinx () {
       exit 1;;
   esac
 
-  # if [ "$distro" == "trusty" ]; then
-  #   curl --location http://launchpadlibrarian.net/247512886/libmysqlclient18_5.6.28-1ubuntu3_amd64.deb -o libmysql.deb
-  #   sudo apt-get install ./libmysql.deb
-  # fi
+  if [ "$distro" == "trusty" ]; then
+    curl --location http://launchpadlibrarian.net/247512886/libmysqlclient18_5.6.28-1ubuntu3_amd64.deb -o libmysql.deb
+    sudo apt-get install ./libmysql.deb
+  fi
 
   if [ "$format" == "deb" ]; then
     curl --location $url -o sphinx.deb

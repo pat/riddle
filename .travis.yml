@@ -20,6 +20,10 @@ env:
 before_script:
 - killall searchd; echo ''
 - "./bin/loadsphinx $SPHINX_VERSION $SPHINX_ENGINE"
+addons:
+  apt:
+    packages:
+    - libodbc1
 services:
   - mysql
 before_install:
