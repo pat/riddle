@@ -8,6 +8,7 @@ secure_file_priv = `pwd`/tmp
 MYSQL
 
 sudo cat /etc/mysql/mysql.conf.d/load_file.cnf
+mkdir -p `pwd`/tmp
 
 sudo systemctl restart mysql
 
