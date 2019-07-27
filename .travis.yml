@@ -18,7 +18,8 @@ env:
   # - SPHINX_VERSION=2.6.3 SPHINX_ENGINE=manticore
   # - SPHINX_VERSION=2.7.5 SPHINX_ENGINE=manticore
 before_script:
-- ls -al /var/lib/mysql-files
+- sudo ls -al /var/lib/mysql-files
+- sudo chmod 666 /var/lib/mysql-files
 - killall searchd; echo ''
 - "./bin/loadsphinx $SPHINX_VERSION $SPHINX_ENGINE"
 addons:
