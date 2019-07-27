@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 
+set -e
+
 sudo tee -a /etc/mysql/mysql.conf.d/load_file >/dev/null <<MYSQL
 [mysqld]
 secure_file_priv = `pwd`/tmp
 MYSQL
 
 sudo systemctl restart mysql
+
+mysql -e 'SHOW VARIABLES LIKE "secure_file_priv";'
