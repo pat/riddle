@@ -25,6 +25,7 @@ addons:
     - cmake
     - bison
     - flex
+    - libmysqlclient-dev
 services:
   - mysql
 before_install:
