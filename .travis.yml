@@ -38,6 +38,10 @@ addons:
 services:
   - mysql
 before_install:
+- sudo ls -al /etc/mysql/mysql.conf.d
+- sudo ls -al /etc/mysql/conf.d
+- sudo cat /etc/mysql/mysql.conf.d/*
+- sudo cat /etc/mysql/conf.d/*
 - pip install --upgrade --user awscli
 - gem update --system
 after_script:
