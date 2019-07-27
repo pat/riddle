@@ -20,6 +20,7 @@ env:
 before_script:
 - sudo ls -al /var/lib/mysql-files
 - sudo chmod 666 /var/lib/mysql-files
+- ls -al /var/lib/mysql-files
 - killall searchd; echo ''
 - "./bin/loadsphinx $SPHINX_VERSION $SPHINX_ENGINE"
 addons:
