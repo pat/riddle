@@ -5,7 +5,7 @@ $:.push File.expand_path('../lib', __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = 'riddle'
-  s.version     = '2.3.2'
+  s.version     = '2.4.0'
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Pat Allan']
   s.email       = ['pat@freelancing-gods.com']
@@ -13,8 +13,6 @@ Gem::Specification.new do |s|
   s.summary     = %q{An API for Sphinx, written in and for Ruby.}
   s.description = %q{A Ruby API and configuration helper for the Sphinx search service.}
   s.license     = 'MIT'
-
-  s.rubyforge_project = 'riddle'
 
   s.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   s.require_paths = ['lib']

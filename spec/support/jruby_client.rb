@@ -6,6 +6,8 @@ class JRubyClient
     properties = Java::JavaUtil::Properties.new
     properties.setProperty "user", username     if username
     properties.setProperty "password", password if password
+    properties.setProperty "useSSL", "false"
+    properties.setProperty "allowLoadLocalInfile", "true"
 
     @client = Java::ComMysqlJdbc::Driver.new.connect address, properties
   end
