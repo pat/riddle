@@ -1,3 +1,10 @@
+2.4.0 - July 28th 2019
+- Escape slashes and single quotes for attribute and field values in INSERT/REPLACE statements, rather than removing them (#103).
+- Remove support for Sphinx 2.0.
+- Add Manticore 2.7 and 2.8.
+- Test suite improvements.
+- Gemspec improvements (Olle Jonsson #105)
+
 2.3.2 - September 23rd 2018
 - Fix attempt to modify a frozen string when generating configuration.
 - Test against Manticore 2.6.3.
