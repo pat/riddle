@@ -69,6 +69,10 @@ class Riddle::Configuration::Parser
   end
 
   def set_common
+    if inner['common'] && inner['common'].values.compact.any?
+      configuration.common.common_sphinx_configuration = true
+    end
+
     set_settings configuration.common, inner['common'] || {}
   end
 
