@@ -1,3 +1,6 @@
+2.4.2 - April 4th 2020
+- Ensure parsing of files with a common section are rendered the same way.
+
 2.4.1 - January 4th 2020
 - Fix typo of stopword_step setting.
 
