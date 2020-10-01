@@ -2,7 +2,7 @@
 - Ensure parsing of files with a common section are rendered the same way.
 
 2.4.1 - January 4th 2020
-- Fix typo of stopword_step setting.
+- Fix type of stopword_step setting.
 
 2.4.0 - July 28th 2019
 - Escape slashes and single quotes for attribute and field values in INSERT/REPLACE statements, rather than removing them (#103).
