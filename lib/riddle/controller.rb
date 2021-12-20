@@ -18,7 +18,7 @@ module Riddle
     end
 
     def sphinx_version
-      `#{indexer} 2>&1`[/Sphinx (\d+\.\d+(\.\d+|(?:-dev|(\-id64)?\-beta)))/, 1]
+      `#{indexer} 2>&1`[/(Sphinx|Manticore) (\d+\.\d+(\.\d+|(?:-dev|(\-id64)?\-beta)))/, 2]
     rescue
       nil
     end
