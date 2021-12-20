@@ -150,7 +150,7 @@ The `:fields` and `:attribute_names` keys return list of fields and attributes f
 
 Please note that this project has a [Contributor Code of Conduct](http://contributor-covenant.org/version/1/0/0/). By participating in this project you agree to abide by its terms.
 
-Riddle uses the [git-flow](http://jeffkreeftmeijer.com/2010/why-arent-you-using-git-flow/) process for development. The `master` branch is the latest released code (in a gem). The `develop` branch is what's coming in the next release. (There may be occasional feature and hotfix branches, although these are generally not pushed to GitHub.)
+Riddle uses the [git-flow](http://jeffkreeftmeijer.com/2010/why-arent-you-using-git-flow/) process for development. The `main` branch is the latest released code (in a gem). The `develop` branch is what's coming in the next release. (There may be occasional feature and hotfix branches, although these are generally not pushed to GitHub.)
 
 When submitting a patch to Riddle, please submit your pull request against the `develop` branch.
 
