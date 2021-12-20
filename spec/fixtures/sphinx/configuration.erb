@@ -8,7 +8,7 @@ searchd
   <% if Riddle.loaded_version.to_f < 0.9 %>
   port          = 9313
   <% else %>
-  listen        = 9313
+  listen        = 9313:sphinx
   listen        = 9306:mysql41
   <% end %>
   log           = <%= fixtures_path %>/sphinx/searchd.log
@@ -30,17 +30,23 @@ source peoples
 
   sql_query           = SELECT id, first_name, middle_initial, last_name, gender, street_address, city, state, postcode, email, UNIX_TIMESTAMP(birthday) AS birthday FROM people WHERE id >= $start AND id <= $end
   sql_query_range     = SELECT MIN(id), MAX(id) FROM people
+  <% if ENV["SPHINX_VERSION"].to_i < 3 %>
   sql_query_info      = SELECT * FROM people WHERE id = $id
   sql_attr_timestamp  = birthday
+  <% else %>
+  sql_attr_uint  = birthday
+  <% end %>
 }
 
 index people
 {
   source          = peoples
-  morphology      = stem_en
   path            = <%= fixtures_path %>/sphinx/people
+  <% if ENV["SPHINX_VERSION"].to_i < 3 %>
+  morphology      = stem_en
   charset_type    = utf-8
   enable_star     = 1
+  <% end %>
   min_prefix_len  = 1
 }
 
@@ -54,14 +60,20 @@ source article_core_source
 
   sql_query           = SELECT id, title, 0 AS deleted FROM articles WHERE id >= $start AND id <= $end AND delta = 0
   sql_query_range     = SELECT MIN(id), MAX(id) FROM articles
+  <% if ENV["SPHINX_VERSION"].to_i < 3 %>
   sql_attr_timestamp  = deleted
+  <% else %>
+  sql_attr_uint  = deleted
+  <% end %>
 }
 
 index article_core
 {
   source       = article_core_source
   path         = <%= fixtures_path %>/sphinx/article_core
+  <% if ENV["SPHINX_VERSION"].to_i < 3 %>
   charset_type = utf-8
+  <% end %>
 }
 
 source article_delta_source
@@ -74,12 +86,18 @@ source article_delta_source
 
   sql_query           = SELECT id, title, 0 AS deleted FROM articles WHERE id >= $start AND id <= $end AND delta = 1
   sql_query_range     = SELECT MIN(id), MAX(id) FROM articles
+  <% if ENV["SPHINX_VERSION"].to_i < 3 %>
   sql_attr_timestamp  = deleted
+  <% else %>
+  sql_attr_uint  = deleted
+  <% end %>
 }
 
 index article_delta
 {
   source       = article_delta_source
   path         = <%= fixtures_path %>/sphinx/article_delta
+  <% if ENV["SPHINX_VERSION"].to_i < 3 %>
   charset_type = utf-8
+  <% end %>
 }

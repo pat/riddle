@@ -2,7 +2,7 @@
 
 module BinaryFixtures
   def self.build_fixtures(version = nil)
-    return if ENV['TRAVIS']
+    return if ENV['CI']
 
     version ||= %w(0.9.9 1.10 2.0.1 2.1.0)
     Array(version).each do |version|

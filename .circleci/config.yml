@@ -1,0 +1,117 @@
+version: 2.1
+
+orbs:
+  ruby: circleci/ruby@1.0
+
+workflows:
+  test:
+    jobs:
+      - test:
+          name: "Sphinx 2.2"
+          sphinx_version: 2.2.11
+          sphinx_engine: sphinx
+          debian: jessie
+          ruby: '2.4.6'
+      - test:
+          name: "Sphinx 3.4"
+          sphinx_version: 3.4.1
+          sphinx_engine: sphinx
+          debian: buster
+          matrix:
+            parameters:
+              ruby: [ '2.4.10', '2.5.9', '2.6.9', '2.7.5', '3.0.3' ]
+      - test:
+          name: "Manticore 3.5"
+          sphinx_version: 3.5.4
+          sphinx_engine: manticore
+          debian: buster
+          matrix:
+            parameters:
+              ruby: [ '2.4.10', '2.5.9', '2.6.9', '2.7.5', '3.0.3' ]
+      - test:
+          name: "Manticore 4.0"
+          sphinx_version: 4.0.2
+          sphinx_engine: manticore
+          debian: buster
+          matrix:
+            parameters:
+              ruby: [ '2.4.10', '2.5.9', '2.6.9', '2.7.5', '3.0.3' ]
+
+jobs:
+  test:
+    parameters:
+      ruby:
+        type: string
+      sphinx_version:
+        type: string
+      sphinx_engine:
+        type: string
+      debian:
+        type: string
+
+    docker:
+      - image: circleci/ruby:<< parameters.ruby >>-<< parameters.debian >>
+
+      - image: circleci/mysql:5.7
+        environment:
+          MYSQL_ROOT_PASSWORD: riddle
+          MYSQL_DATABASE: riddle
+
+    working_directory: ~/app
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-<< parameters.ruby >>
+
+      - run:
+          name: install bundler
+          command: |
+            if [ "<< parameters.ruby >>" == "2.7.5" ]; then
+              export BUNDLER_VERSION=2.1.4
+            elif [ "<< parameters.ruby >>" == "3.0.3" ]; then
+              export BUNDLER_VERSION=2.1.4
+            else
+              export BUNDLER_VERSION=1.17.3
+            fi
+            export BUNDLE_PATH=vendor/bundle
+            gem install bundler:$BUNDLER_VERSION
+
+      - run:
+          name: install dependencies
+          command: |
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+            bundle update
+
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: v1-dependencies-<< parameters.ruby >>
+
+      - run:
+          name: set up sphinx
+          command: "./bin/loadsphinx << parameters.sphinx_version >> << parameters.sphinx_engine >>"
+
+      - run:
+          name: wait for MySQL to be ready
+          command: |
+            for i in `seq 1 10`;
+            do
+              nc -z 127.0.0.1 3306 && echo Success && exit 0
+              echo -n .
+              sleep 1
+            done
+            echo Failed waiting for MySQL && exit 1
+
+      - run:
+          name: tests
+          environment:
+            CI: "true"
+            MYSQL_HOST: 127.0.0.1
+            MYSQL_USER: root
+            MYSQL_PASSWORD: riddle
+            SPHINX_VERSION: << parameters.sphinx_version >>
+            SPHINX_ENGINE: << parameters.sphinx_engine >>
+          command: bundle exec rspec
