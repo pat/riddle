@@ -100,7 +100,7 @@ class Sphinx
   end
 
   def pid
-    if File.exists?("#{fixtures_path}/sphinx/searchd.pid")
+    if File.exist?("#{fixtures_path}/sphinx/searchd.pid")
       `cat #{fixtures_path}/sphinx/searchd.pid`[/\d+/]
     else
       nil

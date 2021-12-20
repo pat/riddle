@@ -74,7 +74,7 @@ module Riddle
     end
 
     def pid
-      if File.exists?(configuration.searchd.pid_file)
+      if File.exist?(configuration.searchd.pid_file)
         File.read(configuration.searchd.pid_file)[/\d+/]
       else
         nil
