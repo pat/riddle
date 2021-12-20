@@ -14,9 +14,9 @@ class Sphinx
   attr_accessor :host, :username, :password
 
   def initialize
-    self.host     = 'localhost'
-    self.username = 'root'
-    self.password = ''
+    self.host     = ENV['MYSQL_HOST'] || 'localhost'
+    self.username = ENV['MYSQL_USER'] || 'root'
+    self.password = ENV['MYSQL_PASSWORD'] || ''
 
     if File.exist?('spec/fixtures/sql/conf.yml')
       config    = YAML.load(File.open('spec/fixtures/sql/conf.yml'))
