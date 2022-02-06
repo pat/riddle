@@ -20,8 +20,6 @@ RSpec.configure do |config|
   sphinx.generate_configuration
   sphinx.index
 
-  BinaryFixtures.build_fixtures Riddle.loaded_version
-
   config.before :all do |group|
     sphinx.start if group.class.metadata[:live]
   end
