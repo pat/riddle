@@ -4,3 +4,5 @@
 *.tmproj
 coverage
 Gemfile.lock
+.overmind.env
+data
