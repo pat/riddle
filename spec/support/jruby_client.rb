@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 class JRubyClient
-  def initialize(host, username, password)
+  def initialize(host, username, password, port)
     address    = "jdbc:mysql://#{host}"
     properties = Java::JavaUtil::Properties.new
     properties.setProperty "user", username     if username
     properties.setProperty "password", password if password
+    properties.setProperty "port", port if port
     properties.setProperty "useSSL", "false"
     properties.setProperty "allowLoadLocalInfile", "true"
 
