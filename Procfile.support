@@ -1,0 +1,1 @@
+mysql: $(brew --prefix mysql@5.7)/bin/mysqld --datadir=$(PWD)/data/mysql --port ${MYSQL_PORT:-3306} --socket=mysql.sock

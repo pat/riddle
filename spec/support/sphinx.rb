@@ -11,18 +11,20 @@ if RUBY_PLATFORM == 'java'
 end
 
 class Sphinx
-  attr_accessor :host, :username, :password
+  attr_accessor :host, :username, :password, :port
 
   def initialize
     self.host     = ENV['MYSQL_HOST'] || 'localhost'
     self.username = ENV['MYSQL_USER'] || 'root'
     self.password = ENV['MYSQL_PASSWORD'] || ''
+    self.port     = ENV['MYSQL_PORT'] || nil
 
     if File.exist?('spec/fixtures/sql/conf.yml')
       config    = YAML.load(File.open('spec/fixtures/sql/conf.yml'))
       self.host     = config['host']
       self.username = config['username']
       self.password = config['password']
+      self.port     = config['port']
     end
   end
 
@@ -52,9 +54,9 @@ class Sphinx
 
   def mysql_client
     @mysql_client ||= if RUBY_PLATFORM == 'java'
-      JRubyClient.new host, username, password
+      JRubyClient.new host, username, password, port
     else
-      MRIClient.new host, username, password
+      MRIClient.new host, username, password, port
     end
   end
 

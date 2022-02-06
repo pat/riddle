@@ -26,6 +26,7 @@ source peoples
   sql_host  = <%= host %>
   sql_user  = <%= username %>
   sql_pass  = <%= password %>
+  sql_port  = <%= port %>
   sql_db    = riddle
 
   sql_query           = SELECT id, first_name, middle_initial, last_name, gender, street_address, city, state, postcode, email, UNIX_TIMESTAMP(birthday) AS birthday FROM people WHERE id >= $start AND id <= $end
@@ -56,6 +57,7 @@ source article_core_source
   sql_host  = <%= host %>
   sql_user  = <%= username %>
   sql_pass  = <%= password %>
+  sql_port  = <%= port %>
   sql_db    = riddle
 
   sql_query           = SELECT id, title, 0 AS deleted FROM articles WHERE id >= $start AND id <= $end AND delta = 0
@@ -82,6 +84,7 @@ source article_delta_source
   sql_host  = <%= host %>
   sql_user  = <%= username %>
   sql_pass  = <%= password %>
+  sql_port  = <%= port %>
   sql_db    = riddle
 
   sql_query           = SELECT id, title, 0 AS deleted FROM articles WHERE id >= $start AND id <= $end AND delta = 1
