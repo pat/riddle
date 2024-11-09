@@ -18,7 +18,7 @@ Or include it in a Gemfile:
 
 ## Usage
 
-As of version 1.0.0, Riddle supports multiple versions of Sphinx in the one gem - you'll need to require your specific version after a normal require, though. The latest distinct version is `2.1.0`:
+As of version `1.0.0`, Riddle supports multiple versions of Sphinx in the one gem - you'll need to require your specific version after a normal require, though. The latest distinct version is `2.1.0`:
 
 	require 'riddle'
 	require 'riddle/2.1.0'
