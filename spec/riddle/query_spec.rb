@@ -5,17 +5,27 @@ require 'spec_helper'
 describe Riddle::Query, :live => true do
   describe '.connection' do
     let(:connection) { Riddle::Query.connection 'localhost', 9306 }
+    let(:controller) { Riddle::Controller.new nil, '' }
 
     it "returns a MySQL Client" do
       connection.should be_a(Mysql2::Client)
     end
 
     it "should handle search requests" do
-      connection.query(Riddle::Query.tables).to_a.should match_array([
-        {'Index' => 'people', 'Type' => 'local'},
-        {'Index' => 'article_core', 'Type' => 'local'},
-        {'Index' => 'article_delta', 'Type' => 'local'}
-      ])
+
+      if controller.sphinx_version.to_i >= 3
+        connection.query(Riddle::Query.tables).to_a.should match_array([
+          {'Table' => 'people', 'Type' => 'local'},
+          {'Table' => 'article_core', 'Type' => 'local'},
+          {'Table' => 'article_delta', 'Type' => 'local'}
+        ])
+      else
+        connection.query(Riddle::Query.tables).to_a.should match_array([
+          {'Index' => 'people', 'Type' => 'local'},
+          {'Index' => 'article_core', 'Type' => 'local'},
+          {'Index' => 'article_delta', 'Type' => 'local'}
+        ])
+      end
     end
   end
 end unless RUBY_PLATFORM == 'java' || Riddle.loaded_version.to_i < 2
