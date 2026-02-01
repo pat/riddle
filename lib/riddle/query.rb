@@ -4,7 +4,7 @@ module Riddle::Query
   ESCAPE_CHARACTERS = /[\(\)\|\-!@~\/"\/\^\$\\><&=\?]/
   # http://sphinxsearch.com/docs/current/extended-syntax.html
   ESCAPE_WORDS = /\b(?:MAYBE|NEAR|PARAGRAPH|SENTENCE|ZONE|ZONESPAN)\b/
-  MYSQL2_ESCAPE = defined?(Mysql2) && defined?(Mysql::Client)
+  MYSQL2_ESCAPE = defined?(Mysql2) && defined?(Mysql2::Client)
 
   def self.connection(address = '127.0.0.1', port = 9312)
     require 'mysql2'
