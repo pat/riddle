@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe "Merging indices", :live => true do
-  let(:connection) { Mysql2::Client.new :host => '127.0.0.1', :port => 9306 }
+  let(:connection) { Riddle::SQLClient.connection '127.0.0.1', 9306 }
   let(:path)       { "spec/fixtures/sphinx/spec.conf" }
   let(:configuration) do
     Riddle::Configuration::Parser.new(File.read(path)).parse!

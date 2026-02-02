@@ -57,6 +57,8 @@ class Sphinx
   def mysql_client
     @mysql_client ||= if RUBY_PLATFORM == 'java'
       JRubyClient.new host, username, password, port
+    elsif ENV['SPHINX_SQL_ADAPTER'] == 'trilogy'
+      TrilogyClient.new host, username, password, port
     else
       MRIClient.new host, username, password, port
     end

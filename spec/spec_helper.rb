@@ -12,6 +12,11 @@ Bundler.require :default, :development
 
 require 'riddle'
 
+if ENV['SPHINX_SQL_ADAPTER']
+  require "riddle/sql_client"
+  Riddle::SQLClient.default_adapter = ENV['SPHINX_SQL_ADAPTER']
+end
+
 RSpec.configure do |config|
   config.include BinaryFixtures
 

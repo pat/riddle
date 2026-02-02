@@ -7,12 +7,11 @@ describe Riddle::Query, :live => true do
     let(:connection) { Riddle::Query.connection 'localhost', 9306 }
     let(:controller) { Riddle::Controller.new nil, '' }
 
-    it "returns a MySQL Client" do
-      expect(connection).to be_a(Mysql2::Client)
+    it "returns a MySQL-compatible client" do
+      expect(connection).to be_a(Mysql2::Client).or be_a(Trilogy)
     end
 
     it "should handle search requests" do
-
       if controller.sphinx_version.to_i >= 5
         expect(connection.query(Riddle::Query.tables).to_a).to match_array([
           {'Table' => 'people', 'Type' => 'local'},

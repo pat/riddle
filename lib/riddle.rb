@@ -77,6 +77,7 @@ require 'riddle/configuration'
 require 'riddle/controller'
 require 'riddle/execute_command'
 require 'riddle/query'
+require 'riddle/sql_client'
 
 Riddle.loaded_version = nil
 Riddle::AutoVersion.configure
