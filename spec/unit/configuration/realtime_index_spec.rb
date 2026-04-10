@@ -9,31 +9,31 @@ describe Riddle::Configuration::RealtimeIndex do
     it "should not be valid without a name" do
       index.name = nil
       index.path = 'foo'
-      index.should_not be_valid
+      expect(index).not_to be_valid
     end
 
     it "should not be valid without a path" do
       index.path = nil
-      index.should_not be_valid
+      expect(index).not_to be_valid
     end
 
     it "should be valid with a name and path" do
       index.path = 'foo'
-      index.should be_valid
+      expect(index).to be_valid
     end
   end
 
   describe '#type' do
     it "should be 'rt'" do
-      index.type.should == 'rt'
+      expect(index.type).to eq('rt')
     end
   end
 
   describe '#render' do
     it "should raise a ConfigurationError if rendering when not valid" do
-      lambda {
+      expect {
         index.render
-      }.should raise_error(Riddle::Configuration::ConfigurationError)
+      }.to raise_error(Riddle::Configuration::ConfigurationError)
     end
 
     it "should render correctly if supplied settings are valid" do
@@ -47,7 +47,7 @@ describe Riddle::Configuration::RealtimeIndex do
       index.rt_attr_timestamp << 'ts_added'
       index.rt_attr_string    << 'author'
 
-      index.render.should == <<-RTINDEX
+      expect(index.render).to eq <<-RTINDEX
 index rt1
 {
   type = rt

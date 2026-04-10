@@ -13,14 +13,14 @@ describe Riddle do
     end
     
     it "should do nothing if there is a Sphinx version loaded" do
-      STDERR.should_not_receive(:puts)
+      expect(STDERR).not_to receive(:puts)
       
       Riddle.loaded_version = '0.9.8'
       Riddle.version_warning
     end
     
     it "should output a warning if no version is loaded" do
-      STDERR.should_receive(:puts)
+      expect(STDERR).to receive(:puts)
       
       Riddle.loaded_version = nil
       Riddle.version_warning

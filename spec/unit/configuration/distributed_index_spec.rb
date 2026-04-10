@@ -5,29 +5,29 @@ require 'spec_helper'
 describe Riddle::Configuration::DistributedIndex do
   it "should not be valid without any indices" do
     index = Riddle::Configuration::DistributedIndex.new("dist1")
-    index.should_not be_valid
+    expect(index).not_to be_valid
   end
 
   it "should be valid with just local indices" do
     index = Riddle::Configuration::DistributedIndex.new("dist1")
     index.local_indices << "local_one"
-    index.should be_valid
+    expect(index).to be_valid
   end
 
   it "should be valid with just remote indices" do
     index = Riddle::Configuration::DistributedIndex.new("dist1")
     index.remote_indices << Riddle::Configuration::RemoteIndex.new("local", 3312, "remote_one")
-    index.should be_valid
+    expect(index).to be_valid
   end
 
   it "should be of type 'distributed'" do
     index = Riddle::Configuration::DistributedIndex.new("dist1")
-    index.type.should == 'distributed'
+    expect(index.type).to eq('distributed')
   end
 
   it "should raise a ConfigurationError if rendering when not valid" do
     index = Riddle::Configuration::DistributedIndex.new("dist1")
-    lambda { index.render }.should raise_error(Riddle::Configuration::ConfigurationError)
+    expect { index.render }.to raise_error(Riddle::Configuration::ConfigurationError)
   end
 
   it "should render correctly if supplied settings are valid" do
@@ -43,7 +43,7 @@ describe Riddle::Configuration::DistributedIndex do
     index.agent_connect_timeout = 1000
     index.agent_query_timeout   = 3000
 
-    index.render.should == <<-DISTINDEX
+    expect(index.render).to eq <<-DISTINDEX
 index dist1
 {
   type = distributed

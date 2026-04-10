@@ -18,13 +18,13 @@ describe "Sphinx Excepts", :live => true do
     )
 
     if controller.sphinx_version.to_i >= 3
-      excerpts.should == [
+      expect(excerpts).to eq([
         '<span class="match">Mary, Mary</span>, quite contrary.'
-      ]
+      ])
     else
-      excerpts.should == [
+      expect(excerpts).to eq([
         '<span class="match">Mary</span>, <span class="match">Mary</span>, quite contrary.'
-      ]
+      ])
     end
   end
 
@@ -38,13 +38,13 @@ describe "Sphinx Excepts", :live => true do
     )
 
     if controller.sphinx_version.to_i >= 3
-      excerpts.should == [
+      expect(excerpts).to eq([
         "<em>Mary, Mary</em>, quite contrary."
-      ]
+      ])
     else
-      excerpts.should == [
+      expect(excerpts).to eq([
         "<em>Mary</em>, <em>Mary</em>, quite contrary."
-      ]
+      ])
     end
   end
 
@@ -70,7 +70,7 @@ not. It's just my name: Pat.
 
     case Riddle.loaded_version
     when '0.9.9'
-      excerpts.should == [
+      expect(excerpts).to eq [
         <<-SENTENCE
 This is a really long sentence written by <em>Pat</em>. It has to be over 256
 characters long, between keywords. But what is the  &#8230; 're really interested in finding out,
@@ -79,11 +79,11 @@ not. It's just my name: <em>Pat</em>.
         SENTENCE
       ]
     when '1.10'
-      excerpts.should == [" &#8230;  really long sentence written by <em>Pat</em>. It has to be over &#8230; . This keyword, however, is\nnot. It's just my name: <em>Pat</em> &#8230; "]
+      expect(excerpts).to eq([" &#8230;  really long sentence written by <em>Pat</em>. It has to be over &#8230; . This keyword, however, is\nnot. It's just my name: <em>Pat</em> &#8230; "])
     when '2.0.1', '2.1.0'
-      excerpts.should == [" &#8230;  really long sentence written by <em>Pat</em>. It has to be over &#8230; . It's just my name: <em>Pat</em>.\n"]
+      expect(excerpts).to eq([" &#8230;  really long sentence written by <em>Pat</em>. It has to be over &#8230; . It's just my name: <em>Pat</em>.\n"])
     else
-      excerpts.should == [
+      expect(excerpts).to eq [
         <<-SENTENCE
 This is a really long sentence written by <em>Pat</em>. It has to be over 256
 characters long, between keywords. But what is the keyword?  &#8230;  interested in finding out,
@@ -117,7 +117,7 @@ not. It's just my name: Pat.
 
     case Riddle.loaded_version
     when '0.9.9'
-      excerpts.should == [
+      expect(excerpts).to eq [
         <<-SENTENCE
 This is a really long sentence written by <em>Pat</em>. It has to be over 256
 characters long, between keywords. But what is the  --- 're really interested in finding out,
@@ -126,11 +126,11 @@ not. It's just my name: <em>Pat</em>.
         SENTENCE
       ]
     when '1.10'
-      excerpts.should == [" ---  really long sentence written by <em>Pat</em>. It has to be over --- . This keyword, however, is\nnot. It's just my name: <em>Pat</em> --- "]
+      expect(excerpts).to eq([" ---  really long sentence written by <em>Pat</em>. It has to be over --- . This keyword, however, is\nnot. It's just my name: <em>Pat</em> --- "])
     when '2.0.1', '2.1.0'
-      excerpts.should == [" ---  really long sentence written by <em>Pat</em>. It has to be over --- . It's just my name: <em>Pat</em>.\n"]
+      expect(excerpts).to eq([" ---  really long sentence written by <em>Pat</em>. It has to be over --- . It's just my name: <em>Pat</em>.\n"])
     else
-      excerpts.should == [
+      expect(excerpts).to eq [
         <<-SENTENCE
 This is a really long sentence written by <em>Pat</em>. It has to be over 256
 characters long, between keywords. But what is the keyword?  ---  interested in finding out,
@@ -154,15 +154,15 @@ not. It's just my name: <em>Pat</em>.
     )
 
     if controller.sphinx_version.to_f >= 3
-      excerpts.should == [
+      expect(excerpts).to eq([
         "<em>Mary, Mary</em>, quite contrary.",
         "The epithet \"Bloody <em>Mary</em>\" is associated with a number of historical and fictional women, most notably Queen <em>Mary</em> I of England"
-      ]
+      ])
     else
-      excerpts.should == [
+      expect(excerpts).to eq([
         "<em>Mary</em>, <em>Mary</em>, quite contrary.",
         "The epithet \"Bloody <em>Mary</em>\" is associated with a number of historical and fictional women, most notably Queen <em>Mary</em> I of England"
-      ]
+      ])
     end
   end
 end

@@ -10,14 +10,14 @@ if Riddle.loaded_version == '0.9.9' || Riddle.loaded_version == '1.10'
     end
   
     it "should return a hash" do
-      @status.should be_a(Hash)
+      expect(@status).to be_a(Hash)
     end
   
     it "should include the uptime, connections, and command_search keys" do
       # Not checking all values, but ensuring keys are being set correctly
-      @status[:uptime].should_not be_nil
-      @status[:connections].should_not be_nil
-      @status[:command_search].should_not be_nil
+      expect(@status[:uptime]).not_to be_nil
+      expect(@status[:connections]).not_to be_nil
+      expect(@status[:command_search]).not_to be_nil
     end
   end
 end

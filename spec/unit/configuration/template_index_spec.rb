@@ -5,17 +5,17 @@ require 'spec_helper'
 describe Riddle::Configuration::TemplateIndex do
   it "should be invalid without a name" do
     index = Riddle::Configuration::TemplateIndex.new(nil)
-    index.should_not be_valid
+    expect(index).not_to be_valid
 
     index.name = "test1"
-    index.should be_valid
+    expect(index).to be_valid
   end
 
   it "should raise a ConfigurationError if rendering when not valid" do
     index = Riddle::Configuration::TemplateIndex.new(nil)
-    lambda {
+    expect {
       index.render
-    }.should raise_error(Riddle::Configuration::ConfigurationError)
+    }.to raise_error(Riddle::Configuration::ConfigurationError)
   end
 
   it "should render correctly if supplied settings are valid" do
@@ -52,7 +52,7 @@ describe Riddle::Configuration::TemplateIndex do
     index.inplace_write_factor      = 0.1
     index.index_exact_words         = 1
 
-    index.render.should == <<-INDEX
+    expect(index.render).to eq <<-INDEX
 index test1
 {
   type = template

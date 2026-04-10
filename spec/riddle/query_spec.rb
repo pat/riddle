@@ -8,19 +8,19 @@ describe Riddle::Query, :live => true do
     let(:controller) { Riddle::Controller.new nil, '' }
 
     it "returns a MySQL Client" do
-      connection.should be_a(Mysql2::Client)
+      expect(connection).to be_a(Mysql2::Client)
     end
 
     it "should handle search requests" do
 
       if controller.sphinx_version.to_i >= 3
-        connection.query(Riddle::Query.tables).to_a.should match_array([
+        expect(connection.query(Riddle::Query.tables).to_a).to match_array([
           {'Table' => 'people', 'Type' => 'local'},
           {'Table' => 'article_core', 'Type' => 'local'},
           {'Table' => 'article_delta', 'Type' => 'local'}
         ])
       else
-        connection.query(Riddle::Query.tables).to_a.should match_array([
+        expect(connection.query(Riddle::Query.tables).to_a).to match_array([
           {'Index' => 'people', 'Type' => 'local'},
           {'Index' => 'article_core', 'Type' => 'local'},
           {'Index' => 'article_delta', 'Type' => 'local'}
@@ -33,68 +33,68 @@ end unless RUBY_PLATFORM == 'java' || Riddle.loaded_version.to_i < 2
 describe Riddle::Query do
   describe '.set' do
     it 'handles a single value' do
-      Riddle::Query.set('foo', 'bar').should == 'SET GLOBAL foo = bar'
+      expect(Riddle::Query.set('foo', 'bar')).to eq('SET GLOBAL foo = bar')
     end
 
     it 'handles multiple values' do
-      Riddle::Query.set('foo', [1, 2, 3]).should == 'SET GLOBAL foo = (1, 2, 3)'
+      expect(Riddle::Query.set('foo', [1, 2, 3])).to eq('SET GLOBAL foo = (1, 2, 3)')
     end
 
     it 'handles non-global settings' do
-      Riddle::Query.set('foo', 'bar', false).should == 'SET foo = bar'
+      expect(Riddle::Query.set('foo', 'bar', false)).to eq('SET foo = bar')
     end
   end
 
   describe '.snippets' do
     it 'handles a basic request' do
-      Riddle::Query.snippets('foo bar baz', 'foo_core', 'foo').
-        should == "CALL SNIPPETS('foo bar baz', 'foo_core', 'foo')"
+      expect(Riddle::Query.snippets('foo bar baz', 'foo_core', 'foo')).
+        to eq("CALL SNIPPETS('foo bar baz', 'foo_core', 'foo')")
     end
 
     it 'handles a request with options' do
-      Riddle::Query.snippets('foo bar baz', 'foo_core', 'foo', :around => 5).
-        should == "CALL SNIPPETS('foo bar baz', 'foo_core', 'foo', 5 AS around)"
+      expect(Riddle::Query.snippets('foo bar baz', 'foo_core', 'foo', :around => 5)).
+        to eq("CALL SNIPPETS('foo bar baz', 'foo_core', 'foo', 5 AS around)")
     end
 
     it 'handles string options' do
-      Riddle::Query.snippets('foo bar baz', 'foo_core', 'foo',
-        :before_match => '<strong>').should == "CALL SNIPPETS('foo bar baz', 'foo_core', 'foo', '<strong>' AS before_match)"
+      expect(Riddle::Query.snippets('foo bar baz', 'foo_core', 'foo',
+        :before_match => '<strong>')).to eq("CALL SNIPPETS('foo bar baz', 'foo_core', 'foo', '<strong>' AS before_match)")
     end
 
     it "handles boolean options" do
-      Riddle::Query.snippets('foo bar baz', 'foo_core', 'foo',
-        :exact_phrase => true).should == "CALL SNIPPETS('foo bar baz', 'foo_core', 'foo', 1 AS exact_phrase)"
+      expect(Riddle::Query.snippets('foo bar baz', 'foo_core', 'foo',
+        :exact_phrase => true)).to eq("CALL SNIPPETS('foo bar baz', 'foo_core', 'foo', 1 AS exact_phrase)")
     end
 
     it "escapes quotes in the text data" do
-      Riddle::Query.snippets("foo bar 'baz", 'foo_core', 'foo').
-        should == "CALL SNIPPETS('foo bar \\'baz', 'foo_core', 'foo')"
+      expect(Riddle::Query.snippets("foo bar 'baz", 'foo_core', 'foo')).
+        to eq("CALL SNIPPETS('foo bar \\'baz', 'foo_core', 'foo')")
     end
 
     it "escapes quotes in the query data" do
-      Riddle::Query.snippets("foo bar baz", 'foo_core', "foo'").
-        should == "CALL SNIPPETS('foo bar baz', 'foo_core', 'foo\\'')"
+      expect(Riddle::Query.snippets("foo bar baz", 'foo_core', "foo'")).
+        to eq("CALL SNIPPETS('foo bar baz', 'foo_core', 'foo\\'')")
     end
   end
 
   describe '.create_function' do
     it 'handles a basic create request' do
-      Riddle::Query.create_function('foo', :bigint, 'foo.sh').
-        should == "CREATE FUNCTION foo RETURNS BIGINT SONAME 'foo.sh'"
+      expect(Riddle::Query.create_function('foo', :bigint, 'foo.sh')).
+        to eq("CREATE FUNCTION foo RETURNS BIGINT SONAME 'foo.sh'")
     end
   end
 
   describe '.update' do
     it 'handles a basic update request' do
-      Riddle::Query.update('foo_core', 5, :deleted => 1).
-        should == 'UPDATE foo_core SET deleted = 1 WHERE id = 5'
+      expect(Riddle::Query.update('foo_core', 5, :deleted => 1)).
+        to eq('UPDATE foo_core SET deleted = 1 WHERE id = 5')
     end
   end
 
   describe '.escape' do
     %w(( ) | - ! @ ~ / ^ $ " > < ?).each do |reserved|
       it "escapes #{reserved}" do
-        Riddle::Query.escape(reserved).should == "\\#{reserved}"
+        expect(Riddle::Query.escape(reserved)).to eq("\\#{reserved}")
       end
     end
 
@@ -102,10 +102,10 @@ describe Riddle::Query do
       operators = ['MAYBE', 'NEAR', 'PARAGRAPH', 'SENTENCE', 'ZONE', 'ZONESPAN']
       operators.each do |operator|
         base = "string with #{operator} operator"
-        Riddle::Query.escape(base).should == base.gsub(operator, "\\#{operator}")
+        expect(Riddle::Query.escape(base)).to eq(base.gsub(operator, "\\#{operator}"))
       end
 
-      Riddle::Query.escape("FIND THE ZONES").should == "FIND THE ZONES"
+      expect(Riddle::Query.escape("FIND THE ZONES")).to eq("FIND THE ZONES")
     end
   end
 end

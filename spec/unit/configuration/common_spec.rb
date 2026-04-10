@@ -5,7 +5,7 @@ require 'spec_helper'
 describe Riddle::Configuration::Common do
   it "should always be valid" do
     common = Riddle::Configuration::Common.new
-    common.should be_valid
+    expect(common).to be_valid
   end
   
   it "should support Sphinx's common settings" do
@@ -15,8 +15,8 @@ describe Riddle::Configuration::Common do
     common = Riddle::Configuration::Common.new
     
     settings.each do |setting|
-      common.should respond_to(setting.to_sym)
-      common.should respond_to("#{setting}=".to_sym)
+      expect(common).to respond_to(setting.to_sym)
+      expect(common).to respond_to("#{setting}=".to_sym)
     end
   end
 
@@ -24,14 +24,14 @@ describe Riddle::Configuration::Common do
     common = Riddle::Configuration::Common.new
     common.common_sphinx_configuration = true
 
-    common.render.should == <<-COMMON
+    expect(common.render).to eq <<-COMMON
 common
 {
 }
     COMMON
   
     common.lemmatizer_base = "/tmp"
-    common.render.should == <<-COMMON
+    expect(common.render).to eq <<-COMMON
 common
 {
   lemmatizer_base = /tmp
@@ -41,19 +41,19 @@ common
 
   it "should not be present when common_sphinx_configuration is not set" do
     common = Riddle::Configuration::Common.new
-    common.render.should be_nil
+    expect(common.render).to be_nil
   end
 
   it "should not be present when common_sphinx_configuration is false" do
     common = Riddle::Configuration::Common.new
     common.common_sphinx_configuration = false
-    common.render.should be_nil
+    expect(common.render).to be_nil
   end
   
   it "should render when common_sphinx_configuration is true" do
     common = Riddle::Configuration::Common.new
     common.common_sphinx_configuration = true
-    common.render.should == <<-COMMON
+    expect(common.render).to eq <<-COMMON
 common
 {
 }
