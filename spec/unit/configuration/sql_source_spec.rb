@@ -5,40 +5,40 @@ require 'spec_helper'
 describe Riddle::Configuration::SQLSource do
   it "should be invalid without a host, user, database, and query if there's no parent" do
     source = Riddle::Configuration::SQLSource.new("src1", "mysql")
-    source.should_not be_valid
+    expect(source).not_to be_valid
     
     source.sql_host   = "localhost"
     source.sql_user   = "test"
     source.sql_db     = "test"
     source.sql_query  = "SELECT * FROM tables"
-    source.should be_valid
+    expect(source).to be_valid
     
     [:name, :type, :sql_host, :sql_user, :sql_db, :sql_query].each do |setting|
       value = source.send(setting)
       source.send("#{setting}=".to_sym, nil)
-      source.should_not be_nil
+      expect(source).not_to be_nil
       source.send("#{setting}=".to_sym, value)
     end
   end
   
   it "should be invalid without only a name and type if there is a parent" do
     source = Riddle::Configuration::SQLSource.new("src1", "mysql")
-    source.should_not be_valid
+    expect(source).not_to be_valid
 
     source.parent = "sqlparent"
-    source.should be_valid
+    expect(source).to be_valid
 
     source.name = nil
-    source.should_not be_valid
+    expect(source).not_to be_valid
 
     source.name = "src1"
     source.type = nil
-    source.should_not be_valid
+    expect(source).not_to be_valid
   end
 
   it "should raise a ConfigurationError if rendering when not valid" do
     source = Riddle::Configuration::SQLSource.new("src1", "mysql")
-    lambda { source.render }.should raise_error(Riddle::Configuration::ConfigurationError)
+    expect { source.render }.to raise_error(Riddle::Configuration::ConfigurationError)
   end
 
   it "should render correctly when valid" do
@@ -72,7 +72,7 @@ describe Riddle::Configuration::SQLSource do
     source.unpack_mysqlcompress << "compressed_column" << "compressed_column_2"
     source.unpack_mysqlcompress_maxsize = "16M"
 
-    source.render.should == <<-SQLSOURCE
+    expect(source.render).to eq <<-SQLSOURCE
 source src1
 {
   type = mysql
@@ -120,7 +120,7 @@ source src1
     source.sql_query = big_query_string[0, 8200]
     source.parent = 'src0'
     
-    source.render.should match(/sql_query\s=\s[^\n]+\\\n/)
+    expect(source.render).to match(/sql_query\s=\s[^\n]+\\\n/)
   end
   
   it "should insert two backslash-newlines into an sql_query when greater than 16,356 characters" do
@@ -128,7 +128,7 @@ source src1
     source.sql_query = big_query_string
     source.parent = 'src0'
     
-    source.render.should match(/sql_query\s=\s[^\n]+\\\n[^\n]+\\\n/)    
+    expect(source.render).to match(/sql_query\s=\s[^\n]+\\\n[^\n]+\\\n/)    
   end
   
   def big_query_string

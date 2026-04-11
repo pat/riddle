@@ -6,11 +6,11 @@ describe Riddle::Configuration do
   describe Riddle::Configuration::Index do
     describe '#settings' do
       it 'should return array with all settings of index' do
-        Riddle::Configuration::Index.settings.should_not be_empty
+        expect(Riddle::Configuration::Index.settings).not_to be_empty
       end
 
       it 'should return array which contains a docinfo' do
-        Riddle::Configuration::Index.settings.should be_include :docinfo
+        expect(Riddle::Configuration::Index.settings).to be_include :docinfo
       end
     end
   end
@@ -22,7 +22,7 @@ describe Riddle::Configuration do
    
     describe '#settings' do
       it 'should has same settings as Riddle::Configuration::Index' do
-        TestIndex.settings.should == Riddle::Configuration::Index.settings
+        expect(TestIndex.settings).to eq(Riddle::Configuration::Index.settings)
       end
     end
 

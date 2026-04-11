@@ -16,15 +16,15 @@ describe 'Sphinx Client', :live => true do
       Riddle::Client.connection = lambda { |client|
         TCPSocket.new(client.server, client.port)
       }
-      client.query('smith').should be_kind_of(Hash)
+      expect(client.query('smith')).to be_kind_of(Hash)
     end
 
     it "should fail with errors from the given block" do
       Riddle::Client.connection = lambda { |client|
         raise RiddleSpecConnectionProcError
       }
-      lambda { client.query('smith') }.
-        should raise_error(Riddle::ResponseError)
+      expect { client.query('smith') }.
+        to raise_error(Riddle::ResponseError)
     end
   end
 
@@ -33,23 +33,23 @@ describe 'Sphinx Client', :live => true do
       client.connection = lambda { |client|
         TCPSocket.new(client.server, client.port)
       }
-      client.query('smith').should be_kind_of(Hash)
+      expect(client.query('smith')).to be_kind_of(Hash)
     end
 
     it "should fail with errors from the given block" do
       client.connection = lambda { |client|
         raise RiddleSpecConnectionProcError
       }
-      lambda { client.query('smith') }.
-        should raise_error(Riddle::ResponseError)
+      expect { client.query('smith') }.
+        to raise_error(Riddle::ResponseError)
     end
 
     it "should not override OutOfBoundsError instances" do
       client.connection = lambda { |client|
         raise Riddle::OutOfBoundsError
       }
-      lambda { client.query('smith') }.
-        should raise_error(Riddle::OutOfBoundsError)
+      expect { client.query('smith') }.
+        to raise_error(Riddle::OutOfBoundsError)
     end
 
     it "should prioritise instance over class connection" do
@@ -60,7 +60,7 @@ describe 'Sphinx Client', :live => true do
         TCPSocket.new(client.server, client.port)
       }
 
-      lambda { client.query('smith') }.should_not raise_error
+      expect { client.query('smith') }.not_to raise_error
     end
   end
 end

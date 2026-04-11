@@ -5,39 +5,39 @@ require 'spec_helper'
 describe Riddle::Configuration::DistributedIndex do
   it "should be invalid without a name, sources or path if there's no parent" do
     index = Riddle::Configuration::Index.new(nil)
-    index.should_not be_valid
+    expect(index).not_to be_valid
 
     index.name = "test1"
-    index.should_not be_valid
+    expect(index).not_to be_valid
 
     index.sources << Riddle::Configuration::SQLSource.new("source", "mysql")
-    index.should_not be_valid
+    expect(index).not_to be_valid
 
     index.path = "a/path"
-    index.should be_valid
+    expect(index).to be_valid
 
     index.name = nil
-    index.should_not be_valid
+    expect(index).not_to be_valid
 
     index.name = "test1"
     index.sources.clear
-    index.should_not be_valid
+    expect(index).not_to be_valid
   end
 
   it "should be invalid without a name but not sources or path if it has a parent" do
     index = Riddle::Configuration::Index.new(nil)
-    index.should_not be_valid
+    expect(index).not_to be_valid
 
     index.name = "test1stemmed"
-    index.should_not be_valid
+    expect(index).not_to be_valid
 
     index.parent = "test1"
-    index.should be_valid
+    expect(index).to be_valid
   end
 
   it "should raise a ConfigurationError if rendering when not valid" do
     index = Riddle::Configuration::Index.new("test1")
-    lambda { index.render }.should raise_error(Riddle::Configuration::ConfigurationError)
+    expect { index.render }.to raise_error(Riddle::Configuration::ConfigurationError)
   end
 
   it "should render correctly if supplied settings are valid" do
@@ -78,7 +78,7 @@ describe Riddle::Configuration::DistributedIndex do
     index.inplace_write_factor      = 0.1
     index.index_exact_words         = 1
 
-    index.render.should == <<-INDEX
+    expect(index.render).to eq <<-INDEX
 source src1
 {
   type = xmlpipe

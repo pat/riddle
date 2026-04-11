@@ -19,9 +19,9 @@ describe Riddle::Configuration do
     config.indices << index
     generated_conf = config.render
 
-    generated_conf.should match(/index index1/)
-    generated_conf.should match(/source src1/)
-    generated_conf.should match(/indexer/)
-    generated_conf.should match(/searchd/)
+    expect(generated_conf).to match(/index index1/)
+    expect(generated_conf).to match(/source src1/)
+    expect(generated_conf).to match(/indexer/)
+    expect(generated_conf).to match(/searchd/)
   end
 end
