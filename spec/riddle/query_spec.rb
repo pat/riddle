@@ -13,7 +13,7 @@ describe Riddle::Query, :live => true do
 
     it "should handle search requests" do
 
-      if controller.sphinx_version.to_i >= 3
+      if controller.sphinx_version.to_i >= 5
         expect(connection.query(Riddle::Query.tables).to_a).to match_array([
           {'Table' => 'people', 'Type' => 'local'},
           {'Table' => 'article_core', 'Type' => 'local'},
