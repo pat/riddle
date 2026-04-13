@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe 'SphinxQL escaping', :live => true do
-  let(:connection) { Mysql2::Client.new :host => '127.0.0.1', :port => 9306 }
+  let(:connection) { Riddle::SQLClient.connection '127.0.0.1', 9306 }
 
   def sphinxql_matching(string)
     select = Riddle::Query::Select.new
@@ -23,6 +23,7 @@ describe 'SphinxQL escaping', :live => true do
   context 'on snippets' do
     def snippets_for(text, words = '', options = nil)
       snippets_query = Riddle::Query.snippets(text, 'people', words, options)
+
       connection.query(snippets_query).first['snippet']
     end
 

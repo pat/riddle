@@ -39,15 +39,17 @@ class Sphinx
     end
     mysql_client.execute 'USE riddle'
 
-    structure = File.open('spec/fixtures/sql/structure.sql') { |f| f.read }
+    structure = File.open("#{fixtures_path}/sql/structure.sql") { |f| f.read }
     structure.split(/;/).each { |sql| mysql_client.execute sql }
 
-    mysql_client.execute <<-SQL
-      LOAD DATA LOCAL INFILE '#{fixtures_path}/sql/data.tsv' INTO TABLE
-      `riddle`.`people` FIELDS TERMINATED BY ',' ENCLOSED BY "'" (gender,
-      first_name, middle_initial, last_name, street_address, city, state,
-      postcode, email, birthday)
-    SQL
+    File.foreach("#{fixtures_path}/sql/data.tsv") do |l|
+      # being lazy about escaping here - each row in data.tsv is suitable for directly inserting
+      mysql_client.execute <<~SQL
+        INSERT INTO `riddle`.`people` (gender, first_name, middle_initial, last_name,
+        street_address, city, state, postcode, email, birthday)
+        VALUES(#{l})
+      SQL
+    end
 
     mysql_client.close
   end
@@ -55,6 +57,8 @@ class Sphinx
   def mysql_client
     @mysql_client ||= if RUBY_PLATFORM == 'java'
       JRubyClient.new host, username, password, port
+    elsif ENV['SPHINX_SQL_ADAPTER'] == 'trilogy'
+      TrilogyClient.new host, username, password, port
     else
       MRIClient.new host, username, password, port
     end

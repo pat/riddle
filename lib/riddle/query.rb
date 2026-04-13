@@ -7,16 +7,7 @@ module Riddle::Query
   MYSQL2_ESCAPE = defined?(Mysql2) && defined?(Mysql2::Client)
 
   def self.connection(address = '127.0.0.1', port = 9312)
-    require 'mysql2'
-
-    # If you use localhost, MySQL insists on a socket connection, but Sphinx
-    # requires a TCP connection. Using 127.0.0.1 fixes that.
-    address = '127.0.0.1' if address == 'localhost'
-
-    Mysql2::Client.new(
-      :host => address,
-      :port => port
-    )
+    Riddle::SQLClient.connection(address, port)
   end
 
   def self.meta
